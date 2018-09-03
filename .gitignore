@@ -47,14 +47,14 @@ Debug/
 !deps/v8/src/debug/
 Release/
 !doc/blog/**
-*.sln
+#*.sln
 !nodemsi.sln
 *.suo
-*.vcproj
-*.vcxproj
+#*.vcproj
+#*.vcxproj
 !custom_actions.vcxproj
 *.vcxproj.user
-*.vcxproj.filters
+#*.vcxproj.filters
 UpgradeLog*.XML
 _UpgradeReport_Files/
 ipch/
@@ -131,3 +131,7 @@ deps/v8/src/Release/
 deps/v8/src/inspector/Debug/
 deps/v8/src/inspector/Release/
 deps/v8/third_party/eu-strip/
+
+*.VC.db
+*.VC.db-shm
+*.VC.db-wal

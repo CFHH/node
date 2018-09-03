@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="deps">
+      <UniqueIdentifier>{D8C1C9B5-38B1-FC5D-54EB-0CB99232FA56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="deps\openssl">
+      <UniqueIdentifier>{A2039617-BE22-2E2D-B4F3-3B64B7BAFB84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="deps\openssl\openssl">
+      <UniqueIdentifier>{A2039617-BE22-2E2D-B4F3-3B64B7BAFB84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="deps\openssl\openssl\util">
+      <UniqueIdentifier>{F977CC92-61A1-407C-2835-A38A3BBED548}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="deps\openssl\openssl\util\_excluded_files">
+      <UniqueIdentifier>{158E591E-B6EA-0C85-8F5A-18EAFA09B4CE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="deps">
+      <UniqueIdentifier>{D8C1C9B5-38B1-FC5D-54EB-0CB99232FA56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="deps\openssl">
+      <UniqueIdentifier>{A2039617-BE22-2E2D-B4F3-3B64B7BAFB84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="deps\openssl\openssl">
+      <UniqueIdentifier>{A2039617-BE22-2E2D-B4F3-3B64B7BAFB84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="deps\openssl\openssl\util">
+      <UniqueIdentifier>{F977CC92-61A1-407C-2835-A38A3BBED548}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="deps\openssl\openssl\util\_excluded_files">
+      <UniqueIdentifier>{158E591E-B6EA-0C85-8F5A-18EAFA09B4CE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="node.gyp"/>
+    <None Include="deps\openssl\openssl\util\libcrypto.num">
+      <Filter>deps\openssl\openssl\util\_excluded_files</Filter>
+    </None>
+    <None Include="deps\openssl\openssl\util\libssl.num">
+      <Filter>deps\openssl\openssl\util\_excluded_files</Filter>
+    </None>
+  </ItemGroup>
+</Project>

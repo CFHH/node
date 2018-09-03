@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{BB1BFF01-BBA9-3885-7A95-1E5372405CD3}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>node_lib</RootNamespace>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Locals">
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+  <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props"/>
+  <ImportGroup Label="ExtensionSettings"/>
+  <ImportGroup Label="PropertySheets">
+    <Import Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"/>
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros"/>
+  <PropertyGroup>
+    <EmbedManifest>true</EmbedManifest>
+    <ExecutablePath>$(ExecutablePath);$(MSBuildProjectDirectory)\.\bin\;$(MSBuildProjectDirectory)\.\bin\</ExecutablePath>
+    <IntDir>$(Configuration)\obj\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <TargetName>node</TargetName>
+    <TargetPath>$(OutDir)lib\node$(TargetExt)</TargetPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>src;$(OutDir)obj\global_intermediate;$(OutDir)obj\global_intermediate\include;$(OutDir)obj\global_intermediate\src;tools\msvs\genfiles;deps\v8\include;deps\icu-small\source\i18n;deps\icu-small\source\common;deps\zlib;deps\http_parser;deps\cares\include;deps\uv\include;deps\nghttp2\lib\includes;deps\openssl\openssl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/bigobj /MP %(AdditionalOptions)</AdditionalOptions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4251;4275;4267;4351;4355;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <OmitFramePointers>false</OmitFramePointers>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;NODE_ARCH=&quot;x64&quot;;NODE_WANT_INTERNALS=1;V8_DEPRECATION_WARNINGS=1;NODE_OPENSSL_SYSTEM_CERT_PATH=&quot;&quot;;HAVE_INSPECTOR=1;HAVE_ETW=1;HAVE_PERFCTR=1;FD_SETSIZE=1024;NODE_PLATFORM=&quot;win32&quot;;NOMINMAX;_UNICODE=1;NODE_USE_V8_PLATFORM=1;NODE_HAVE_I18N_SUPPORT=1;NODE_HAVE_SMALL_ICU=1;HAVE_OPENSSL=1;UCONFIG_NO_SERVICE=1;UCONFIG_NO_REGULAR_EXPRESSIONS=1;U_ENABLE_DYLOAD=0;U_STATIC_IMPLEMENTATION=1;U_HAVE_STD_STRING=1;UCONFIG_NO_BREAK_ITERATION=0;HTTP_PARSER_STRICT=0;NGHTTP2_STATICLIB;DEBUG;_DEBUG;V8_ENABLE_CHECKS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <StringPooling>true</StringPooling>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)lib\node$(TargetExt)</OutputFile>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>psapi.lib</AdditionalDependencies>
+      <AllowIsolation>true</AllowIsolation>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapExports>true</MapExports>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <Manifest>
+      <AdditionalManifestFiles>src/res/node.exe.extra.manifest</AdditionalManifestFiles>
+    </Manifest>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>src;$(OutDir)obj\global_intermediate;$(OutDir)obj\global_intermediate\include;$(OutDir)obj\global_intermediate\src;tools\msvs\genfiles;deps\v8\include;deps\icu-small\source\i18n;deps\icu-small\source\common;deps\zlib;deps\http_parser;deps\cares\include;deps\uv\include;deps\nghttp2\lib\includes;deps\openssl\openssl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;NODE_ARCH=&quot;x64&quot;;NODE_WANT_INTERNALS=1;V8_DEPRECATION_WARNINGS=1;NODE_OPENSSL_SYSTEM_CERT_PATH=&quot;&quot;;HAVE_INSPECTOR=1;HAVE_ETW=1;HAVE_PERFCTR=1;FD_SETSIZE=1024;NODE_PLATFORM=&quot;win32&quot;;NOMINMAX;_UNICODE=1;NODE_USE_V8_PLATFORM=1;NODE_HAVE_I18N_SUPPORT=1;NODE_HAVE_SMALL_ICU=1;HAVE_OPENSSL=1;UCONFIG_NO_SERVICE=1;UCONFIG_NO_REGULAR_EXPRESSIONS=1;U_ENABLE_DYLOAD=0;U_STATIC_IMPLEMENTATION=1;U_HAVE_STD_STRING=1;UCONFIG_NO_BREAK_ITERATION=0;HTTP_PARSER_STRICT=0;NGHTTP2_STATICLIB;DEBUG;_DEBUG;V8_ENABLE_CHECKS;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>src;$(OutDir)obj\global_intermediate;$(OutDir)obj\global_intermediate\include;$(OutDir)obj\global_intermediate\src;tools\msvs\genfiles;deps\v8\include;deps\icu-small\source\i18n;deps\icu-small\source\common;deps\zlib;deps\http_parser;deps\cares\include;deps\uv\include;deps\nghttp2\lib\includes;deps\openssl\openssl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4251;4275;4267;4351;4355;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <OmitFramePointers>true</OmitFramePointers>
+      <Optimization>Full</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;NODE_ARCH=&quot;x64&quot;;NODE_WANT_INTERNALS=1;V8_DEPRECATION_WARNINGS=1;NODE_OPENSSL_SYSTEM_CERT_PATH=&quot;&quot;;HAVE_INSPECTOR=1;HAVE_ETW=1;HAVE_PERFCTR=1;FD_SETSIZE=1024;NODE_PLATFORM=&quot;win32&quot;;NOMINMAX;_UNICODE=1;NODE_USE_V8_PLATFORM=1;NODE_HAVE_I18N_SUPPORT=1;NODE_HAVE_SMALL_ICU=1;HAVE_OPENSSL=1;UCONFIG_NO_SERVICE=1;UCONFIG_NO_REGULAR_EXPRESSIONS=1;U_ENABLE_DYLOAD=0;U_STATIC_IMPLEMENTATION=1;U_HAVE_STD_STRING=1;UCONFIG_NO_BREAK_ITERATION=0;HTTP_PARSER_STRICT=0;NGHTTP2_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <StringPooling>true</StringPooling>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)lib\node$(TargetExt)</OutputFile>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>psapi.lib</AdditionalDependencies>
+      <AllowIsolation>true</AllowIsolation>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapExports>true</MapExports>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <Manifest>
+      <AdditionalManifestFiles>src/res/node.exe.extra.manifest</AdditionalManifestFiles>
+    </Manifest>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>src;$(OutDir)obj\global_intermediate;$(OutDir)obj\global_intermediate\include;$(OutDir)obj\global_intermediate\src;tools\msvs\genfiles;deps\v8\include;deps\icu-small\source\i18n;deps\icu-small\source\common;deps\zlib;deps\http_parser;deps\cares\include;deps\uv\include;deps\nghttp2\lib\includes;deps\openssl\openssl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;NODE_ARCH=&quot;x64&quot;;NODE_WANT_INTERNALS=1;V8_DEPRECATION_WARNINGS=1;NODE_OPENSSL_SYSTEM_CERT_PATH=&quot;&quot;;HAVE_INSPECTOR=1;HAVE_ETW=1;HAVE_PERFCTR=1;FD_SETSIZE=1024;NODE_PLATFORM=&quot;win32&quot;;NOMINMAX;_UNICODE=1;NODE_USE_V8_PLATFORM=1;NODE_HAVE_I18N_SUPPORT=1;NODE_HAVE_SMALL_ICU=1;HAVE_OPENSSL=1;UCONFIG_NO_SERVICE=1;UCONFIG_NO_REGULAR_EXPRESSIONS=1;U_ENABLE_DYLOAD=0;U_STATIC_IMPLEMENTATION=1;U_HAVE_STD_STRING=1;UCONFIG_NO_BREAK_ITERATION=0;HTTP_PARSER_STRICT=0;NGHTTP2_STATICLIB;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="lib\internal\per_context.js"/>
+    <None Include="lib\internal\bootstrap\cache.js"/>
+    <None Include="lib\internal\bootstrap\loaders.js"/>
+    <None Include="lib\internal\bootstrap\node.js"/>
+    <None Include="lib\async_hooks.js"/>
+    <None Include="lib\assert.js"/>
+    <None Include="lib\buffer.js"/>
+    <None Include="lib\child_process.js"/>
+    <None Include="lib\console.js"/>
+    <None Include="lib\constants.js"/>
+    <None Include="lib\crypto.js"/>
+    <None Include="lib\cluster.js"/>
+    <None Include="lib\dgram.js"/>
+    <None Include="lib\dns.js"/>
+    <None Include="lib\domain.js"/>
+    <None Include="lib\events.js"/>
+    <None Include="lib\fs.js"/>
+    <None Include="lib\http.js"/>
+    <None Include="lib\http2.js"/>
+    <None Include="lib\_http_agent.js"/>
+    <None Include="lib\_http_client.js"/>
+    <None Include="lib\_http_common.js"/>
+    <None Include="lib\_http_incoming.js"/>
+    <None Include="lib\_http_outgoing.js"/>
+    <None Include="lib\_http_server.js"/>
+    <None Include="lib\https.js"/>
+    <None Include="lib\inspector.js"/>
+    <None Include="lib\module.js"/>
+    <None Include="lib\net.js"/>
+    <None Include="lib\os.js"/>
+    <None Include="lib\path.js"/>
+    <None Include="lib\perf_hooks.js"/>
+    <None Include="lib\process.js"/>
+    <None Include="lib\punycode.js"/>
+    <None Include="lib\querystring.js"/>
+    <None Include="lib\readline.js"/>
+    <None Include="lib\repl.js"/>
+    <None Include="lib\stream.js"/>
+    <None Include="lib\_stream_readable.js"/>
+    <None Include="lib\_stream_writable.js"/>
+    <None Include="lib\_stream_duplex.js"/>
+    <None Include="lib\_stream_transform.js"/>
+    <None Include="lib\_stream_passthrough.js"/>
+    <None Include="lib\_stream_wrap.js"/>
+    <None Include="lib\string_decoder.js"/>
+    <None Include="lib\sys.js"/>
+    <None Include="lib\timers.js"/>
+    <None Include="lib\tls.js"/>
+    <None Include="lib\_tls_common.js"/>
+    <None Include="lib\_tls_wrap.js"/>
+    <None Include="lib\trace_events.js"/>
+    <None Include="lib\tty.js"/>
+    <None Include="lib\url.js"/>
+    <None Include="lib\util.js"/>
+    <None Include="lib\v8.js"/>
+    <None Include="lib\vm.js"/>
+    <None Include="lib\worker_threads.js"/>
+    <None Include="lib\zlib.js"/>
+    <None Include="lib\internal\assert.js"/>
+    <None Include="lib\internal\async_hooks.js"/>
+    <None Include="lib\internal\buffer.js"/>
+    <None Include="lib\internal\cli_table.js"/>
+    <None Include="lib\internal\child_process.js"/>
+    <None Include="lib\internal\cluster\child.js"/>
+    <None Include="lib\internal\cluster\master.js"/>
+    <None Include="lib\internal\cluster\round_robin_handle.js"/>
+    <None Include="lib\internal\cluster\shared_handle.js"/>
+    <None Include="lib\internal\cluster\utils.js"/>
+    <None Include="lib\internal\cluster\worker.js"/>
+    <None Include="lib\internal\crypto\certificate.js"/>
+    <None Include="lib\internal\crypto\cipher.js"/>
+    <None Include="lib\internal\crypto\diffiehellman.js"/>
+    <None Include="lib\internal\crypto\hash.js"/>
+    <None Include="lib\internal\crypto\pbkdf2.js"/>
+    <None Include="lib\internal\crypto\random.js"/>
+    <None Include="lib\internal\crypto\scrypt.js"/>
+    <None Include="lib\internal\crypto\sig.js"/>
+    <None Include="lib\internal\crypto\util.js"/>
+    <None Include="lib\internal\constants.js"/>
+    <None Include="lib\internal\dns\promises.js"/>
+    <None Include="lib\internal\dns\utils.js"/>
+    <None Include="lib\internal\domexception.js"/>
+    <None Include="lib\internal\encoding.js"/>
+    <None Include="lib\internal\errors.js"/>
+    <None Include="lib\internal\error-serdes.js"/>
+    <None Include="lib\internal\fixed_queue.js"/>
+    <None Include="lib\internal\freelist.js"/>
+    <None Include="lib\internal\fs\promises.js"/>
+    <None Include="lib\internal\fs\read_file_context.js"/>
+    <None Include="lib\internal\fs\streams.js"/>
+    <None Include="lib\internal\fs\sync_write_stream.js"/>
+    <None Include="lib\internal\fs\utils.js"/>
+    <None Include="lib\internal\fs\watchers.js"/>
+    <None Include="lib\internal\http.js"/>
+    <None Include="lib\internal\inspector_async_hook.js"/>
+    <None Include="lib\internal\linkedlist.js"/>
+    <None Include="lib\internal\modules\cjs\helpers.js"/>
+    <None Include="lib\internal\modules\cjs\loader.js"/>
+    <None Include="lib\internal\modules\esm\loader.js"/>
+    <None Include="lib\internal\modules\esm\create_dynamic_module.js"/>
+    <None Include="lib\internal\modules\esm\default_resolve.js"/>
+    <None Include="lib\internal\modules\esm\module_job.js"/>
+    <None Include="lib\internal\modules\esm\module_map.js"/>
+    <None Include="lib\internal\modules\esm\translators.js"/>
+    <None Include="lib\internal\safe_globals.js"/>
+    <None Include="lib\internal\net.js"/>
+    <None Include="lib\internal\os.js"/>
+    <None Include="lib\internal\priority_queue.js"/>
+    <None Include="lib\internal\process\esm_loader.js"/>
+    <None Include="lib\internal\process\main_thread_only.js"/>
+    <None Include="lib\internal\process\next_tick.js"/>
+    <None Include="lib\internal\process\per_thread.js"/>
+    <None Include="lib\internal\process\promises.js"/>
+    <None Include="lib\internal\process\stdio.js"/>
+    <None Include="lib\internal\process\warning.js"/>
+    <None Include="lib\internal\process\worker_thread_only.js"/>
+    <None Include="lib\internal\querystring.js"/>
+    <None Include="lib\internal\process\write-coverage.js"/>
+    <None Include="lib\internal\readline.js"/>
+    <None Include="lib\internal\repl.js"/>
+    <None Include="lib\internal\repl\await.js"/>
+    <None Include="lib\internal\socket_list.js"/>
+    <None Include="lib\internal\test\binding.js"/>
+    <None Include="lib\internal\test\unicode.js"/>
+    <None Include="lib\internal\timers.js"/>
+    <None Include="lib\internal\tls.js"/>
+    <None Include="lib\internal\trace_events_async_hooks.js"/>
+    <None Include="lib\internal\tty.js"/>
+    <None Include="lib\internal\url.js"/>
+    <None Include="lib\internal\util.js"/>
+    <None Include="lib\internal\util\comparisons.js"/>
+    <None Include="lib\internal\util\inspector.js"/>
+    <None Include="lib\internal\util\types.js"/>
+    <None Include="lib\internal\http2\core.js"/>
+    <None Include="lib\internal\http2\compat.js"/>
+    <None Include="lib\internal\http2\util.js"/>
+    <None Include="lib\internal\v8_prof_polyfill.js"/>
+    <None Include="lib\internal\v8_prof_processor.js"/>
+    <None Include="lib\internal\validators.js"/>
+    <None Include="lib\internal\stream_base_commons.js"/>
+    <None Include="lib\internal\vm\module.js"/>
+    <None Include="lib\internal\worker.js"/>
+    <None Include="lib\internal\streams\lazy_transform.js"/>
+    <None Include="lib\internal\streams\async_iterator.js"/>
+    <None Include="lib\internal\streams\buffer_list.js"/>
+    <None Include="lib\internal\streams\duplexpair.js"/>
+    <None Include="lib\internal\streams\legacy.js"/>
+    <None Include="lib\internal\streams\destroy.js"/>
+    <None Include="lib\internal\streams\state.js"/>
+    <None Include="lib\internal\streams\pipeline.js"/>
+    <None Include="lib\internal\streams\end-of-stream.js"/>
+    <None Include="lib\internal\wrap_js_stream.js"/>
+    <None Include="deps\v8\tools\splaytree.js"/>
+    <None Include="deps\v8\tools\codemap.js"/>
+    <None Include="deps\v8\tools\consarray.js"/>
+    <None Include="deps\v8\tools\csvparser.js"/>
+    <None Include="deps\v8\tools\profile.js"/>
+    <None Include="deps\v8\tools\profile_view.js"/>
+    <None Include="deps\v8\tools\logreader.js"/>
+    <None Include="deps\v8\tools\arguments.js"/>
+    <None Include="deps\v8\tools\tickprocessor.js"/>
+    <None Include="deps\v8\tools\SourceMap.js"/>
+    <None Include="deps\v8\tools\tickprocessor-driver.js"/>
+    <None Include="deps\node-inspect\lib\_inspect.js"/>
+    <None Include="deps\node-inspect\lib\internal\inspect_client.js"/>
+    <None Include="deps\node-inspect\lib\internal\inspect_repl.js"/>
+    <None Include="deps\acorn\dist\acorn.js"/>
+    <None Include="deps\acorn\dist\walk.js"/>
+    <None Include="common.gypi"/>
+    <None Include="node.gyp"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\node_api.h"/>
+    <ClInclude Include="src\node_api_types.h"/>
+    <ClInclude Include="src\node_errors.h"/>
+    <ClInclude Include="src\aliased_buffer.h"/>
+    <ClInclude Include="src\async_wrap.h"/>
+    <ClInclude Include="src\async_wrap-inl.h"/>
+    <ClInclude Include="src\base_object.h"/>
+    <ClInclude Include="src\base_object-inl.h"/>
+    <ClInclude Include="src\connection_wrap.h"/>
+    <ClInclude Include="src\connect_wrap.h"/>
+    <ClInclude Include="src\debug_utils.h"/>
+    <ClInclude Include="src\env.h"/>
+    <ClInclude Include="src\env-inl.h"/>
+    <ClInclude Include="src\handle_wrap.h"/>
+    <ClInclude Include="src\js_stream.h"/>
+    <ClInclude Include="src\module_wrap.h"/>
+    <ClInclude Include="src\node.h"/>
+    <ClInclude Include="src\node_buffer.h"/>
+    <ClInclude Include="src\node_code_cache.h"/>
+    <ClInclude Include="src\node_constants.h"/>
+    <ClInclude Include="src\node_contextify.h"/>
+    <ClInclude Include="src\node_debug_options.h"/>
+    <ClInclude Include="src\node_file.h"/>
+    <ClInclude Include="src\node_http2.h"/>
+    <ClInclude Include="src\node_http2_state.h"/>
+    <ClInclude Include="src\node_internals.h"/>
+    <ClInclude Include="src\node_javascript.h"/>
+    <ClInclude Include="src\node_messaging.h"/>
+    <ClInclude Include="src\node_mutex.h"/>
+    <ClInclude Include="src\node_perf.h"/>
+    <ClInclude Include="src\node_perf_common.h"/>
+    <ClInclude Include="src\node_persistent.h"/>
+    <ClInclude Include="src\node_platform.h"/>
+    <ClInclude Include="src\node_root_certs.h"/>
+    <ClInclude Include="src\node_version.h"/>
+    <ClInclude Include="src\node_watchdog.h"/>
+    <ClInclude Include="src\node_wrap.h"/>
+    <ClInclude Include="src\node_revert.h"/>
+    <ClInclude Include="src\node_i18n.h"/>
+    <ClInclude Include="src\node_worker.h"/>
+    <ClInclude Include="src\pipe_wrap.h"/>
+    <ClInclude Include="src\tty_wrap.h"/>
+    <ClInclude Include="src\tcp_wrap.h"/>
+    <ClInclude Include="src\udp_wrap.h"/>
+    <ClInclude Include="src\req_wrap.h"/>
+    <ClInclude Include="src\req_wrap-inl.h"/>
+    <ClInclude Include="src\sharedarraybuffer_metadata.h"/>
+    <ClInclude Include="src\string_bytes.h"/>
+    <ClInclude Include="src\string_decoder.h"/>
+    <ClInclude Include="src\string_decoder-inl.h"/>
+    <ClInclude Include="src\stream_base.h"/>
+    <ClInclude Include="src\stream_base-inl.h"/>
+    <ClInclude Include="src\stream_pipe.h"/>
+    <ClInclude Include="src\stream_wrap.h"/>
+    <ClInclude Include="src\tracing\agent.h"/>
+    <ClInclude Include="src\tracing\node_trace_buffer.h"/>
+    <ClInclude Include="src\tracing\node_trace_writer.h"/>
+    <ClInclude Include="src\tracing\trace_event.h"/>
+    <ClInclude Include="src\util.h"/>
+    <ClInclude Include="src\util-inl.h"/>
+    <ClInclude Include="deps\http_parser\http_parser.h"/>
+    <ClInclude Include="deps\v8\include\v8.h"/>
+    <ClInclude Include="src\inspector_agent.h"/>
+    <ClInclude Include="src\inspector_io.h"/>
+    <ClInclude Include="src\inspector_socket.h"/>
+    <ClInclude Include="src\inspector_socket_server.h"/>
+    <ClInclude Include="src\inspector\node_string.h"/>
+    <ClInclude Include="src\inspector\tracing_agent.h"/>
+    <ClInclude Include="$(OutDir)obj\global_intermediate\src\node\inspector\protocol\Forward.h"/>
+    <ClInclude Include="$(OutDir)obj\global_intermediate\src\node\inspector\protocol\Protocol.h"/>
+    <ClInclude Include="$(OutDir)obj\global_intermediate\src\node\inspector\protocol\NodeTracing.h"/>
+    <ClInclude Include="src\node_win32_etw_provider.h"/>
+    <ClInclude Include="src\node_win32_etw_provider-inl.h"/>
+    <ClInclude Include="tools\msvs\genfiles\node_etw_provider.h"/>
+    <ClInclude Include="src\node_win32_perfctr_provider.h"/>
+    <ClInclude Include="src\node_counters.h"/>
+    <ClInclude Include="src\node_crypto.h"/>
+    <ClInclude Include="src\node_crypto_bio.h"/>
+    <ClInclude Include="src\node_crypto_clienthello.h"/>
+    <ClInclude Include="src\tls_wrap.h"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\async_wrap.cc"/>
+    <ClCompile Include="src\bootstrapper.cc"/>
+    <ClCompile Include="src\callback_scope.cc"/>
+    <ClCompile Include="src\cares_wrap.cc"/>
+    <ClCompile Include="src\connection_wrap.cc"/>
+    <ClCompile Include="src\connect_wrap.cc"/>
+    <ClCompile Include="src\debug_utils.cc"/>
+    <ClCompile Include="src\env.cc"/>
+    <ClCompile Include="src\exceptions.cc"/>
+    <ClCompile Include="src\fs_event_wrap.cc"/>
+    <ClCompile Include="src\handle_wrap.cc"/>
+    <ClCompile Include="src\js_stream.cc"/>
+    <ClCompile Include="src\module_wrap.cc"/>
+    <ClCompile Include="src\node.cc"/>
+    <ClCompile Include="src\node_api.cc"/>
+    <ClCompile Include="src\node_buffer.cc"/>
+    <ClCompile Include="src\node_config.cc"/>
+    <ClCompile Include="src\node_constants.cc"/>
+    <ClCompile Include="src\node_contextify.cc"/>
+    <ClCompile Include="src\node_debug_options.cc"/>
+    <ClCompile Include="src\node_domain.cc"/>
+    <ClCompile Include="src\node_encoding.cc"/>
+    <ClCompile Include="src\node_file.cc"/>
+    <ClCompile Include="src\node_http2.cc"/>
+    <ClCompile Include="src\node_http_parser.cc"/>
+    <ClCompile Include="src\node_messaging.cc"/>
+    <ClCompile Include="src\node_os.cc"/>
+    <ClCompile Include="src\node_platform.cc"/>
+    <ClCompile Include="src\node_perf.cc"/>
+    <ClCompile Include="src\node_postmortem_metadata.cc"/>
+    <ClCompile Include="src\node_process.cc"/>
+    <ClCompile Include="src\node_serdes.cc"/>
+    <ClCompile Include="src\node_trace_events.cc"/>
+    <ClCompile Include="src\node_types.cc"/>
+    <ClCompile Include="src\node_url.cc"/>
+    <ClCompile Include="src\node_util.cc"/>
+    <ClCompile Include="src\node_v8.cc"/>
+    <ClCompile Include="src\node_stat_watcher.cc"/>
+    <ClCompile Include="src\node_watchdog.cc"/>
+    <ClCompile Include="src\node_worker.cc"/>
+    <ClCompile Include="src\node_zlib.cc"/>
+    <ClCompile Include="src\node_i18n.cc"/>
+    <ClCompile Include="src\pipe_wrap.cc"/>
+    <ClCompile Include="src\process_wrap.cc"/>
+    <ClCompile Include="src\sharedarraybuffer_metadata.cc"/>
+    <ClCompile Include="src\signal_wrap.cc"/>
+    <ClCompile Include="src\spawn_sync.cc"/>
+    <ClCompile Include="src\string_bytes.cc"/>
+    <ClCompile Include="src\string_decoder.cc"/>
+    <ClCompile Include="src\stream_base.cc"/>
+    <ClCompile Include="src\stream_pipe.cc"/>
+    <ClCompile Include="src\stream_wrap.cc"/>
+    <ClCompile Include="src\tcp_wrap.cc"/>
+    <ClCompile Include="src\timers.cc"/>
+    <ClCompile Include="src\tracing\agent.cc"/>
+    <ClCompile Include="src\tracing\node_trace_buffer.cc"/>
+    <ClCompile Include="src\tracing\node_trace_writer.cc"/>
+    <ClCompile Include="src\tracing\trace_event.cc"/>
+    <ClCompile Include="src\tty_wrap.cc"/>
+    <ClCompile Include="src\udp_wrap.cc"/>
+    <ClCompile Include="src\util.cc"/>
+    <ClCompile Include="src\uv.cc"/>
+    <ClCompile Include="$(OutDir)obj\global_intermediate\node_javascript.cc"/>
+    <ClCompile Include="src\node_code_cache_stub.cc"/>
+    <ClCompile Include="src\inspector_agent.cc"/>
+    <ClCompile Include="src\inspector_io.cc"/>
+    <ClCompile Include="src\inspector_js_api.cc"/>
+    <ClCompile Include="src\inspector_socket.cc"/>
+    <ClCompile Include="src\inspector_socket_server.cc"/>
+    <ClCompile Include="src\inspector\tracing_agent.cc"/>
+    <ClCompile Include="src\inspector\node_string.cc"/>
+    <ClCompile Include="$(OutDir)obj\global_intermediate\src\node\inspector\protocol\Protocol.cpp"/>
+    <ClCompile Include="$(OutDir)obj\global_intermediate\src\node\inspector\protocol\NodeTracing.cpp"/>
+    <ClCompile Include="src\node_win32_etw_provider.cc"/>
+    <ClCompile Include="src\node_dtrace.cc"/>
+    <ClCompile Include="src\node_win32_perfctr_provider.cc"/>
+    <ClCompile Include="src\node_counters.cc"/>
+    <ClCompile Include="src\node_crypto.cc"/>
+    <ClCompile Include="src\node_crypto_bio.cc"/>
+    <ClCompile Include="src\node_crypto_clienthello.cc"/>
+    <ClCompile Include="src\tls_wrap.cc"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="node_js2c.vcxproj">
+      <Project>{4DCBA3DB-4989-EAB7-0252-907D0C8A5A33}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="node_protocol_generated_sources.vcxproj">
+      <Project>{3397E217-93A7-6026-AB81-C5246E8B0AF3}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="v8_inspector_compress_protocol_json.vcxproj">
+      <Project>{1A42D791-9E83-55B1-0871-F2937B01DF9A}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="node_etw.vcxproj">
+      <Project>{F6F4AF82-6B99-6964-D7F3-CF38A17D3F8B}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="node_perfctr.vcxproj">
+      <Project>{E0426E6D-33CD-5201-39EF-B614814AC019}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="deps\v8\gypfiles\v8.vcxproj">
+      <Project>{091CB482-92BF-88E1-AE30-7CF52D1E9DBB}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="tools\icu\icuuc.vcxproj">
+      <Project>{6FEB5F0A-E6B2-54BE-BBB8-95D0237DA4D7}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="deps\openssl\openssl-cli.vcxproj">
+      <Project>{21D888B2-15AC-898B-EA33-9C73445681C1}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+  <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets"/>
+  <ImportGroup Label="ExtensionTargets"/>
+</Project>

@@ -1,0 +1,642 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4DCBA3DB-4989-EAB7-0252-907D0C8A5A33}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>node_js2c</RootNamespace>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Locals">
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+  <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props"/>
+  <ImportGroup Label="ExtensionSettings"/>
+  <ImportGroup Label="PropertySheets">
+    <Import Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"/>
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros"/>
+  <PropertyGroup>
+    <ExecutablePath>$(ExecutablePath);$(MSBuildProjectDirectory)\.\bin\;$(MSBuildProjectDirectory)\.\bin\</ExecutablePath>
+    <IntDir>$(Configuration)\obj\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalOptions>/bigobj /MP %(AdditionalOptions)</AdditionalOptions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4251;4275;4267;4351;4355;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <OmitFramePointers>false</OmitFramePointers>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;DEBUG;_DEBUG;V8_ENABLE_CHECKS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <StringPooling>true</StringPooling>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies></AdditionalDependencies>
+      <AllowIsolation>true</AllowIsolation>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapExports>true</MapExports>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;DEBUG;_DEBUG;V8_ENABLE_CHECKS;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4251;4275;4267;4351;4355;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <OmitFramePointers>true</OmitFramePointers>
+      <Optimization>Full</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <StringPooling>true</StringPooling>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies></AdditionalDependencies>
+      <AllowIsolation>true</AllowIsolation>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapExports>true</MapExports>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="node.gyp"/>
+    <None Include="lib\internal\bootstrap\cache.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\bootstrap\loaders.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\bootstrap\node.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\async_hooks.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\assert.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\buffer.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\child_process.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\console.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\constants.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\crypto.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\cluster.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\dgram.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\dns.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\domain.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\events.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\fs.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\http.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\http2.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\_http_agent.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\_http_client.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\_http_common.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\_http_incoming.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\_http_outgoing.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\_http_server.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\https.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\inspector.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\module.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\net.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\os.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\path.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\perf_hooks.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\process.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\punycode.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\querystring.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\readline.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\repl.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\stream.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\_stream_readable.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\_stream_writable.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\_stream_duplex.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\_stream_transform.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\_stream_passthrough.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\_stream_wrap.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\string_decoder.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\sys.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\timers.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\tls.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\_tls_common.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\_tls_wrap.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\trace_events.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\tty.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\url.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\util.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\v8.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\vm.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\worker_threads.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\zlib.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\assert.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\async_hooks.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\buffer.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\cli_table.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\child_process.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\cluster\child.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\cluster\master.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\cluster\round_robin_handle.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\cluster\shared_handle.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\cluster\utils.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\cluster\worker.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\crypto\certificate.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\crypto\cipher.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\crypto\diffiehellman.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\crypto\hash.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\crypto\pbkdf2.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\crypto\random.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\crypto\scrypt.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\crypto\sig.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\crypto\util.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\constants.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\dns\promises.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\dns\utils.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\domexception.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\encoding.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\errors.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\error-serdes.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\fixed_queue.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\freelist.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\fs\promises.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\fs\read_file_context.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\fs\streams.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\fs\sync_write_stream.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\fs\utils.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\fs\watchers.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\http.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\inspector_async_hook.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\linkedlist.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\modules\cjs\helpers.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\modules\cjs\loader.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\modules\esm\loader.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\modules\esm\create_dynamic_module.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\modules\esm\default_resolve.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\modules\esm\module_job.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\modules\esm\module_map.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\modules\esm\translators.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\safe_globals.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\net.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\os.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\priority_queue.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\process\esm_loader.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\process\main_thread_only.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\process\next_tick.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\process\per_thread.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\process\promises.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\process\stdio.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\process\warning.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\process\worker_thread_only.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\querystring.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\process\write-coverage.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\readline.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\repl.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\repl\await.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\socket_list.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\test\binding.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\test\unicode.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\timers.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\tls.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\trace_events_async_hooks.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\tty.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\url.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\util.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\util\comparisons.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\util\inspector.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\util\types.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\http2\core.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\http2\compat.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\http2\util.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\v8_prof_polyfill.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\v8_prof_processor.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\validators.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\stream_base_commons.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\vm\module.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\worker.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\streams\lazy_transform.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\streams\async_iterator.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\streams\buffer_list.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\streams\duplexpair.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\streams\legacy.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\streams\destroy.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\streams\state.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\streams\pipeline.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\streams\end-of-stream.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="lib\internal\wrap_js_stream.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="deps\v8\tools\splaytree.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="deps\v8\tools\codemap.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="deps\v8\tools\consarray.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="deps\v8\tools\csvparser.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="deps\v8\tools\profile.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="deps\v8\tools\profile_view.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="deps\v8\tools\logreader.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="deps\v8\tools\arguments.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="deps\v8\tools\tickprocessor.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="deps\v8\tools\SourceMap.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="deps\v8\tools\tickprocessor-driver.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="deps\node-inspect\lib\_inspect.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="deps\node-inspect\lib\internal\inspect_client.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="deps\node-inspect\lib\internal\inspect_repl.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="deps\acorn\dist\acorn.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="deps\acorn\dist\walk.js">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="tools\check_macros.py">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="tools\nodcheck_macros.py">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+    <None Include="config.gypi">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(OutDir)obj\global_intermediate\node_javascript.cc"/>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="lib\internal\per_context.js">
+      <FileType>Document</FileType>
+      <Command>call call python &quot;tools\js2c.py&quot; &quot;$(OutDir)obj\global_intermediate\node_javascript.cc&quot; &quot;lib\internal\per_context.js&quot; &quot;lib\internal\bootstrap\cache.js&quot; &quot;lib\internal\bootstrap\loaders.js&quot; &quot;lib\internal\bootstrap\node.js&quot; &quot;lib\async_hooks.js&quot; &quot;lib\assert.js&quot; &quot;lib\buffer.js&quot; &quot;lib\child_process.js&quot; &quot;lib\console.js&quot; &quot;lib\constants.js&quot; &quot;lib\crypto.js&quot; &quot;lib\cluster.js&quot; &quot;lib\dgram.js&quot; &quot;lib\dns.js&quot; &quot;lib\domain.js&quot; &quot;lib\events.js&quot; &quot;lib\fs.js&quot; &quot;lib\http.js&quot; &quot;lib\http2.js&quot; &quot;lib\_http_agent.js&quot; &quot;lib\_http_client.js&quot; &quot;lib\_http_common.js&quot; &quot;lib\_http_incoming.js&quot; &quot;lib\_http_outgoing.js&quot; &quot;lib\_http_server.js&quot; &quot;lib\https.js&quot; &quot;lib\inspector.js&quot; &quot;lib\module.js&quot; &quot;lib\net.js&quot; &quot;lib\os.js&quot; &quot;lib\path.js&quot; &quot;lib\perf_hooks.js&quot; &quot;lib\process.js&quot; &quot;lib\punycode.js&quot; &quot;lib\querystring.js&quot; &quot;lib\readline.js&quot; &quot;lib\repl.js&quot; &quot;lib\stream.js&quot; &quot;lib\_stream_readable.js&quot; &quot;lib\_stream_writable.js&quot; &quot;lib\_stream_duplex.js&quot; &quot;lib\_stream_transform.js&quot; &quot;lib\_stream_passthrough.js&quot; &quot;lib\_stream_wrap.js&quot; &quot;lib\string_decoder.js&quot; &quot;lib\sys.js&quot; &quot;lib\timers.js&quot; &quot;lib\tls.js&quot; &quot;lib\_tls_common.js&quot; &quot;lib\_tls_wrap.js&quot; &quot;lib\trace_events.js&quot; &quot;lib\tty.js&quot; &quot;lib\url.js&quot; &quot;lib\util.js&quot; &quot;lib\v8.js&quot; &quot;lib\vm.js&quot; &quot;lib\worker_threads.js&quot; &quot;lib\zlib.js&quot; &quot;lib\internal\assert.js&quot; &quot;lib\internal\async_hooks.js&quot; &quot;lib\internal\buffer.js&quot; &quot;lib\internal\cli_table.js&quot; &quot;lib\internal\child_process.js&quot; &quot;lib\internal\cluster\child.js&quot; &quot;lib\internal\cluster\master.js&quot; &quot;lib\internal\cluster\round_robin_handle.js&quot; &quot;lib\internal\cluster\shared_handle.js&quot; &quot;lib\internal\cluster\utils.js&quot; &quot;lib\internal\cluster\worker.js&quot; &quot;lib\internal\crypto\certificate.js&quot; &quot;lib\internal\crypto\cipher.js&quot; &quot;lib\internal\crypto\diffiehellman.js&quot; &quot;lib\internal\crypto\hash.js&quot; &quot;lib\internal\crypto\pbkdf2.js&quot; &quot;lib\internal\crypto\random.js&quot; &quot;lib\internal\crypto\scrypt.js&quot; &quot;lib\internal\crypto\sig.js&quot; &quot;lib\internal\crypto\util.js&quot; &quot;lib\internal\constants.js&quot; &quot;lib\internal\dns\promises.js&quot; &quot;lib\internal\dns\utils.js&quot; &quot;lib\internal\domexception.js&quot; &quot;lib\internal\encoding.js&quot; &quot;lib\internal\errors.js&quot; &quot;lib\internal\error-serdes.js&quot; &quot;lib\internal\fixed_queue.js&quot; &quot;lib\internal\freelist.js&quot; &quot;lib\internal\fs\promises.js&quot; &quot;lib\internal\fs\read_file_context.js&quot; &quot;lib\internal\fs\streams.js&quot; &quot;lib\internal\fs\sync_write_stream.js&quot; &quot;lib\internal\fs\utils.js&quot; &quot;lib\internal\fs\watchers.js&quot; &quot;lib\internal\http.js&quot; &quot;lib\internal\inspector_async_hook.js&quot; &quot;lib\internal\linkedlist.js&quot; &quot;lib\internal\modules\cjs\helpers.js&quot; &quot;lib\internal\modules\cjs\loader.js&quot; &quot;lib\internal\modules\esm\loader.js&quot; &quot;lib\internal\modules\esm\create_dynamic_module.js&quot; &quot;lib\internal\modules\esm\default_resolve.js&quot; &quot;lib\internal\modules\esm\module_job.js&quot; &quot;lib\internal\modules\esm\module_map.js&quot; &quot;lib\internal\modules\esm\translators.js&quot; &quot;lib\internal\safe_globals.js&quot; &quot;lib\internal\net.js&quot; &quot;lib\internal\os.js&quot; &quot;lib\internal\priority_queue.js&quot; &quot;lib\internal\process\esm_loader.js&quot; &quot;lib\internal\process\main_thread_only.js&quot; &quot;lib\internal\process\next_tick.js&quot; &quot;lib\internal\process\per_thread.js&quot; &quot;lib\internal\process\promises.js&quot; &quot;lib\internal\process\stdio.js&quot; &quot;lib\internal\process\warning.js&quot; &quot;lib\internal\process\worker_thread_only.js&quot; &quot;lib\internal\querystring.js&quot; &quot;lib\internal\process\write-coverage.js&quot; &quot;lib\internal\readline.js&quot; &quot;lib\internal\repl.js&quot; &quot;lib\internal\repl\await.js&quot; &quot;lib\internal\socket_list.js&quot; &quot;lib\internal\test\binding.js&quot; &quot;lib\internal\test\unicode.js&quot; &quot;lib\internal\timers.js&quot; &quot;lib\internal\tls.js&quot; &quot;lib\internal\trace_events_async_hooks.js&quot; &quot;lib\internal\tty.js&quot; &quot;lib\internal\url.js&quot; &quot;lib\internal\util.js&quot; &quot;lib\internal\util\comparisons.js&quot; &quot;lib\internal\util\inspector.js&quot; &quot;lib\internal\util\types.js&quot; &quot;lib\internal\http2\core.js&quot; &quot;lib\internal\http2\compat.js&quot; &quot;lib\internal\http2\util.js&quot; &quot;lib\internal\v8_prof_polyfill.js&quot; &quot;lib\internal\v8_prof_processor.js&quot; &quot;lib\internal\validators.js&quot; &quot;lib\internal\stream_base_commons.js&quot; &quot;lib\internal\vm\module.js&quot; &quot;lib\internal\worker.js&quot; &quot;lib\internal\streams\lazy_transform.js&quot; &quot;lib\internal\streams\async_iterator.js&quot; &quot;lib\internal\streams\buffer_list.js&quot; &quot;lib\internal\streams\duplexpair.js&quot; &quot;lib\internal\streams\legacy.js&quot; &quot;lib\internal\streams\destroy.js&quot; &quot;lib\internal\streams\state.js&quot; &quot;lib\internal\streams\pipeline.js&quot; &quot;lib\internal\streams\end-of-stream.js&quot; &quot;lib\internal\wrap_js_stream.js&quot; &quot;deps\v8\tools\splaytree.js&quot; &quot;deps\v8\tools\codemap.js&quot; &quot;deps\v8\tools\consarray.js&quot; &quot;deps\v8\tools\csvparser.js&quot; &quot;deps\v8\tools\profile.js&quot; &quot;deps\v8\tools\profile_view.js&quot; &quot;deps\v8\tools\logreader.js&quot; &quot;deps\v8\tools\arguments.js&quot; &quot;deps\v8\tools\tickprocessor.js&quot; &quot;deps\v8\tools\SourceMap.js&quot; &quot;deps\v8\tools\tickprocessor-driver.js&quot; &quot;deps\node-inspect\lib\_inspect.js&quot; &quot;deps\node-inspect\lib\internal\inspect_client.js&quot; &quot;deps\node-inspect\lib\internal\inspect_repl.js&quot; &quot;deps\acorn\dist\acorn.js&quot; &quot;deps\acorn\dist\walk.js&quot; &quot;config.gypi&quot; &quot;tools\check_macros.py&quot; &quot;tools\nodcheck_macros.py&quot;&#xD;&#xA;if %errorlevel% neq 0 exit /b %errorlevel%</Command>
+      <Message>node_js2c</Message>
+      <Outputs>$(OutDir)obj\global_intermediate\node_javascript.cc</Outputs>
+      <AdditionalInputs>lib\internal\bootstrap\cache.js;lib\internal\bootstrap\loaders.js;lib\internal\bootstrap\node.js;lib\async_hooks.js;lib\assert.js;lib\buffer.js;lib\child_process.js;lib\console.js;lib\constants.js;lib\crypto.js;lib\cluster.js;lib\dgram.js;lib\dns.js;lib\domain.js;lib\events.js;lib\fs.js;lib\http.js;lib\http2.js;lib\_http_agent.js;lib\_http_client.js;lib\_http_common.js;lib\_http_incoming.js;lib\_http_outgoing.js;lib\_http_server.js;lib\https.js;lib\inspector.js;lib\module.js;lib\net.js;lib\os.js;lib\path.js;lib\perf_hooks.js;lib\process.js;lib\punycode.js;lib\querystring.js;lib\readline.js;lib\repl.js;lib\stream.js;lib\_stream_readable.js;lib\_stream_writable.js;lib\_stream_duplex.js;lib\_stream_transform.js;lib\_stream_passthrough.js;lib\_stream_wrap.js;lib\string_decoder.js;lib\sys.js;lib\timers.js;lib\tls.js;lib\_tls_common.js;lib\_tls_wrap.js;lib\trace_events.js;lib\tty.js;lib\url.js;lib\util.js;lib\v8.js;lib\vm.js;lib\worker_threads.js;lib\zlib.js;lib\internal\assert.js;lib\internal\async_hooks.js;lib\internal\buffer.js;lib\internal\cli_table.js;lib\internal\child_process.js;lib\internal\cluster\child.js;lib\internal\cluster\master.js;lib\internal\cluster\round_robin_handle.js;lib\internal\cluster\shared_handle.js;lib\internal\cluster\utils.js;lib\internal\cluster\worker.js;lib\internal\crypto\certificate.js;lib\internal\crypto\cipher.js;lib\internal\crypto\diffiehellman.js;lib\internal\crypto\hash.js;lib\internal\crypto\pbkdf2.js;lib\internal\crypto\random.js;lib\internal\crypto\scrypt.js;lib\internal\crypto\sig.js;lib\internal\crypto\util.js;lib\internal\constants.js;lib\internal\dns\promises.js;lib\internal\dns\utils.js;lib\internal\domexception.js;lib\internal\encoding.js;lib\internal\errors.js;lib\internal\error-serdes.js;lib\internal\fixed_queue.js;lib\internal\freelist.js;lib\internal\fs\promises.js;lib\internal\fs\read_file_context.js;lib\internal\fs\streams.js;lib\internal\fs\sync_write_stream.js;lib\internal\fs\utils.js;lib\internal\fs\watchers.js;lib\internal\http.js;lib\internal\inspector_async_hook.js;lib\internal\linkedlist.js;lib\internal\modules\cjs\helpers.js;lib\internal\modules\cjs\loader.js;lib\internal\modules\esm\loader.js;lib\internal\modules\esm\create_dynamic_module.js;lib\internal\modules\esm\default_resolve.js;lib\internal\modules\esm\module_job.js;lib\internal\modules\esm\module_map.js;lib\internal\modules\esm\translators.js;lib\internal\safe_globals.js;lib\internal\net.js;lib\internal\os.js;lib\internal\priority_queue.js;lib\internal\process\esm_loader.js;lib\internal\process\main_thread_only.js;lib\internal\process\next_tick.js;lib\internal\process\per_thread.js;lib\internal\process\promises.js;lib\internal\process\stdio.js;lib\internal\process\warning.js;lib\internal\process\worker_thread_only.js;lib\internal\querystring.js;lib\internal\process\write-coverage.js;lib\internal\readline.js;lib\internal\repl.js;lib\internal\repl\await.js;lib\internal\socket_list.js;lib\internal\test\binding.js;lib\internal\test\unicode.js;lib\internal\timers.js;lib\internal\tls.js;lib\internal\trace_events_async_hooks.js;lib\internal\tty.js;lib\internal\url.js;lib\internal\util.js;lib\internal\util\comparisons.js;lib\internal\util\inspector.js;lib\internal\util\types.js;lib\internal\http2\core.js;lib\internal\http2\compat.js;lib\internal\http2\util.js;lib\internal\v8_prof_polyfill.js;lib\internal\v8_prof_processor.js;lib\internal\validators.js;lib\internal\stream_base_commons.js;lib\internal\vm\module.js;lib\internal\worker.js;lib\internal\streams\lazy_transform.js;lib\internal\streams\async_iterator.js;lib\internal\streams\buffer_list.js;lib\internal\streams\duplexpair.js;lib\internal\streams\legacy.js;lib\internal\streams\destroy.js;lib\internal\streams\state.js;lib\internal\streams\pipeline.js;lib\internal\streams\end-of-stream.js;lib\internal\wrap_js_stream.js;deps\v8\tools\splaytree.js;deps\v8\tools\codemap.js;deps\v8\tools\consarray.js;deps\v8\tools\csvparser.js;deps\v8\tools\profile.js;deps\v8\tools\profile_view.js;deps\v8\tools\logreader.js;deps\v8\tools\arguments.js;deps\v8\tools\tickprocessor.js;deps\v8\tools\SourceMap.js;deps\v8\tools\tickprocessor-driver.js;deps\node-inspect\lib\_inspect.js;deps\node-inspect\lib\internal\inspect_client.js;deps\node-inspect\lib\internal\inspect_repl.js;deps\acorn\dist\acorn.js;deps\acorn\dist\walk.js;config.gypi;tools\check_macros.py;tools\nodcheck_macros.py</AdditionalInputs>
+    </CustomBuild>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+  <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets"/>
+  <ImportGroup Label="ExtensionTargets"/>
+</Project>
