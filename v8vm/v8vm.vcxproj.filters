@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="v8vm.h" />
+    <ClInclude Include="smart_contract.h" />
+    <ClInclude Include="virtual_mation.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="v8vm.cpp" />
+    <ClCompile Include="smart_contract.cpp" />
+    <ClCompile Include="virtual_mation.cpp" />
+  </ItemGroup>
+</Project>
