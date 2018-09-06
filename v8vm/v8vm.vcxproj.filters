@@ -4,10 +4,14 @@
     <ClInclude Include="v8vm.h" />
     <ClInclude Include="smart_contract.h" />
     <ClInclude Include="virtual_mation.h" />
+    <ClInclude Include="v8environment.h" />
+    <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="v8vm.cpp" />
     <ClCompile Include="smart_contract.cpp" />
     <ClCompile Include="virtual_mation.cpp" />
+    <ClCompile Include="v8environment.cpp" />
+    <ClCompile Include="util.cpp" />
   </ItemGroup>
 </Project>

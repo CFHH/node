@@ -175,11 +175,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="smart_contract.h" />
+    <ClInclude Include="util.h" />
+    <ClInclude Include="v8environment.h" />
     <ClInclude Include="v8vm.h" />
     <ClInclude Include="virtual_mation.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="smart_contract.cpp" />
+    <ClCompile Include="util.cpp" />
+    <ClCompile Include="v8environment.cpp" />
     <ClCompile Include="v8vm.cpp" />
     <ClCompile Include="virtual_mation.cpp" />
   </ItemGroup>
