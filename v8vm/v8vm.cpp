@@ -6,14 +6,14 @@
 
 V8Environment* g_environment = NULL;
 
-V8VM_EXPORT void __stdcall InitializeEnvironment()
+V8VM_EXPORT void __stdcall InitializeV8Environment()
 {
     if (g_environment != NULL)
         return;
     g_environment = new V8Environment();
 }
 
-V8VM_EXPORT void __stdcall ShutdownEnvironment()
+V8VM_EXPORT void __stdcall ShutdownV8Environment()
 {
     if (g_environment == NULL)
         return;
@@ -21,9 +21,9 @@ V8VM_EXPORT void __stdcall ShutdownEnvironment()
     g_environment = NULL;
 }
 
-V8VM_EXPORT __int64 __stdcall CreateVirtualMation()
+V8VM_EXPORT __int64 __stdcall CreateV8VirtualMation()
 {
-    if (g_environment != NULL)
+    if (g_environment == NULL)
         return 0;
     V8VirtualMation* vm = g_environment->CreateVirtualMation();
     if (vm == NULL)
@@ -31,16 +31,16 @@ V8VM_EXPORT __int64 __stdcall CreateVirtualMation()
     return vm->VMID();
 }
 
-V8VM_EXPORT void __stdcall DisposeVirtualMation(__int64 vmid)
+V8VM_EXPORT void __stdcall DisposeV8VirtualMation(__int64 vmid)
 {
-    if (g_environment != NULL)
+    if (g_environment == NULL)
         return;
     g_environment->DisposeVirtualMation(vmid);
 }
 
 V8VM_EXPORT bool __stdcall IsSmartContractLoaded(__int64 vmid, const char* contract_name)
 {
-    if (g_environment != NULL)
+    if (g_environment == NULL)
         return false;
     V8VirtualMation* vm = g_environment->GetVirtualMation(vmid);
     if (vm == NULL)
@@ -53,7 +53,7 @@ V8VM_EXPORT bool __stdcall IsSmartContractLoaded(__int64 vmid, const char* contr
 
 V8VM_EXPORT bool __stdcall LoadSmartContractBySourcecode(__int64 vmid, const char* contract_name, const char* sourcecode)
 {
-    if (g_environment != NULL)
+    if (g_environment == NULL)
         return false;
     V8VirtualMation* vm = g_environment->GetVirtualMation(vmid);
     if (vm == NULL)
@@ -83,7 +83,7 @@ V8VM_EXPORT bool __stdcall LoadSmartContractByFileName(__int64 vmid, const char*
 
 V8VM_EXPORT int __stdcall InvokeSmartContract(__int64 vmid, const char* contract_name, int param1, const char* param2)
 {
-    if (g_environment != NULL)
+    if (g_environment == NULL)
         return -1;
     V8VirtualMation* vm = g_environment->GetVirtualMation(vmid);
     if (vm == NULL)

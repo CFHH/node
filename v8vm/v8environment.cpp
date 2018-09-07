@@ -3,7 +3,7 @@
 #include "smart_contract.h"
 
 V8Environment::V8Environment()
-    : m_next_vmid(0)
+    : m_next_vmid(1)
 {
     v8::V8::InitializeICUDefaultLocation(nullptr);
     v8::V8::InitializeExternalStartupData(nullptr);
@@ -33,9 +33,10 @@ void V8Environment::PumpMessage(v8::Isolate* isolate)
 
 V8VirtualMation* V8Environment::CreateVirtualMation()
 {
+    __int64 vmid = m_next_vmid;
     ++m_next_vmid;
-    V8VirtualMation* vm = new V8VirtualMation(this, m_next_vmid);
-    m_vms[m_next_vmid] = vm;
+    V8VirtualMation* vm = new V8VirtualMation(this, vmid);
+    m_vms[vmid] = vm;
     return vm;
 }
 

@@ -3,4 +3,7 @@
   <ItemGroup>
     <ClCompile Include="v8vmtest.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="sample_contract.js" />
+  </ItemGroup>
 </Project>

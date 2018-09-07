@@ -10,10 +10,10 @@
 extern "C" {
 #endif
 
-	V8VM_EXPORT void __stdcall InitializeEnvironment();
-	V8VM_EXPORT void __stdcall ShutdownEnvironment();
-	V8VM_EXPORT __int64 __stdcall CreateVirtualMation();
-	V8VM_EXPORT void __stdcall DisposeVirtualMation(__int64 vmid);
+	V8VM_EXPORT void __stdcall InitializeV8Environment();
+	V8VM_EXPORT void __stdcall ShutdownV8Environment();
+	V8VM_EXPORT __int64 __stdcall CreateV8VirtualMation();
+	V8VM_EXPORT void __stdcall DisposeV8VirtualMation(__int64 vmid);
 	V8VM_EXPORT bool __stdcall IsSmartContractLoaded(__int64 vmid, const char* contract_name);
 	V8VM_EXPORT bool __stdcall LoadSmartContractBySourcecode(__int64 vmid, const char* contract_name, const char* sourcecode);
 	V8VM_EXPORT bool __stdcall LoadSmartContractByFileName(__int64 vmid, const char* contract_name, const char* filename);

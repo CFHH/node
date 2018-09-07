@@ -23,7 +23,7 @@ public:
 
     void InstallMap(v8::Local<v8::Context> context, std::map<std::string, std::string>* stdmap, const char* map_name);
 
-    v8::Local<v8::Object> V8VirtualMation::WrapInvokeParam(v8::Local<v8::Context> context, InvokeParam* param);
+    v8::Local<v8::Object> WrapInvokeParam(v8::Local<v8::Context> context, InvokeParam* param);
 
 private:
     v8::Local<v8::Object> WrapMap(v8::Local<v8::Context> context, std::map<std::string, std::string>* obj);
