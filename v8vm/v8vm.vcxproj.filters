@@ -6,6 +6,7 @@
     <ClInclude Include="virtual_mation.h" />
     <ClInclude Include="v8environment.h" />
     <ClInclude Include="util.h" />
+    <ClInclude Include="v8vm_internal.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="v8vm.cpp" />
@@ -13,5 +14,6 @@
     <ClCompile Include="virtual_mation.cpp" />
     <ClCompile Include="v8environment.cpp" />
     <ClCompile Include="util.cpp" />
+    <ClCompile Include="v8vm_internal.cpp" />
   </ItemGroup>
 </Project>

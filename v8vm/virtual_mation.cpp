@@ -9,6 +9,12 @@ V8VirtualMation::V8VirtualMation(V8Environment* environment, __int64 vmid)
 {
     m_create_params.array_buffer_allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator();
     m_isolate = v8::Isolate::New(m_create_params);
+
+    //m_isolate->AddMessageListener(OnMessage);
+    //m_isolate->SetAbortOnUncaughtExceptionCallback(ShouldAbortOnUncaughtException);
+    //m_isolate->SetMicrotasksPolicy(v8::MicrotasksPolicy::kExplicit);
+    //m_isolate->SetFatalErrorHandler(OnFatalError);
+    //m_isolate->SetAllowWasmCodeGenerationCallback(AllowWasmCodeGenerationCallback);
 }
 
 V8VirtualMation::~V8VirtualMation()

@@ -185,6 +185,7 @@
     <ClInclude Include="util.h" />
     <ClInclude Include="v8environment.h" />
     <ClInclude Include="v8vm.h" />
+    <ClInclude Include="v8vm_internal.h" />
     <ClInclude Include="virtual_mation.h" />
   </ItemGroup>
   <ItemGroup>
@@ -192,6 +193,7 @@
     <ClCompile Include="util.cpp" />
     <ClCompile Include="v8environment.cpp" />
     <ClCompile Include="v8vm.cpp" />
+    <ClCompile Include="v8vm_internal.cpp" />
     <ClCompile Include="virtual_mation.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

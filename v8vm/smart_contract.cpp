@@ -18,6 +18,7 @@ SmartContract::~SmartContract()
 bool SmartContract::Initialize(const char* sourcecode)
 {
     v8::Isolate* isolate = m_vm->GetIsolate();
+    v8::Locker locker(isolate);
     v8::Isolate::Scope isolate_scope(isolate);
     v8::HandleScope handle_scope(isolate);
     int size = strlen(sourcecode);
@@ -65,6 +66,7 @@ bool SmartContract::Initialize(const char* sourcecode)
 bool SmartContract::Invoke(InvokeParam* param)
 {
     v8::Isolate* isolate = m_vm->GetIsolate();
+    v8::Locker locker(isolate);
     v8::Isolate::Scope isolate_scope(isolate);
     v8::HandleScope handle_scope(isolate);
     v8::Local<v8::Context> context = v8::Local<v8::Context>::New(isolate, m_context);
