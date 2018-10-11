@@ -8,7 +8,7 @@ package v8vm
 #include <string.h>
 #include "v8vm.h"
 
-int BalanceTransferStub(__int64 vmid, char* from, char* to, int amount);
+int BalanceTransferStub(__int64 vmid, char* from, char* to, __int64 amount);
 */
 import "C"
 import "unsafe"

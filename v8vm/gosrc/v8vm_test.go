@@ -130,11 +130,11 @@ func TestV8vmCase4(t *testing.T) {
 	if !ok {
 		panic("")
 	}
-	result := InvokeSmartContract(vmid, "balancetransfer_contract", int(vmid), `{ "from":"Zhang3", "to":"Li4", "amount":100 }`)
+	result := InvokeSmartContract(vmid, "balancetransfer_contract", int(vmid), `{ "from":"Zhang3", "to":"Li4", "amount":100123456789 }`)
 	if result != 0 {
 		panic("")
 	}
-	result = InvokeSmartContract(vmid, "balancetransfer_contract", int(vmid), `{ "from":"Li4", "to":"Zhang3", "amount":110 }`)
+	result = InvokeSmartContract(vmid, "balancetransfer_contract", int(vmid), `{ "from":"Li4", "to":"Zhang3", "amount":10123456789 }`)
 	if result != 0 {
 		panic("")
 	}
