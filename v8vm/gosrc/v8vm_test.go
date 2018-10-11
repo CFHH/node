@@ -113,7 +113,7 @@ function Initialize()
 function Process(param)
 {
 	var obj = JSON.parse(param.param2);
-	BalanceTransfer(obj.from, obj.to, obj.amount)
+	BalanceTransfer(param.param1, obj.from, obj.to, obj.amount)
 }
 
 Initialize();
@@ -125,15 +125,16 @@ func TestV8vmCase4(t *testing.T) {
 	if vmid == 0 {
 		panic("")
 	}
+	fmt.Println("vmid = ", vmid)
 	ok := LoadSmartContractBySourcecode(vmid, "balancetransfer_contract", balancetransfer_contract)
 	if !ok {
 		panic("")
 	}
-	result := InvokeSmartContract(vmid, "balancetransfer_contract", 0, `{ "from":"Zhang3", "to":"Li4", "amount":100 }`)
+	result := InvokeSmartContract(vmid, "balancetransfer_contract", int(vmid), `{ "from":"Zhang3", "to":"Li4", "amount":100 }`)
 	if result != 0 {
 		panic("")
 	}
-	result = InvokeSmartContract(vmid, "balancetransfer_contract", 0, `{ "from":"Li4", "to":"Zhang3", "amount":110 }`)
+	result = InvokeSmartContract(vmid, "balancetransfer_contract", int(vmid), `{ "from":"Li4", "to":"Zhang3", "amount":110 }`)
 	if result != 0 {
 		panic("")
 	}

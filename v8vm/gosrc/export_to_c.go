@@ -3,10 +3,10 @@ package v8vm
 /*
 #include <stdio.h>
 
-extern int BalanceTransfer(char*, char*, int);
-int BalanceTransferStub(char* from, char* to, int amount)
+extern int BalanceTransfer(__int64, char*, char*, int);
+int BalanceTransferStub(__int64 vmid, char* from, char* to, int amount)
 {
-	return BalanceTransfer(from, to, amount);
+	return BalanceTransfer(vmid, from, to, amount);
 }
 */
 import "C"
