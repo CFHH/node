@@ -112,8 +112,8 @@ function Initialize()
 
 function Process(param)
 {
-	BalanceTransfer(param.param2, "zhang3", param.param1)
-	log("Process(), " + param.param2 + " = " + param.param1);
+	var obj = JSON.parse(param.param2);
+	BalanceTransfer(obj.from, obj.to, obj.amount)
 }
 
 Initialize();
@@ -129,11 +129,13 @@ func TestV8vmCase4(t *testing.T) {
 	if !ok {
 		panic("")
 	}
-	for i := 0; i < 4; i++ {
-		result := InvokeSmartContract(vmid, "balancetransfer_contract", i+1, "sum")
-		if result != 0 {
-			panic("")
-		}
+	result := InvokeSmartContract(vmid, "balancetransfer_contract", 0, `{ "from":"Zhang3", "to":"Li4", "amount":100 }`)
+	if result != 0 {
+		panic("")
+	}
+	result = InvokeSmartContract(vmid, "balancetransfer_contract", 0, `{ "from":"Li4", "to":"Zhang3", "amount":110 }`)
+	if result != 0 {
+		panic("")
 	}
 	DisposeV8VirtualMation(vmid)
 	ShutdownV8Environment()
