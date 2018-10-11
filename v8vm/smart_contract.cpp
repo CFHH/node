@@ -1,6 +1,7 @@
 #include "smart_contract.h"
 #include "virtual_mation.h"
 #include "util.h"
+#include "v8vmex.h"
 
 SmartContract::SmartContract(V8VirtualMation* vm)
     : m_vm(vm)
@@ -25,8 +26,10 @@ bool SmartContract::Initialize(const char* sourcecode)
     v8::Local<v8::String> source = v8::String::NewFromUtf8(isolate, sourcecode, v8::NewStringType::kNormal, static_cast<int>(size)).ToLocalChecked();
 
     v8::Local<v8::ObjectTemplate> global = v8::ObjectTemplate::New(isolate);
-    global->Set(v8::String::NewFromUtf8(isolate, "log", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(isolate, Log_JS2C));
 
+    //ZZWTODO 实现CommonJS，用require
+    global->Set(v8::String::NewFromUtf8(isolate, "log", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(isolate, Log_JS2C));
+    global->Set(v8::String::NewFromUtf8(isolate, "BalanceTransfer", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(isolate, BalanceTransfer_JS2C));
 
     v8::Local<v8::Context> context = v8::Context::New(isolate, NULL, global);
     v8::Context::Scope context_scope(context);

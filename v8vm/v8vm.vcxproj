@@ -185,6 +185,7 @@
     <ClInclude Include="util.h" />
     <ClInclude Include="v8environment.h" />
     <ClInclude Include="v8vm.h" />
+    <ClInclude Include="v8vmex.h" />
     <ClInclude Include="v8vm_internal.h" />
     <ClInclude Include="virtual_mation.h" />
   </ItemGroup>
@@ -193,8 +194,15 @@
     <ClCompile Include="util.cpp" />
     <ClCompile Include="v8environment.cpp" />
     <ClCompile Include="v8vm.cpp" />
+    <ClCompile Include="v8vmex.cpp" />
     <ClCompile Include="v8vm_internal.cpp" />
     <ClCompile Include="virtual_mation.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="gosrc\export_to_c.go" />
+    <None Include="gosrc\stub_for_c.go" />
+    <None Include="gosrc\stub_for_go.go" />
+    <None Include="gosrc\v8vm_test.go" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

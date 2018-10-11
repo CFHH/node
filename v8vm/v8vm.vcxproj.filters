@@ -7,6 +7,7 @@
     <ClInclude Include="v8environment.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="v8vm_internal.h" />
+    <ClInclude Include="v8vmex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="v8vm.cpp" />
@@ -15,5 +16,25 @@
     <ClCompile Include="v8environment.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="v8vm_internal.cpp" />
+    <ClCompile Include="v8vmex.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="gosrc">
+      <UniqueIdentifier>{f4eea40e-043f-4d6b-8021-d821e44ae9cb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="gosrc\export_to_c.go">
+      <Filter>gosrc</Filter>
+    </None>
+    <None Include="gosrc\stub_for_c.go">
+      <Filter>gosrc</Filter>
+    </None>
+    <None Include="gosrc\stub_for_go.go">
+      <Filter>gosrc</Filter>
+    </None>
+    <None Include="gosrc\v8vm_test.go">
+      <Filter>gosrc</Filter>
+    </None>
   </ItemGroup>
 </Project>
