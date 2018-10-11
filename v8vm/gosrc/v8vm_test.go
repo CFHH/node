@@ -35,13 +35,13 @@ func TestV8vmCase1(t *testing.T) {
 	if vmid == 0 {
 		panic("")
 	}
-	//ok := LoadSmartContractByFileName(vmid, "sample_contract_1", "sample_contract.js")
-	ok := LoadSmartContractBySourcecode(vmid, "sample_contract_1", sample_contract)
+	//ok := LoadSmartContractByFileName(vmid, "sample_contract", "sample_contract.js")
+	ok := LoadSmartContractBySourcecode(vmid, "sample_contract", sample_contract)
 	if !ok {
 		panic("")
 	}
 	for i := 0; i < 4; i++ {
-		result := InvokeSmartContract(vmid, "sample_contract_1", i+1, "sum")
+		result := InvokeSmartContract(vmid, "sample_contract", i+1, "sum")
 		if result != 0 {
 			panic("")
 		}
@@ -60,19 +60,19 @@ func TestV8vmCase2(t *testing.T) {
 	if vmid2 == 0 {
 		panic("")
 	}
-	ok1 := LoadSmartContractBySourcecode(vmid1, "sample_contract_1", sample_contract)
+	ok1 := LoadSmartContractBySourcecode(vmid1, "sample_contract", sample_contract)
 	if !ok1 {
 		panic("")
 	}
-	ok2 := LoadSmartContractBySourcecode(vmid2, "sample_contract_2", sample_contract)
+	ok2 := LoadSmartContractBySourcecode(vmid2, "sample_contract", sample_contract)
 	if !ok2 {
 		panic("")
 	}
-	result1 := InvokeSmartContract(vmid1, "sample_contract_1", 100, "vm1")
+	result1 := InvokeSmartContract(vmid1, "sample_contract", 100, "vm1")
 	if result1 != 0 {
 		panic("")
 	}
-	result2 := InvokeSmartContract(vmid2, "sample_contract_2", 200, "vm2")
+	result2 := InvokeSmartContract(vmid2, "sample_contract", 200, "vm2")
 	if result2 != 0 {
 		panic("")
 	}
@@ -87,13 +87,13 @@ func TestV8vmCase3(t *testing.T) {
 	if vmid == 0 {
 		panic("")
 	}
-	ok := LoadSmartContractBySourcecode(vmid, "sample_contract_1", sample_contract)
+	ok := LoadSmartContractBySourcecode(vmid, "sample_contract", sample_contract)
 	if !ok {
 		panic("")
 	}
 	t1 := time.Now()
 	for i := 0; i < 10000; i++ {
-		result := InvokeSmartContract(vmid, "sample_contract_1", i+1, "sum")
+		result := InvokeSmartContract(vmid, "sample_contract", i+1, "sum")
 		if result != 0 {
 			panic("")
 		}
@@ -112,7 +112,7 @@ function Initialize()
 
 function Process(param)
 {
-	BalanceTransfer(param.param1, param.param2)
+	BalanceTransfer(param.param2, "zhang3", param.param1)
 	log("Process(), " + param.param2 + " = " + param.param1);
 }
 
@@ -125,12 +125,12 @@ func TestV8vmCase4(t *testing.T) {
 	if vmid == 0 {
 		panic("")
 	}
-	ok := LoadSmartContractBySourcecode(vmid, "sample_contract_1", balancetransfer_contract)
+	ok := LoadSmartContractBySourcecode(vmid, "balancetransfer_contract", balancetransfer_contract)
 	if !ok {
 		panic("")
 	}
 	for i := 0; i < 4; i++ {
-		result := InvokeSmartContract(vmid, "sample_contract_1", i+1, "sum")
+		result := InvokeSmartContract(vmid, "balancetransfer_contract", i+1, "sum")
 		if result != 0 {
 			panic("")
 		}

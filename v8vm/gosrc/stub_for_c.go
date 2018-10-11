@@ -8,7 +8,7 @@ import "C"
 import "fmt"
 
 //export BalanceTransfer
-func BalanceTransfer(value1 int32, value2 *C.char) _Ctype_int {
-	fmt.Println("!!!!!!!!!! BalanceTransfer(), value1 =", value1, ", value2 =", C.GoString(value2))
+func BalanceTransfer(from *C.char, to *C.char, amount int32) _Ctype_int {
+	fmt.Println("!!!!!!!!!! BalanceTransfer(), from =", C.GoString(from), ", to =", C.GoString(to), ", value2 =", amount)
 	return 0
 }
