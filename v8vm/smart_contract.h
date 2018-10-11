@@ -5,6 +5,7 @@
 #include "v8.h"
 
 #define SMART_CONTRACT_PROCESS "Process"
+#define INVOKE_PARAM_PARAM0 "param0"
 #define INVOKE_PARAM_PARAM1 "param1"
 #define INVOKE_PARAM_PARAM2 "param2"
 
@@ -12,6 +13,7 @@ class V8VirtualMation;
 
 struct InvokeParam
 {
+    int param0;  //ZZWTODO 需要改V8支持64，用来表示vmid
     int param1;
     std::string param2;
 };

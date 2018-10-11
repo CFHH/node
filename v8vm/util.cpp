@@ -61,6 +61,29 @@ void MapSet_JS2C(v8::Local<v8::Name> key_obj, v8::Local<v8::Value> value_obj, co
     info.GetReturnValue().Set(value_obj);
 }
 
+void GetInvokeParam_JS2C(v8::Local<v8::String> name, const v8::PropertyCallbackInfo<v8::Value>& info)
+{
+    InvokeParam* param = V8Object2InvokeParam(info.Holder());
+    if (param == NULL)
+        return;
+    v8::String::Utf8Value utf8_value(info.GetIsolate(), v8::Local<v8::String>::Cast(name));
+    char* field = *utf8_value;
+    if (strcmp(field, INVOKE_PARAM_PARAM0) == 0)
+        info.GetReturnValue().Set(param->param0);
+    else if (strcmp(field, INVOKE_PARAM_PARAM1) == 0)
+        info.GetReturnValue().Set(param->param1);
+    else if (strcmp(field, INVOKE_PARAM_PARAM2) == 0)
+        info.GetReturnValue().Set(v8::String::NewFromUtf8(info.GetIsolate(), param->param2.c_str(), v8::NewStringType::kNormal, static_cast<int>(param->param2.length())).ToLocalChecked());
+}
+
+void GetInvokeParam0_JS2C(v8::Local<v8::String> name, const v8::PropertyCallbackInfo<v8::Value>& info)
+{
+    InvokeParam* param = V8Object2InvokeParam(info.Holder());
+    if (param == NULL)
+        return;
+    info.GetReturnValue().Set(param->param0);
+}
+
 
 void GetInvokeParam1_JS2C(v8::Local<v8::String> name, const v8::PropertyCallbackInfo<v8::Value>& info)
 {

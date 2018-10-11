@@ -31,10 +31,35 @@ void V8Environment::PumpMessage(v8::Isolate* isolate)
         continue;
 }
 
-V8VirtualMation* V8Environment::CreateVirtualMation()
+V8VirtualMation* V8Environment::CreateVirtualMation(__int64 expected_vmid)
 {
-    __int64 vmid = m_next_vmid;
-    ++m_next_vmid;
+    __int64 vmid = expected_vmid;
+    if (expected_vmid != 0)
+    {
+        if (m_vms.find(expected_vmid) != m_vms.end())
+            return NULL;
+    }
+    else
+    {
+        while (true)
+        {
+            if (m_vms.find(m_next_vmid) != m_vms.end())
+            {
+                if (++m_next_vmid == 0)
+                    ++m_next_vmid;
+            }
+            else
+            {
+                vmid = m_next_vmid;
+                if (++m_next_vmid == 0)
+                    ++m_next_vmid;
+                break;
+            }
+        }
+    }
+    //__int64 vmid = m_next_vmid;
+    //if (++m_next_vmid == 0)
+    //    ++m_next_vmid;
     V8VirtualMation* vm = new V8VirtualMation(this, vmid);
     m_vms[vmid] = vm;
     return vm;

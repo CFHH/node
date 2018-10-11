@@ -31,7 +31,7 @@ Initialize();
 
 func TestV8vmCase1(t *testing.T) {
 	InitializeV8Environment()
-	vmid := CreateV8VirtualMation()
+	vmid := CreateV8VirtualMation(0)
 	if vmid == 0 {
 		panic("")
 	}
@@ -52,11 +52,11 @@ func TestV8vmCase1(t *testing.T) {
 
 func TestV8vmCase2(t *testing.T) {
 	InitializeV8Environment()
-	vmid1 := CreateV8VirtualMation()
+	vmid1 := CreateV8VirtualMation(0)
 	if vmid1 == 0 {
 		panic("")
 	}
-	vmid2 := CreateV8VirtualMation()
+	vmid2 := CreateV8VirtualMation(0)
 	if vmid2 == 0 {
 		panic("")
 	}
@@ -83,7 +83,7 @@ func TestV8vmCase2(t *testing.T) {
 
 func TestV8vmCase3(t *testing.T) {
 	InitializeV8Environment()
-	vmid := CreateV8VirtualMation()
+	vmid := CreateV8VirtualMation(0)
 	if vmid == 0 {
 		panic("")
 	}
@@ -113,7 +113,7 @@ function Initialize()
 function Process(param)
 {
 	var obj = JSON.parse(param.param2);
-	BalanceTransfer(param.param1, obj.from, obj.to, obj.amount)
+	BalanceTransfer(param.param0, obj.from, obj.to, obj.amount)
 }
 
 Initialize();
@@ -121,7 +121,7 @@ Initialize();
 
 func TestV8vmCase4(t *testing.T) {
 	InitializeV8Environment()
-	vmid := CreateV8VirtualMation()
+	vmid := CreateV8VirtualMation(123)
 	if vmid == 0 {
 		panic("")
 	}
@@ -130,11 +130,11 @@ func TestV8vmCase4(t *testing.T) {
 	if !ok {
 		panic("")
 	}
-	result := InvokeSmartContract(vmid, "balancetransfer_contract", int(vmid), `{ "from":"Zhang3", "to":"Li4", "amount":100123456789 }`)
+	result := InvokeSmartContract(vmid, "balancetransfer_contract", 0, `{ "from":"Zhang3", "to":"Li4", "amount":100123456789 }`)
 	if result != 0 {
 		panic("")
 	}
-	result = InvokeSmartContract(vmid, "balancetransfer_contract", int(vmid), `{ "from":"Li4", "to":"Zhang3", "amount":10123456789 }`)
+	result = InvokeSmartContract(vmid, "balancetransfer_contract", 0, `{ "from":"Li4", "to":"Zhang3", "amount":10123456789 }`)
 	if result != 0 {
 		panic("")
 	}

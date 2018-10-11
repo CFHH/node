@@ -7,7 +7,7 @@
 //int main(int argc, char* argv[])
 //{
 //    InitializeV8Environment();
-//    __int64 vmid = CreateV8VirtualMation();
+//    __int64 vmid = CreateV8VirtualMation(0);
 //    if (vmid == 0)
 //        return 1;
 //    bool ok1 = LoadSmartContractByFileName(vmid, "sample_contract_1", "E:/Github/node/v8vmtest/sample_contract.js");
@@ -27,10 +27,10 @@
 //int main(int argc, char* argv[])
 //{
 //    InitializeV8Environment();
-//    __int64 vmid1 = CreateV8VirtualMation();
+//    __int64 vmid1 = CreateV8VirtualMation(0);
 //    if (vmid1 == 0)
 //        return 1;
-//    __int64 vmid2 = CreateV8VirtualMation();
+//    __int64 vmid2 = CreateV8VirtualMation(0);
 //    if (vmid2 == 0)
 //        return 1;
 //    bool ok1 = LoadSmartContractByFileName(vmid1, "sample_contract_1", "E:/Github/node/v8vmtest/sample_contract.js");
@@ -55,7 +55,7 @@
 int main(int argc, char* argv[])
 {
     InitializeV8Environment();
-    __int64 vmid = CreateV8VirtualMation();
+    __int64 vmid = CreateV8VirtualMation(0);
     if (vmid == 0)
         return 1;
     bool ok1 = LoadSmartContractByFileName(vmid, "sample_contract_1", "E:/Github/node/v8vmtest/sample_contract.js");

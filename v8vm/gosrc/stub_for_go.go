@@ -26,8 +26,9 @@ func ShutdownV8Environment() {
 	C.ShutdownV8Environment()
 }
 
-func CreateV8VirtualMation() int64 {
-	vmid := C.CreateV8VirtualMation()
+func CreateV8VirtualMation(expected_vmid int64) int64 {
+	cid := C.longlong(expected_vmid)
+	vmid := C.CreateV8VirtualMation(cid)
 	return int64(vmid)
 }
 

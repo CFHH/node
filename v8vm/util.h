@@ -14,6 +14,8 @@ InvokeParam* V8Object2InvokeParam(v8::Local<v8::Object> obj);
 
 void MapGet_JS2C(v8::Local<v8::Name> key_obj, const v8::PropertyCallbackInfo<v8::Value>& info);
 void MapSet_JS2C(v8::Local<v8::Name> key_obj, v8::Local<v8::Value> value_obj, const v8::PropertyCallbackInfo<v8::Value>& info);
+void GetInvokeParam_JS2C(v8::Local<v8::String> name, const v8::PropertyCallbackInfo<v8::Value>& info);
+void GetInvokeParam0_JS2C(v8::Local<v8::String> name, const v8::PropertyCallbackInfo<v8::Value>& info);
 void GetInvokeParam1_JS2C(v8::Local<v8::String> name, const v8::PropertyCallbackInfo<v8::Value>& info);
 void GetInvokeParam2_JS2C(v8::Local<v8::String> name, const v8::PropertyCallbackInfo<v8::Value>& info);
 

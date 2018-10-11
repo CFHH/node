@@ -13,7 +13,7 @@ public:
     ~V8Environment();
     v8::Platform* GetPlatform() {  return m_platform.get(); }
     void PumpMessage(v8::Isolate* isolate);
-    V8VirtualMation* CreateVirtualMation();
+    V8VirtualMation* CreateVirtualMation(__int64 expected_vmid);
     void DisposeVirtualMation(__int64 vmid);
     V8VirtualMation* GetVirtualMation(__int64 vmid);
 

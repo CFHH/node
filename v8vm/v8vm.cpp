@@ -21,11 +21,11 @@ V8VM_EXTERN void __stdcall ShutdownV8Environment()
     g_environment = NULL;
 }
 
-V8VM_EXTERN __int64 __stdcall CreateV8VirtualMation()
+V8VM_EXTERN __int64 __stdcall CreateV8VirtualMation(__int64 expected_vmid)
 {
     if (g_environment == NULL)
         return 0;
-    V8VirtualMation* vm = g_environment->CreateVirtualMation();
+    V8VirtualMation* vm = g_environment->CreateVirtualMation(expected_vmid);
     if (vm == NULL)
         return 0;
     return vm->VMID();
@@ -93,6 +93,7 @@ V8VM_EXTERN int __stdcall InvokeSmartContract(__int64 vmid, const char* contract
         return -1;
 
     InvokeParam param;
+    param.param0 = int(vmid); //ZZWTODO
     param.param1 = param1;
     param.param2 = param2;
     bool result = contract->Invoke(&param);
