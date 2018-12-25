@@ -3,6 +3,7 @@
 #include <map>
 #include "libplatform/libplatform.h"
 #include "v8.h"
+#include "platform.h"
 
 #define SMART_CONTRACT_PROCESS "Process"
 #define INVOKE_PARAM_PARAM0 "param0"

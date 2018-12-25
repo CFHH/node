@@ -181,6 +181,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="platform.h" />
     <ClInclude Include="smart_contract.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="v8environment.h" />

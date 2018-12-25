@@ -4,6 +4,7 @@
 #include <string>
 #include "libplatform/libplatform.h"
 #include "v8.h"
+#include "platform.h"
 
 struct InvokeParam;
 

@@ -3,6 +3,7 @@
 #include <map>
 #include "libplatform/libplatform.h"
 #include "v8.h"
+#include "platform.h"
 
 class V8Environment;
 class SmartContract;
@@ -11,10 +12,10 @@ struct InvokeParam;
 class V8VirtualMation
 {
 public:
-    explicit V8VirtualMation(V8Environment* environment, __int64 vmid);
+    explicit V8VirtualMation(V8Environment* environment, Int64 vmid);
     ~V8VirtualMation();
     v8::Isolate* GetIsolate() { return m_isolate; }
-    __int64 VMID() { return m_vmid; }
+    Int64 VMID() { return m_vmid; }
     bool IsInUse();
     void PumpMessage();
 
@@ -33,7 +34,7 @@ private:
 
 private:
     V8Environment* m_environment;
-    __int64 m_vmid;
+    Int64 m_vmid;
     v8::Isolate::CreateParams m_create_params;
     v8::Isolate* m_isolate;
     v8::Global<v8::ObjectTemplate> m_map_template;

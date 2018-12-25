@@ -3,7 +3,7 @@
 #include "smart_contract.h"
 #include "util.h"
 
-V8VirtualMation::V8VirtualMation(V8Environment* environment, __int64 vmid)
+V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
     : m_environment(environment)
     , m_vmid(vmid)
 {

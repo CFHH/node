@@ -8,6 +8,7 @@
     <ClInclude Include="util.h" />
     <ClInclude Include="v8vm_internal.h" />
     <ClInclude Include="v8vmex.h" />
+    <ClInclude Include="platform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="v8vm.cpp" />

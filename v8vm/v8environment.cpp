@@ -14,7 +14,7 @@ V8Environment::V8Environment()
 
 V8Environment::~V8Environment()
 {
-    for (std::map<__int64, V8VirtualMation*>::iterator itr = m_vms.begin(); itr != m_vms.end(); ++itr)
+    for (std::map<Int64, V8VirtualMation*>::iterator itr = m_vms.begin(); itr != m_vms.end(); ++itr)
     {
         V8VirtualMation* vm = itr->second;
         delete vm;
@@ -31,9 +31,9 @@ void V8Environment::PumpMessage(v8::Isolate* isolate)
         continue;
 }
 
-V8VirtualMation* V8Environment::CreateVirtualMation(__int64 expected_vmid)
+V8VirtualMation* V8Environment::CreateVirtualMation(Int64 expected_vmid)
 {
-    __int64 vmid = expected_vmid;
+    Int64 vmid = expected_vmid;
     if (expected_vmid != 0)
     {
         if (m_vms.find(expected_vmid) != m_vms.end())
@@ -57,7 +57,7 @@ V8VirtualMation* V8Environment::CreateVirtualMation(__int64 expected_vmid)
             }
         }
     }
-    //__int64 vmid = m_next_vmid;
+    //Int64 vmid = m_next_vmid;
     //if (++m_next_vmid == 0)
     //    ++m_next_vmid;
     V8VirtualMation* vm = new V8VirtualMation(this, vmid);
@@ -65,9 +65,9 @@ V8VirtualMation* V8Environment::CreateVirtualMation(__int64 expected_vmid)
     return vm;
 }
 
-void V8Environment::DisposeVirtualMation(__int64 vmid)
+void V8Environment::DisposeVirtualMation(Int64 vmid)
 {
-    std::map<__int64, V8VirtualMation*>::iterator itr = m_vms.find(vmid);
+    std::map<Int64, V8VirtualMation*>::iterator itr = m_vms.find(vmid);
     if (itr == m_vms.end())
         return;
     V8VirtualMation* vm = itr->second;
@@ -75,9 +75,9 @@ void V8Environment::DisposeVirtualMation(__int64 vmid)
     delete vm;
 }
 
-V8VirtualMation* V8Environment::GetVirtualMation(__int64 vmid)
+V8VirtualMation* V8Environment::GetVirtualMation(Int64 vmid)
 {
-    std::map<__int64, V8VirtualMation*>::iterator itr = m_vms.find(vmid);
+    std::map<Int64, V8VirtualMation*>::iterator itr = m_vms.find(vmid);
     if (itr == m_vms.end())
         return NULL;
     V8VirtualMation* vm = itr->second;
