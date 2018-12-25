@@ -15,6 +15,7 @@ public:
     ~V8VirtualMation();
     v8::Isolate* GetIsolate() { return m_isolate; }
     __int64 VMID() { return m_vmid; }
+    bool IsInUse();
     void PumpMessage();
 
     SmartContract* CreateSmartContract(const char* contract_name, const char* sourcecode);

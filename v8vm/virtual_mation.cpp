@@ -33,6 +33,11 @@ V8VirtualMation::~V8VirtualMation()
     m_environment = NULL;
 }
 
+bool V8VirtualMation::IsInUse()
+{
+    return m_isolate->IsInUse();
+}
+
 void V8VirtualMation::PumpMessage()
 {
     m_environment->PumpMessage(m_isolate);

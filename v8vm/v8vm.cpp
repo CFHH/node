@@ -4,6 +4,41 @@
 #include "smart_contract.h"
 #include "util.h"
 
+/*
+参考 https://v8.dev/docs/build
+假设工作目录是/PATH
+一、安装depot_tools
+    git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+        写入环境变量~/.bashr，export PATH=$PATH:/PATH/depot_tools
+    gclient
+二、得v8代码
+    mkdir /PATH/v8
+    cd /PATH/v8
+    fetch v8
+    cd /PATH/v8/v8
+    gclient sync
+    ./build/install-build-deps.sh
+三、编译
+    cd /PATH/v8/v8
+    git pull && gclient sync
+    tools/dev/gm.py x64.release 或 tools/dev/gm.py x64.release.check(编完跑测试用例)
+四、用GN编译成动态库
+    参考 https://v8.dev/docs/build-gn
+    参考 https://blog.scaleprocess.net/building-v8-on-arch-linux/
+    1、创建out.gn目录，导入默认的配置x64.release
+        tools/dev/v8gen.py x64.release
+    2、编辑配置
+        gn args out.gn/x64.release
+        如果要编译动态库，添加
+            is_component_build = true
+    3、编译
+        ninja -C out.gn/x64.release
+        如果要编译静态库（并不是这样）
+            ninja -C out.gn/x64.release v8
+    4、编译产物
+        out.gn/x64.release/*.so
+*/
+
 V8Environment* g_environment = NULL;
 
 V8VM_EXTERN void __stdcall InitializeV8Environment()
@@ -36,6 +71,16 @@ V8VM_EXTERN void __stdcall DisposeV8VirtualMation(__int64 vmid)
     if (g_environment == NULL)
         return;
     g_environment->DisposeVirtualMation(vmid);
+}
+
+V8VM_EXTERN bool __stdcall IsV8VirtualMationInUse(__int64 vmid)
+{
+    if (g_environment == NULL)
+        return false;
+    V8VirtualMation* vm = g_environment->GetVirtualMation(vmid);
+    if (vm == NULL)
+        return false;
+    return vm->IsInUse();
 }
 
 V8VM_EXTERN bool __stdcall IsSmartContractLoaded(__int64 vmid, const char* contract_name)
