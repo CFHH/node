@@ -1,6 +1,7 @@
 #include "util.h"
 #include <stdarg.h>
 #include "smart_contract.h"
+#include <string.h>
 
 #define LOG_BUF_SIZE 1024
 
@@ -169,7 +170,11 @@ void Log(const char *format, ...)
     char buf[LOG_BUF_SIZE] = { 0 };
     va_list argptr;
     va_start(argptr, format);
+#ifdef _MSC_VER
     vsprintf_s(buf, LOG_BUF_SIZE - 1, format, argptr);
+#else
+    vsprintf(buf, format, argptr);
+#endif
     va_end(argptr);
     printf("%s\n", buf);
 }

@@ -2,6 +2,7 @@
 #include "virtual_mation.h"
 #include "util.h"
 #include "v8vmex.h"
+#include <string.h>
 
 SmartContract::SmartContract(V8VirtualMation* vm)
     : m_vm(vm)

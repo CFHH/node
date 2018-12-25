@@ -4,7 +4,7 @@
 
 BalanceTransfer_callback BalanceTransfer = NULL;
 
-V8VM_EXTERN void __stdcall SetBalanceTransfer(BalanceTransfer_callback fn)
+V8VM_EXTERN void V8VM_STDCALL SetBalanceTransfer(BalanceTransfer_callback fn)
 {
     BalanceTransfer = fn;
 }

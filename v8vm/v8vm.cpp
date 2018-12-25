@@ -41,14 +41,14 @@
 
 V8Environment* g_environment = NULL;
 
-V8VM_EXTERN void __stdcall InitializeV8Environment()
+V8VM_EXTERN void V8VM_STDCALL InitializeV8Environment()
 {
     if (g_environment != NULL)
         return;
     g_environment = new V8Environment();
 }
 
-V8VM_EXTERN void __stdcall ShutdownV8Environment()
+V8VM_EXTERN void V8VM_STDCALL ShutdownV8Environment()
 {
     if (g_environment == NULL)
         return;
@@ -56,7 +56,7 @@ V8VM_EXTERN void __stdcall ShutdownV8Environment()
     g_environment = NULL;
 }
 
-V8VM_EXTERN Int64 __stdcall CreateV8VirtualMation(Int64 expected_vmid)
+V8VM_EXTERN Int64 V8VM_STDCALL CreateV8VirtualMation(Int64 expected_vmid)
 {
     if (g_environment == NULL)
         return 0;
@@ -66,14 +66,14 @@ V8VM_EXTERN Int64 __stdcall CreateV8VirtualMation(Int64 expected_vmid)
     return vm->VMID();
 }
 
-V8VM_EXTERN void __stdcall DisposeV8VirtualMation(Int64 vmid)
+V8VM_EXTERN void V8VM_STDCALL DisposeV8VirtualMation(Int64 vmid)
 {
     if (g_environment == NULL)
         return;
     g_environment->DisposeVirtualMation(vmid);
 }
 
-V8VM_EXTERN bool __stdcall IsV8VirtualMationInUse(Int64 vmid)
+V8VM_EXTERN bool V8VM_STDCALL IsV8VirtualMationInUse(Int64 vmid)
 {
     if (g_environment == NULL)
         return false;
@@ -83,7 +83,7 @@ V8VM_EXTERN bool __stdcall IsV8VirtualMationInUse(Int64 vmid)
     return vm->IsInUse();
 }
 
-V8VM_EXTERN bool __stdcall IsSmartContractLoaded(Int64 vmid, const char* contract_name)
+V8VM_EXTERN bool V8VM_STDCALL IsSmartContractLoaded(Int64 vmid, const char* contract_name)
 {
     if (g_environment == NULL)
         return false;
@@ -96,7 +96,7 @@ V8VM_EXTERN bool __stdcall IsSmartContractLoaded(Int64 vmid, const char* contrac
     return true;
 }
 
-V8VM_EXTERN bool __stdcall LoadSmartContractBySourcecode(Int64 vmid, const char* contract_name, const char* sourcecode)
+V8VM_EXTERN bool V8VM_STDCALL LoadSmartContractBySourcecode(Int64 vmid, const char* contract_name, const char* sourcecode)
 {
     if (g_environment == NULL)
         return false;
@@ -112,7 +112,7 @@ V8VM_EXTERN bool __stdcall LoadSmartContractBySourcecode(Int64 vmid, const char*
     return true;
 }
 
-V8VM_EXTERN bool __stdcall LoadSmartContractByFileName(Int64 vmid, const char* contract_name, const char* filename)
+V8VM_EXTERN bool V8VM_STDCALL LoadSmartContractByFileName(Int64 vmid, const char* contract_name, const char* filename)
 {
     char* buf = NULL;
     bool result = ReadScriptFile(filename, buf);
@@ -126,7 +126,7 @@ V8VM_EXTERN bool __stdcall LoadSmartContractByFileName(Int64 vmid, const char* c
     return result;
 }
 
-V8VM_EXTERN int __stdcall InvokeSmartContract(Int64 vmid, const char* contract_name, int param1, const char* param2)
+V8VM_EXTERN int V8VM_STDCALL InvokeSmartContract(Int64 vmid, const char* contract_name, int param1, const char* param2)
 {
     if (g_environment == NULL)
         return -1;
