@@ -5,6 +5,7 @@
 #include "util.h"
 
 /*
+*****编译V8*****
 参考 https://v8.dev/docs/build
 假设工作目录是/PATH
 一、安装depot_tools
@@ -37,6 +38,77 @@
             ninja -C out.gn/x64.release v8
     4、编译产物
         out.gn/x64.release/*.so
+五、编出来的so貌似没什么用
+*/
+/*
+*****编译NODE*****
+一、Windows
+    编译
+        .\vcbuild
+    编译产物
+        icudata.lib
+        icui18n.lib
+        icustubdata.lib
+        icutools.lib
+        icuucx.lib
+        v8_base_0.lib
+        v8_base_1.lib
+        v8_base_2.lib
+        v8_base_3.lib
+        v8_init.lib
+        v8_initializers.lib
+        v8_libbase.lib
+        v8_libplatform.lib
+        v8_libsampler.lib
+        v8_snapshot.lib
+        zlib.lib
+二、Linux
+    编译
+        ./configure
+            修改这个 node/out/Release/v8_build_config.json
+        make -j4
+    编译产物
+        node/out/Release/obj.target/deps/uv/gypfiles/
+            libuv.a
+        node/out/Release/obj.target/deps/v8/gypfiles/
+            libv8_base.a
+            libv8_init.a
+            libv8_initializers.a
+            libv8_libbase.a
+            libv8_libplatform.a
+            libv8_libsampler.a
+            ***libv8_nosnapshot.a
+            libv8_snapshot.a
+        node/out/Release/obj.target/deps/zlib/gypfiles/
+            libzlib.a
+N、最早的编译从node的静态库中抄了那么多预处理器定义
+NDEBUG
+_CONSOLE
+LIBV8VM
+_WINDOWS
+_USRDLL
+WIN32
+_CRT_SECURE_NO_DEPRECATE
+_CRT_NONSTDC_NO_DEPRECATE
+_HAS_EXCEPTIONS=0
+BUILDING_V8_SHARED=1
+BUILDING_UV_SHARED=1
+FD_SETSIZE=1024
+NODE_PLATFORM="win32"
+NOMINMAX
+_UNICODE=1
+NODE_USE_V8_PLATFORM=1
+NODE_HAVE_I18N_SUPPORT=1
+NODE_HAVE_SMALL_ICU=1
+HAVE_OPENSSL=1
+UCONFIG_NO_SERVICE=1
+UCONFIG_NO_REGULAR_EXPRESSIONS=1
+U_ENABLE_DYLOAD=0
+U_STATIC_IMPLEMENTATION=1
+U_HAVE_STD_STRING=1
+UCONFIG_NO_BREAK_ITERATION=0
+HTTP_PARSER_STRICT=0
+NGHTTP2_STATICLIB
 */
 
 V8Environment* g_environment = NULL;
