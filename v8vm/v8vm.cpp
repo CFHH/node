@@ -64,8 +64,7 @@
         zlib.lib
 二、Linux
     编译
-        ./configure
-            修改这个 node/out/Release/v8_build_config.json
+        ./configure --shared
         make -j4
     编译产物
         node/out/Release/obj.target/deps/uv/gypfiles/
@@ -81,7 +80,8 @@
             libv8_snapshot.a
         node/out/Release/obj.target/deps/zlib/gypfiles/
             libzlib.a
-N、最早的编译从node的静态库中抄了那么多预处理器定义
+
+三、最早的编译从node的静态库中抄了那么多预处理器定义，备份一下
 NDEBUG
 _CONSOLE
 LIBV8VM

@@ -116,7 +116,7 @@
       <OptimizeReferences>
       </OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>icudata.lib;icui18n.lib;icustubdata.lib;icutools.lib;icuucx.lib;v8_base_0.lib;v8_base_1.lib;v8_base_2.lib;v8_base_3.lib;v8_init.lib;v8_initializers.lib;v8_libbase.lib;v8_libplatform.lib;v8_libsampler.lib;v8_snapshot.lib;zlib.lib;dbghelp.lib;shlwapi.lib;winmm.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>v8_base_0.lib;v8_base_1.lib;v8_base_2.lib;v8_base_3.lib;v8_init.lib;v8_initializers.lib;v8_libbase.lib;v8_libplatform.lib;v8_libsampler.lib;v8_snapshot.lib;icudata.lib;icui18n.lib;icustubdata.lib;icutools.lib;icuucx.lib;zlib.lib;dbghelp.lib;shlwapi.lib;winmm.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateMapFile>true</GenerateMapFile>
       <MapExports>true</MapExports>
     </Link>
@@ -157,7 +157,7 @@
       <SubSystem>
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>icudata.lib;icui18n.lib;icustubdata.lib;icutools.lib;icuucx.lib;v8_base_0.lib;v8_base_1.lib;v8_base_2.lib;v8_base_3.lib;v8_init.lib;v8_initializers.lib;v8_libbase.lib;v8_libplatform.lib;v8_libsampler.lib;v8_snapshot.lib;zlib.lib;dbghelp.lib;shlwapi.lib;winmm.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>v8_base_0.lib;v8_base_1.lib;v8_base_2.lib;v8_base_3.lib;v8_init.lib;v8_initializers.lib;v8_libbase.lib;v8_libplatform.lib;v8_libsampler.lib;v8_snapshot.lib;icudata.lib;icui18n.lib;icustubdata.lib;icutools.lib;icuucx.lib;zlib.lib;dbghelp.lib;shlwapi.lib;winmm.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateMapFile>false</GenerateMapFile>
       <MapExports>false</MapExports>
     </Link>

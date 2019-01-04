@@ -14,8 +14,8 @@ typedef unsigned __int64 Uint64;
 #define INT64LIT(x) x##i64
 #define UINT64LIT(x) x##ui64
 #elif (_LP64 || __LP64__)
-typedef signed long Int64;
-typedef unsigned long Uint64;
+typedef signed long long Int64;
+typedef unsigned long long Uint64;
 #define INT64LIT(x) x##L
 #define UINT64LIT(x) x##UL
 #else

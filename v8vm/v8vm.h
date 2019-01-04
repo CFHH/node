@@ -1,27 +1,17 @@
 #pragma once
 #include "platform.h"
 
-#if defined (__GNUC__)
-#define __V8VM_DECLSPEC_EXPORT  
-#define __V8VM_DECLSPEC_IMPORT  
-#define V8VM_STDCALL __attribute__((__stdcall__))
-#elif defined (_MSC_VER) || defined (__BORLANDC__) || defined (__ORANGEC__)
+#if defined(_MSC_VER)
 #define __V8VM_DECLSPEC_EXPORT  __declspec(dllexport)
 #define __V8VM_DECLSPEC_IMPORT  __declspec(dllimport)
 #define V8VM_STDCALL __stdcall
-#elif defined (__WATCOMC__)
-#define __V8VM_DECLSPEC_EXPORT  __export
-#define __V8VM_DECLSPEC_IMPORT  __import
-#define V8VM_STDCALL __stdcall
-#elif defined (__IBMC__)
-#define __V8VM_DECLSPEC_EXPORT  _Export
-#define __V8VM_DECLSPEC_IMPORT  _Import
-#define V8VM_STDCALL __stdcall
 #else
-#define __V8VM_DECLSPEC_EXPORT
+#define __V8VM_DECLSPEC_EXPORT  
 #define __V8VM_DECLSPEC_IMPORT
-#define V8VM_STDCALL __stdcall
+#define V8VM_STDCALL 
+//#define V8VM_STDCALL __attribute__((__stdcall__))
 #endif
+
 
 #ifdef LIBV8VM
 #define V8VM_EXTERN  __V8VM_DECLSPEC_EXPORT
