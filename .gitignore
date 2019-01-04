@@ -135,3 +135,6 @@ deps/v8/third_party/eu-strip/
 *.VC.db
 *.VC.db-shm
 *.VC.db-wal
+
+v8vm/build
+v8vmtest/build
