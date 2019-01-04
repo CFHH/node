@@ -9,8 +9,4 @@ AUX_SOURCE_DIRECTORY(. DIR_SRCS)
 
 ADD_EXECUTABLE(v8vmtest ${DIR_SRCS})
 
-SET(EXTRA_LIBS libv8vm.so 
-	libv8.so
-	libpthread.so)
-
-TARGET_LINK_LIBRARIES(v8vmtest ${EXTRA_LIBS})
+TARGET_LINK_LIBRARIES(v8vmtest libv8vm.so)
