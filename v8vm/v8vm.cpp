@@ -5,6 +5,35 @@
 #include "util.h"
 
 /*
+*****Gosig虚拟机的编译方法*****
+一、Windows
+    1、node.sln（通过.\vcbuild得到）
+    2、v8vm.sln
+二、Linux
+    1、编译node
+        ./configure --shared
+        make -j4
+    2、生成/usr/lib/libv8.so
+        sudo ./genlibv8.sh
+    3、生成/usr/lib/libv8vm.so（确认在node根目录）
+        cd v8vm
+        rm -r build/
+        mkdir build
+        cd build
+        cmake ..
+        make
+        sudo cp ./libv8vm.so /usr/lib
+    4、测试（先回到node根目录）
+        cd v8vmtest
+        rm -r build/
+        mkdir build
+        cd build
+        cmake ..
+        make
+        ./v8vmtest
+*/
+
+/*
 *****编译V8*****
 参考 https://v8.dev/docs/build
 假设工作目录是/PATH
@@ -40,12 +69,14 @@
         out.gn/x64.release/*.so
 五、编出来的so貌似没什么用
 */
+
 /*
 *****编译NODE*****
 一、Windows
     编译
         .\vcbuild
-    编译产物
+        得到 node.sln
+    编译中间产物
         icudata.lib
         icui18n.lib
         icustubdata.lib
@@ -66,7 +97,7 @@
     编译
         ./configure --shared
         make -j4
-    编译产物
+    编译中间产物（没什么用）
         node/out/Release/obj.target/deps/uv/gypfiles/
             libuv.a
         node/out/Release/obj.target/deps/v8/gypfiles/
