@@ -2,14 +2,17 @@
 #include "virtual_mation.h"
 #include "smart_contract.h"
 
+bool v8_initialized = false;
+
 V8Environment::V8Environment()
     : m_next_vmid(1)
 {
     v8::V8::InitializeICUDefaultLocation(nullptr);
     v8::V8::InitializeExternalStartupData(nullptr);
-    m_platform = v8::platform::NewDefaultPlatform();
+    m_platform = v8::platform::NewDefaultPlatform(); //ZZWTODO 替换为V8Platform，m_platform的类型要改，还要手动删除
     v8::V8::InitializePlatform(m_platform.get());
     v8::V8::Initialize();
+    v8_initialized = true;
 }
 
 V8Environment::~V8Environment()
@@ -20,6 +23,7 @@ V8Environment::~V8Environment()
         delete vm;
     }
     m_vms.clear();
+    v8_initialized = false;
     v8::V8::Dispose();
     v8::V8::ShutdownPlatform();
 }

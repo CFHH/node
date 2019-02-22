@@ -1,4 +1,4 @@
-#include "util.h"
+#include "v8vm_util.h"
 #include <stdarg.h>
 #include "smart_contract.h"
 #include <string.h>

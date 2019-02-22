@@ -1,6 +1,6 @@
 #include "smart_contract.h"
 #include "virtual_mation.h"
-#include "util.h"
+#include "v8vm_util.h"
 #include "v8vmex.h"
 #include <string.h>
 

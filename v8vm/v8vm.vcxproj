@@ -102,7 +102,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <CallingConvention>Cdecl</CallingConvention>
-      <AdditionalIncludeDirectories>..\deps\v8\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\deps\v8\include;.\</AdditionalIncludeDirectories>
       <ExceptionHandling>Sync</ExceptionHandling>
       <StringPooling>true</StringPooling>
       <DisableSpecificWarnings>4251;4275;4267;4351;4355;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -145,7 +145,7 @@
       <PreprocessorDefinitions>LIBV8VM;BUILDING_V8_SHARED;_DEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>..\deps\v8\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\deps\v8\include;.\</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4251;4275;4267;4351;4355;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <OmitFramePointers>false</OmitFramePointers>
       <StringPooling>true</StringPooling>
@@ -183,27 +183,30 @@
   <ItemGroup>
     <ClInclude Include="platform.h" />
     <ClInclude Include="smart_contract.h" />
-    <ClInclude Include="util.h" />
+    <ClInclude Include="v8vm_util.h" />
     <ClInclude Include="v8environment.h" />
     <ClInclude Include="v8vm.h" />
     <ClInclude Include="v8vmex.h" />
-    <ClInclude Include="v8vm_internal.h" />
     <ClInclude Include="virtual_mation.h" />
+    <ClInclude Include="vm\array_buffer_allocator.h" />
+    <ClInclude Include="vm\module.h" />
+    <ClInclude Include="vm\util.h" />
+    <ClInclude Include="vm\v8_platform.h" />
+    <ClInclude Include="vm\vm_internal.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="smart_contract.cpp" />
-    <ClCompile Include="util.cpp" />
+    <ClCompile Include="v8vm_util.cpp" />
     <ClCompile Include="v8environment.cpp" />
     <ClCompile Include="v8vm.cpp" />
     <ClCompile Include="v8vmex.cpp" />
-    <ClCompile Include="v8vm_internal.cpp" />
     <ClCompile Include="virtual_mation.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="gosrc\export_to_c.go" />
-    <None Include="gosrc\stub_for_c.go" />
-    <None Include="gosrc\stub_for_go.go" />
-    <None Include="gosrc\v8vm_test.go" />
+    <ClCompile Include="vm\array_buffer_allocator.cpp" />
+    <ClCompile Include="vm\module.cpp" />
+    <ClCompile Include="vm\test_module.cpp" />
+    <ClCompile Include="vm\util.cpp" />
+    <ClCompile Include="vm\v8_platform.cpp" />
+    <ClCompile Include="vm\vm_internal.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -36,6 +36,8 @@ extern "C" {
     typedef int(*BalanceTransfer_callback)(Int64 vmid, char* from, char* to, Int64 amount);
     V8VM_EXTERN void V8VM_STDCALL SetBalanceTransfer(BalanceTransfer_callback fn);
 
+    //ZZWTODO 加一个Log回调
+
 #ifdef __cplusplus
 }
 #endif

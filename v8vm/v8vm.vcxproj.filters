@@ -5,37 +5,54 @@
     <ClInclude Include="smart_contract.h" />
     <ClInclude Include="virtual_mation.h" />
     <ClInclude Include="v8environment.h" />
-    <ClInclude Include="util.h" />
-    <ClInclude Include="v8vm_internal.h" />
     <ClInclude Include="v8vmex.h" />
     <ClInclude Include="platform.h" />
+    <ClInclude Include="v8vm_util.h" />
+    <ClInclude Include="vm\array_buffer_allocator.h">
+      <Filter>vm</Filter>
+    </ClInclude>
+    <ClInclude Include="vm\util.h">
+      <Filter>vm</Filter>
+    </ClInclude>
+    <ClInclude Include="vm\v8_platform.h">
+      <Filter>vm</Filter>
+    </ClInclude>
+    <ClInclude Include="vm\vm_internal.h">
+      <Filter>vm</Filter>
+    </ClInclude>
+    <ClInclude Include="vm\module.h">
+      <Filter>vm</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="v8vm.cpp" />
     <ClCompile Include="smart_contract.cpp" />
     <ClCompile Include="virtual_mation.cpp" />
     <ClCompile Include="v8environment.cpp" />
-    <ClCompile Include="util.cpp" />
-    <ClCompile Include="v8vm_internal.cpp" />
     <ClCompile Include="v8vmex.cpp" />
+    <ClCompile Include="v8vm_util.cpp" />
+    <ClCompile Include="vm\array_buffer_allocator.cpp">
+      <Filter>vm</Filter>
+    </ClCompile>
+    <ClCompile Include="vm\test_module.cpp">
+      <Filter>vm</Filter>
+    </ClCompile>
+    <ClCompile Include="vm\util.cpp">
+      <Filter>vm</Filter>
+    </ClCompile>
+    <ClCompile Include="vm\v8_platform.cpp">
+      <Filter>vm</Filter>
+    </ClCompile>
+    <ClCompile Include="vm\vm_internal.cpp">
+      <Filter>vm</Filter>
+    </ClCompile>
+    <ClCompile Include="vm\module.cpp">
+      <Filter>vm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="gosrc">
-      <UniqueIdentifier>{f4eea40e-043f-4d6b-8021-d821e44ae9cb}</UniqueIdentifier>
+    <Filter Include="vm">
+      <UniqueIdentifier>{e2a99120-4ad8-44a0-8790-4e7119311889}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="gosrc\export_to_c.go">
-      <Filter>gosrc</Filter>
-    </None>
-    <None Include="gosrc\stub_for_c.go">
-      <Filter>gosrc</Filter>
-    </None>
-    <None Include="gosrc\stub_for_go.go">
-      <Filter>gosrc</Filter>
-    </None>
-    <None Include="gosrc\v8vm_test.go">
-      <Filter>gosrc</Filter>
-    </None>
   </ItemGroup>
 </Project>

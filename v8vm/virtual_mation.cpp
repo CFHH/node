@@ -1,13 +1,13 @@
 #include "v8environment.h"
 #include "virtual_mation.h"
 #include "smart_contract.h"
-#include "util.h"
+#include "v8vm_util.h"
 
 V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
     : m_environment(environment)
     , m_vmid(vmid)
 {
-    m_create_params.array_buffer_allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator();
+    m_create_params.array_buffer_allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator(); //ZZWTODO 替换为 ArrayBufferAllocator
     m_isolate = v8::Isolate::New(m_create_params);
 
     //m_isolate->AddMessageListener(OnMessage);
@@ -29,7 +29,7 @@ V8VirtualMation::~V8VirtualMation()
     m_map_template.Reset();
     m_isolate->Dispose();
     m_isolate = NULL;
-    delete m_create_params.array_buffer_allocator;
+    delete m_create_params.array_buffer_allocator; //ZZWTODO 替换为 ArrayBufferAllocator
     m_environment = NULL;
 }
 

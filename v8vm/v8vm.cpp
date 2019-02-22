@@ -2,7 +2,7 @@
 #include "v8environment.h"
 #include "virtual_mation.h"
 #include "smart_contract.h"
-#include "util.h"
+#include "v8vm_util.h"
 
 /*
 *****Gosig虚拟机的编译方法*****
