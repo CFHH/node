@@ -14,13 +14,13 @@
     <ClInclude Include="vm\util.h">
       <Filter>vm</Filter>
     </ClInclude>
-    <ClInclude Include="vm\v8_platform.h">
-      <Filter>vm</Filter>
-    </ClInclude>
     <ClInclude Include="vm\vm_internal.h">
       <Filter>vm</Filter>
     </ClInclude>
-    <ClInclude Include="vm\module.h">
+    <ClInclude Include="vm\vm_module.h">
+      <Filter>vm</Filter>
+    </ClInclude>
+    <ClInclude Include="vm\vm_platform.h">
       <Filter>vm</Filter>
     </ClInclude>
   </ItemGroup>
@@ -40,13 +40,13 @@
     <ClCompile Include="vm\util.cpp">
       <Filter>vm</Filter>
     </ClCompile>
-    <ClCompile Include="vm\v8_platform.cpp">
-      <Filter>vm</Filter>
-    </ClCompile>
     <ClCompile Include="vm\vm_internal.cpp">
       <Filter>vm</Filter>
     </ClCompile>
-    <ClCompile Include="vm\module.cpp">
+    <ClCompile Include="vm\vm_module.cpp">
+      <Filter>vm</Filter>
+    </ClCompile>
+    <ClCompile Include="vm\vm_platform.cpp">
       <Filter>vm</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,5 +1,5 @@
 #include "v8.h"
-#include "module.h"
+#include "vm_module.h"
 
 static void GetName(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
@@ -9,7 +9,7 @@ static void GetName(const v8::FunctionCallbackInfo<v8::Value>& args)
 }
 
 
-void InitializeTestModule(v8::Local<v8::Object> target, v8::Local<v8::Value> unused, v8::Local<v8::Context> context)
+void InitializeTestModule(v8::Local<v8::Object> exports, v8::Local<v8::Value> module, v8::Local<v8::Context> context, void* private_data)
 {
     //Environment* env = Environment::GetCurrent(context);
     //env->SetMethod(target, "getname", GetName);

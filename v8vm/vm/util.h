@@ -30,17 +30,17 @@ NO_RETURN void Assert(const char* const (*args)[4]);
 #define PRETTY_FUNCTION_NAME ""
 #endif
 
-#define STRINGIFY_(x) #x
 #define STRINGIFY(x) STRINGIFY_(x)
+#define STRINGIFY_(x) #x
 
-#define CHECK(expr)                                                           \
-  do {                                                                        \
-    if (UNLIKELY(!(expr))) {                                                  \
-      static const char* const args[] = { __FILE__, STRINGIFY(__LINE__),      \
-                                          #expr, PRETTY_FUNCTION_NAME };      \
-      Assert(&args);                                                    \
-    }                                                                         \
-  } while (0)
+#define CHECK(expr)                                                             \
+    do {                                                                        \
+        if (UNLIKELY(!(expr))) {                                                \
+            static const char* const args[] = { __FILE__, STRINGIFY(__LINE__),  \
+                                                #expr, PRETTY_FUNCTION_NAME };  \
+            Assert(&args);                                                      \
+        }                                                                       \
+    } while (0)
 
 #define CHECK_EQ(a, b) CHECK((a) == (b))
 #define CHECK_GE(a, b) CHECK((a) >= (b))
@@ -75,7 +75,6 @@ T* UncheckedRealloc(T* pointer, size_t n)
     void* allocated = realloc(pointer, full_size);
     if (UNLIKELY(allocated == nullptr))
     {
-        // Tell V8 that memory is low and retry.
         LowMemoryNotification();
         allocated = realloc(pointer, full_size);
     }

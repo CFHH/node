@@ -1,11 +1,6 @@
 #pragma once
 #include "v8.h"
 
-#define VM_MODULE_VERSION 64
-
-
-
-
 #define V8VM_DEFINE_CONSTANT(target, constant)                                \
   do {                                                                        \
     v8::Isolate* isolate = target->GetIsolate();                              \

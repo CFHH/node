@@ -9,7 +9,8 @@ V8Environment::V8Environment()
 {
     v8::V8::InitializeICUDefaultLocation(nullptr);
     v8::V8::InitializeExternalStartupData(nullptr);
-    m_platform = v8::platform::NewDefaultPlatform(); //ZZWTODO 替换为V8Platform，m_platform的类型要改，还要手动删除
+    //ZZWTODO RegisterBuiltinModules()
+    m_platform = v8::platform::NewDefaultPlatform(); //DefaultPlatform, 自定义Platform的工作量太大了
     v8::V8::InitializePlatform(m_platform.get());
     v8::V8::Initialize();
     v8_initialized = true;
@@ -26,6 +27,7 @@ V8Environment::~V8Environment()
     v8_initialized = false;
     v8::V8::Dispose();
     v8::V8::ShutdownPlatform();
+    //ZZWTODO 手动删除自定义的m_platform
 }
 
 void V8Environment::PumpMessage(v8::Isolate* isolate)
