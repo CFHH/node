@@ -1,5 +1,5 @@
-#include "util.h"
 #include "v8.h"
+#include "vm_util.h"
 
 NO_RETURN void Abort()
 {

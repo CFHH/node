@@ -1,5 +1,5 @@
 #include "v8vm.h"
-#include "v8vmex.h"
+#include "v8vm_ex.h"
 #include "v8vm_util.h"
 
 //这里的变量名不能和go中的c函数部分同名，否则在linux下会发生segmentation violation

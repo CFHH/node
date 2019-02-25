@@ -1,5 +1,5 @@
 #include "array_buffer_allocator.h"
-#include "util.h"
+#include "vm_util.h"
 
 void* ArrayBufferAllocator::Allocate(size_t size)
 {

@@ -1,14 +1,14 @@
 #pragma once
 #include "v8.h"
-#include "util.h"
+#include "vm_util.h"
 
 #define VM_MODULE_VERSION 64
 
 enum
 {
     VM_F_BUILTIN = 1 << 0,
-    VM_F_LINKED = 1 << 1,
-    VM_F_INTERNAL = 1 << 2,
+    VM_F_INTERNAL = 1 << 1,
+    VM_F_LINKED = 1 << 2,
 };
 
 typedef void(*addon_register_func)(v8::Local<v8::Object> exports, v8::Local<v8::Value> module, void* private_data);
@@ -26,9 +26,13 @@ struct VMModule
     VMModule* m_vm_link;
 };
 
+void RegisterVMModule(VMModule* module);
+
+void RegisterBuiltinModules();
+
 
 #define NODE_MODULE_CONTEXT_AWARE_CPP(modname, regfunc, private_data, flags)    \
-    static VMModule module = {                                                  \
+    static VMModule _module = {                                                 \
         VM_MODULE_VERSION,                                                      \
         flags,                                                                  \
         STRINGIFY(modname),                                                     \
@@ -39,15 +43,14 @@ struct VMModule
         nullptr                                                                 \
     };                                                                          \
     void _register_ ## modname() {                                              \
-        VMModuleRegister(&module);                                              \
+        RegisterVMModule(&_module);                                             \
     }
 
 #define NODE_BUILTIN_MODULE_CONTEXT_AWARE(modname, regfunc)                     \
     NODE_MODULE_CONTEXT_AWARE_CPP(modname, regfunc, nullptr, VM_F_BUILTIN)
 
-#define NODE_BUILTIN_MODULES(V)     \
+#define NODE_MODULE_CONTEXT_AWARE_INTERNAL(modname, regfunc)                    \
+    NODE_MODULE_CONTEXT_AWARE_CPP(modname, regfunc, nullptr, VM_F_INTERNAL)
+
+#define FOREACH_VM_BUILTIN_MODULES(V)   \
     V(testmod)
-
-void VMModuleRegister(void* mod);
-
-void RegisterBuiltinModules();

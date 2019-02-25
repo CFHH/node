@@ -3,6 +3,9 @@
 
 extern bool v8_initialized;
 
+#define STRINGIFY(x) STRINGIFY_(x)
+#define STRINGIFY_(x) #x
+
 #ifdef __GNUC__
 #define NO_RETURN __attribute__((noreturn))
 #else
@@ -29,9 +32,6 @@ NO_RETURN void Assert(const char* const (*args)[4]);
 #define UNLIKELY(expr) expr
 #define PRETTY_FUNCTION_NAME ""
 #endif
-
-#define STRINGIFY(x) STRINGIFY_(x)
-#define STRINGIFY_(x) #x
 
 #define CHECK(expr)                                                             \
     do {                                                                        \

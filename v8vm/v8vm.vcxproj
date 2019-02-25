@@ -183,30 +183,32 @@
   <ItemGroup>
     <ClInclude Include="platform.h" />
     <ClInclude Include="smart_contract.h" />
-    <ClInclude Include="v8vm_util.h" />
     <ClInclude Include="v8environment.h" />
     <ClInclude Include="v8vm.h" />
-    <ClInclude Include="v8vmex.h" />
+    <ClInclude Include="v8vm_ex.h" />
+    <ClInclude Include="v8vm_internal.h" />
+    <ClInclude Include="v8vm_util.h" />
     <ClInclude Include="virtual_mation.h" />
     <ClInclude Include="vm\array_buffer_allocator.h" />
-    <ClInclude Include="vm\util.h" />
     <ClInclude Include="vm\vm_internal.h" />
-    <ClInclude Include="vm\vm_module.h" />
     <ClInclude Include="vm\vm_platform.h" />
+    <ClInclude Include="vm_module.h" />
+    <ClInclude Include="vm_util.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="smart_contract.cpp" />
-    <ClCompile Include="v8vm_util.cpp" />
     <ClCompile Include="v8environment.cpp" />
     <ClCompile Include="v8vm.cpp" />
-    <ClCompile Include="v8vmex.cpp" />
+    <ClCompile Include="v8vm_ex.cpp" />
+    <ClCompile Include="v8vm_internal.cpp" />
+    <ClCompile Include="v8vm_util.cpp" />
     <ClCompile Include="virtual_mation.cpp" />
     <ClCompile Include="vm\array_buffer_allocator.cpp" />
     <ClCompile Include="vm\test_module.cpp" />
-    <ClCompile Include="vm\util.cpp" />
     <ClCompile Include="vm\vm_internal.cpp" />
-    <ClCompile Include="vm\vm_module.cpp" />
     <ClCompile Include="vm\vm_platform.cpp" />
+    <ClCompile Include="vm_module.cpp" />
+    <ClCompile Include="vm_util.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

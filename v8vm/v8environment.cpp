@@ -1,6 +1,7 @@
 #include "v8environment.h"
 #include "virtual_mation.h"
 #include "smart_contract.h"
+#include "vm_module.h"
 
 bool v8_initialized = false;
 
@@ -9,8 +10,8 @@ V8Environment::V8Environment()
 {
     v8::V8::InitializeICUDefaultLocation(nullptr);
     v8::V8::InitializeExternalStartupData(nullptr);
-    //ZZWTODO RegisterBuiltinModules()
-    m_platform = v8::platform::NewDefaultPlatform(); //DefaultPlatform, 自定义Platform的工作量太大了
+    RegisterBuiltinModules();
+    m_platform = v8::platform::NewDefaultPlatform(); //ZZWTODO 自定义Platform的工作量太大了，先不做；参考v8里的DefaultPlatform和node里的NodePlatform
     v8::V8::InitializePlatform(m_platform.get());
     v8::V8::Initialize();
     v8_initialized = true;
@@ -27,7 +28,7 @@ V8Environment::~V8Environment()
     v8_initialized = false;
     v8::V8::Dispose();
     v8::V8::ShutdownPlatform();
-    //ZZWTODO 手动删除自定义的m_platform
+    //ZZWTODO 此时可以销毁Platform
 }
 
 void V8Environment::PumpMessage(v8::Isolate* isolate)
