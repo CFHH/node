@@ -48,5 +48,11 @@
     <Filter Include="vm">
       <UniqueIdentifier>{e2a99120-4ad8-44a0-8790-4e7119311889}</UniqueIdentifier>
     </Filter>
+    <Filter Include="jslib">
+      <UniqueIdentifier>{93e25532-285e-47d3-aa32-e93ae77958fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="jslib\internal">
+      <UniqueIdentifier>{007c9b8b-06ae-49f2-bb86-3f05ce2f4c48}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

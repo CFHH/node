@@ -22,6 +22,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+    V8VM_EXTERN void V8VM_STDCALL SetJSLibPath(const char* path);
 
     V8VM_EXTERN void V8VM_STDCALL InitializeV8Environment();
     V8VM_EXTERN void V8VM_STDCALL ShutdownV8Environment();

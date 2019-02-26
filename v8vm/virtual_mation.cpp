@@ -3,6 +3,9 @@
 #include "smart_contract.h"
 #include "v8vm_util.h"
 #include "v8vm_ex.h"
+#include <string>
+
+extern const char* g_js_lib_path;
 
 V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
     : m_environment(environment)
@@ -32,6 +35,18 @@ V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
 
     v8::Context::Scope context_scope(context);
     InstallMap(context, &m_output, "output");
+
+    //internal/per_context.js
+    std::string filename(g_js_lib_path);
+    filename += "/internal/per_context.js";
+    //Log("per_context: %s\r\n", filename.c_str());
+    char* sourcecode = NULL;
+    bool result = ReadScriptFile(filename.c_str(), sourcecode);
+    int size = strlen(sourcecode);
+    v8::Local<v8::String> per_context = v8::String::NewFromUtf8(m_isolate, sourcecode, v8::NewStringType::kNormal, static_cast<int>(size)).ToLocalChecked();
+    v8::ScriptCompiler::Source per_context_src(per_context, nullptr);
+    v8::Local<v8::Script> script = v8::ScriptCompiler::Compile(context, &per_context_src).ToLocalChecked();
+    script->Run(context).ToLocalChecked();
 }
 
 V8VirtualMation::~V8VirtualMation()

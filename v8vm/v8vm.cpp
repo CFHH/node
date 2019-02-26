@@ -3,6 +3,7 @@
 #include "virtual_mation.h"
 #include "smart_contract.h"
 #include "v8vm_util.h"
+#include <string>
 
 /*
 *****Gosig虚拟机的编译方法*****
@@ -142,7 +143,17 @@ HTTP_PARSER_STRICT=0
 NGHTTP2_STATICLIB
 */
 
+std::string g_js_lib_path_internal;
+const char* g_js_lib_path = NULL;
 V8Environment* g_environment = NULL;
+
+V8VM_EXTERN void V8VM_STDCALL SetJSLibPath(const char* path)
+{
+    if (g_js_lib_path_internal.length() == 0) {
+        g_js_lib_path_internal = path;
+        g_js_lib_path = g_js_lib_path_internal.c_str();
+    }
+}
 
 V8VM_EXTERN void V8VM_STDCALL InitializeV8Environment()
 {
