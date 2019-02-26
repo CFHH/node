@@ -1,7 +1,6 @@
 #include "smart_contract.h"
 #include "virtual_mation.h"
 #include "v8vm_util.h"
-#include "v8vm_ex.h"
 #include <string.h>
 
 SmartContract::SmartContract(V8VirtualMation* vm)
@@ -13,7 +12,9 @@ SmartContract::~SmartContract()
 {
     m_process_fun.Reset();
     m_script.Reset();
+#if SMART_CONTRACT_OWN_SEPERATE_CONTEXT
     m_context.Reset();
+#endif
     m_vm = NULL;
 }
 
@@ -23,20 +24,22 @@ bool SmartContract::Initialize(const char* sourcecode)
     v8::Locker locker(isolate);
     v8::Isolate::Scope isolate_scope(isolate);
     v8::HandleScope handle_scope(isolate);
-    int size = strlen(sourcecode);
-    v8::Local<v8::String> source = v8::String::NewFromUtf8(isolate, sourcecode, v8::NewStringType::kNormal, static_cast<int>(size)).ToLocalChecked();
 
+#if SMART_CONTRACT_OWN_SEPERATE_CONTEXT
     v8::Local<v8::ObjectTemplate> global = v8::ObjectTemplate::New(isolate);
-
     //ZZWTODO 实现CommonJS，用require
     global->Set(v8::String::NewFromUtf8(isolate, "log", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(isolate, Log_JS2C));
     global->Set(v8::String::NewFromUtf8(isolate, "BalanceTransfer", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(isolate, BalanceTransfer_JS2C));
-
     v8::Local<v8::Context> context = v8::Context::New(isolate, NULL, global);
     v8::Context::Scope context_scope(context);
-
     m_vm->InstallMap(context, &m_output, "output");
+#else
+    v8::Local<v8::Context> context = m_vm->context();
+    v8::Context::Scope context_scope(context);
+#endif
 
+    int size = strlen(sourcecode);
+    v8::Local<v8::String> source = v8::String::NewFromUtf8(isolate, sourcecode, v8::NewStringType::kNormal, static_cast<int>(size)).ToLocalChecked();
     v8::TryCatch try_catch(isolate);
     v8::Local<v8::Script> script;
     if (!v8::Script::Compile(context, source).ToLocal(&script))
@@ -60,7 +63,9 @@ bool SmartContract::Initialize(const char* sourcecode)
     }
     v8::Local<v8::Function> process_fun = v8::Local<v8::Function>::Cast(process_val);
 
+#if SMART_CONTRACT_OWN_SEPERATE_CONTEXT
     m_context.Reset(isolate, context);
+#endif
     m_script.Reset(isolate, script);
     m_process_fun.Reset(isolate, process_fun);
 
@@ -73,8 +78,13 @@ bool SmartContract::Invoke(InvokeParam* param)
     v8::Locker locker(isolate);
     v8::Isolate::Scope isolate_scope(isolate);
     v8::HandleScope handle_scope(isolate);
+#if SMART_CONTRACT_OWN_SEPERATE_CONTEXT
     v8::Local<v8::Context> context = v8::Local<v8::Context>::New(isolate, m_context);
+#else
+    v8::Local<v8::Context> context = m_vm->context();
+#endif
     v8::Context::Scope context_scope(context);
+
     v8::Local<v8::Object> param_obj = m_vm->WrapInvokeParam(context, param);
     v8::TryCatch try_catch(isolate);
     const int argc = 1;

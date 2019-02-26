@@ -4,6 +4,7 @@
 #include "libplatform/libplatform.h"
 #include "v8.h"
 #include "platform.h"
+#include "v8vm_internal.h"
 
 class V8Environment;
 class SmartContract;
@@ -15,6 +16,10 @@ public:
     explicit V8VirtualMation(V8Environment* environment, Int64 vmid);
     ~V8VirtualMation();
     v8::Isolate* GetIsolate() { return m_isolate; }
+    v8::Local<v8::Context> context()
+    {
+        return StrongPersistentToLocal(m_context);
+    }
     Int64 VMID() { return m_vmid; }
     bool IsInUse();
     void PumpMessage();
@@ -37,6 +42,8 @@ private:
     Int64 m_vmid;
     v8::Isolate::CreateParams m_create_params;
     v8::Isolate* m_isolate;
+    Persistent<v8::Context> m_context;
+    std::map<std::string, std::string> m_output;
     v8::Global<v8::ObjectTemplate> m_map_template;
     v8::Global<v8::ObjectTemplate> m_invoke_param_template;
     std::map<std::string, SmartContract*> m_contracts;

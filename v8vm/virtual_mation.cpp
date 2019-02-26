@@ -2,6 +2,7 @@
 #include "virtual_mation.h"
 #include "smart_contract.h"
 #include "v8vm_util.h"
+#include "v8vm_ex.h"
 
 V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
     : m_environment(environment)
@@ -10,11 +11,27 @@ V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
     m_create_params.array_buffer_allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator(); //ZZWTODO 替换为 ArrayBufferAllocator
     m_isolate = v8::Isolate::New(m_create_params);
 
+    //ZZWTODO 
     //m_isolate->AddMessageListener(OnMessage);
     //m_isolate->SetAbortOnUncaughtExceptionCallback(ShouldAbortOnUncaughtException);
     //m_isolate->SetMicrotasksPolicy(v8::MicrotasksPolicy::kExplicit);
     //m_isolate->SetFatalErrorHandler(OnFatalError);
     //m_isolate->SetAllowWasmCodeGenerationCallback(AllowWasmCodeGenerationCallback);
+
+    v8::Locker locker(m_isolate);
+    v8::Isolate::Scope isolate_scope(m_isolate);
+    v8::HandleScope handle_scope(m_isolate);
+
+    //ZZWTODO 实现CommonJS，用require
+    v8::Local<v8::ObjectTemplate> global = v8::ObjectTemplate::New(m_isolate);
+    global->Set(v8::String::NewFromUtf8(m_isolate, "log", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, Log_JS2C));
+    global->Set(v8::String::NewFromUtf8(m_isolate, "BalanceTransfer", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, BalanceTransfer_JS2C));
+
+    v8::Local<v8::Context> context = v8::Context::New(m_isolate, NULL, global);
+    m_context.Reset(m_isolate, context);
+
+    v8::Context::Scope context_scope(context);
+    InstallMap(context, &m_output, "output");
 }
 
 V8VirtualMation::~V8VirtualMation()
@@ -27,6 +44,7 @@ V8VirtualMation::~V8VirtualMation()
     m_contracts.clear();
     m_invoke_param_template.Reset();
     m_map_template.Reset();
+    m_context.Reset();
     m_isolate->Dispose();
     m_isolate = NULL;
     delete m_create_params.array_buffer_allocator; //ZZWTODO 替换为 ArrayBufferAllocator
