@@ -1,4 +1,3 @@
-#include "v8.h"
 #include "vm_module.h"
 
 static void GetName(const v8::FunctionCallbackInfo<v8::Value>& args)

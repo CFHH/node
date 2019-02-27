@@ -25,13 +25,33 @@ V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
     v8::Isolate::Scope isolate_scope(m_isolate);
     v8::HandleScope handle_scope(m_isolate);
 
+#define V(PropertyName, StringValue)    \
+    m_ ## PropertyName.Set(m_isolate,   \
+        v8::Private::New(m_isolate,         \
+            v8::String::NewFromOneByte(m_isolate, reinterpret_cast<const uint8_t*>(StringValue), v8::NewStringType::kInternalized, sizeof(StringValue) - 1).ToLocalChecked()));
+    PER_ISOLATE_PRIVATE_SYMBOL_PROPERTIES(V)
+#undef V
+
+#define V(PropertyName, StringValue)    \
+    m_ ## PropertyName.Set(m_isolate,   \
+        v8::Symbol::New(m_isolate,          \
+            v8::String::NewFromOneByte(m_isolate, reinterpret_cast<const uint8_t*>(StringValue), v8::NewStringType::kInternalized, sizeof(StringValue) - 1).ToLocalChecked()));
+    PER_ISOLATE_SYMBOL_PROPERTIES(V)
+#undef V
+
+#define V(PropertyName, StringValue)    \
+    m_ ## PropertyName.Set(m_isolate,   \
+        v8::String::NewFromOneByte(m_isolate, reinterpret_cast<const uint8_t*>(StringValue), v8::NewStringType::kInternalized, sizeof(StringValue) - 1).ToLocalChecked());
+    PER_ISOLATE_STRING_PROPERTIES(V)
+#undef V
+
     //ZZWTODO 实现CommonJS，用require
     v8::Local<v8::ObjectTemplate> global = v8::ObjectTemplate::New(m_isolate);
     global->Set(v8::String::NewFromUtf8(m_isolate, "log", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, Log_JS2C));
     global->Set(v8::String::NewFromUtf8(m_isolate, "BalanceTransfer", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, BalanceTransfer_JS2C));
 
     v8::Local<v8::Context> context = v8::Context::New(m_isolate, NULL, global);
-    m_context.Reset(m_isolate, context);
+    set_context(context);
 
     v8::Context::Scope context_scope(context);
     InstallMap(context, &m_output, "output");
@@ -47,19 +67,37 @@ V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
     v8::ScriptCompiler::Source per_context_src(per_context, nullptr);
     v8::Local<v8::Script> script = v8::ScriptCompiler::Compile(context, &per_context_src).ToLocalChecked();
     script->Run(context).ToLocalChecked();
+
+    set_as_external(v8::External::New(m_isolate, this));
+    context->SetAlignedPointerInEmbedderData(ContextEmbedderIndex::kEnvironment, this);
 }
 
 V8VirtualMation::~V8VirtualMation()
 {
-    for (std::map<std::string, SmartContract*>::iterator itr = m_contracts.begin(); itr != m_contracts.end(); ++itr)
+    //Destroy isolate
     {
-        SmartContract* contract = itr->second;
-        delete contract;
+        v8::Locker locker(m_isolate);
+        v8::Isolate::Scope isolate_scope(m_isolate);
+        v8::HandleScope handle_scope(m_isolate);
+        //Destroy context
+        {
+            v8::Local<v8::Context> ctx = context();
+            v8::Context::Scope context_scope(ctx);
+
+            for (std::map<std::string, SmartContract*>::iterator itr = m_contracts.begin(); itr != m_contracts.end(); ++itr)
+            {
+                SmartContract* contract = itr->second;
+                delete contract;
+            }
+            m_contracts.clear();
+            ctx->SetAlignedPointerInEmbedderData(ContextEmbedderIndex::kEnvironment, nullptr);
+        }
+        m_invoke_param_template.Reset();
+        m_map_template.Reset();
+#define V(PropertyName, _) m_ ## PropertyName.Reset();
+        ENVIRONMENT_STRONG_PERSISTENT_PROPERTIES(V)
+#undef V
     }
-    m_contracts.clear();
-    m_invoke_param_template.Reset();
-    m_map_template.Reset();
-    m_context.Reset();
     m_isolate->Dispose();
     m_isolate = NULL;
     delete m_create_params.array_buffer_allocator; //ZZWTODO 替换为 ArrayBufferAllocator
@@ -168,4 +206,29 @@ v8::Local<v8::ObjectTemplate> V8VirtualMation::MakeInvokeParamTemplate()
     obj_templ->SetAccessor(v8::String::NewFromUtf8(m_isolate, INVOKE_PARAM_PARAM1, v8::NewStringType::kInternalized).ToLocalChecked(), GetInvokeParam1_JS2C);
     obj_templ->SetAccessor(v8::String::NewFromUtf8(m_isolate, INVOKE_PARAM_PARAM2, v8::NewStringType::kInternalized).ToLocalChecked(), GetInvokeParam2_JS2C);
     return handle_scope.Escape(obj_templ);
+}
+
+
+
+V8VirtualMation* V8VirtualMation::GetCurrent(v8::Isolate* isolate)
+{
+    return V8VirtualMation::GetCurrent(isolate->GetCurrentContext());
+}
+
+V8VirtualMation* V8VirtualMation::GetCurrent(v8::Local<v8::Context> context)
+{
+    return static_cast<V8VirtualMation*>(context->GetAlignedPointerFromEmbedderData(ContextEmbedderIndex::kEnvironment));
+}
+
+V8VirtualMation* V8VirtualMation::GetCurrent(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    CHECK(info.Data()->IsExternal());
+    return static_cast<V8VirtualMation*>(info.Data().As<v8::External>()->Value());
+}
+
+template <typename T>
+V8VirtualMation* V8VirtualMation::GetCurrent(const v8::PropertyCallbackInfo<T>& info)
+{
+    CHECK(info.Data()->IsExternal());
+    return static_cast<V8VirtualMation*>(info.Data().template As<v8::External>()->Value());
 }

@@ -43,6 +43,12 @@
     <ClCompile Include="v8vm_ex.cpp" />
     <ClCompile Include="vm_module.cpp" />
     <ClCompile Include="vm_util.cpp" />
+    <ClCompile Include="module\util_module.cpp">
+      <Filter>module</Filter>
+    </ClCompile>
+    <ClCompile Include="module\symbols.cpp">
+      <Filter>module</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="vm">
@@ -53,6 +59,9 @@
     </Filter>
     <Filter Include="jslib\internal">
       <UniqueIdentifier>{007c9b8b-06ae-49f2-bb86-3f05ce2f4c48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="module">
+      <UniqueIdentifier>{f3517fa4-86c3-4029-ac41-cae5a2652ecf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

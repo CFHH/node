@@ -34,3 +34,23 @@ inline v8::Local<TypeName> WeakPersistentToLocal(v8::Isolate* isolate, const Per
 {
     return v8::Local<TypeName>::New(isolate, persistent);
 }
+
+
+template <typename T, size_t N>
+constexpr size_t arraysize(const T(&)[N]) { return N; }
+
+#ifndef V8VM_CONTEXT_EMBEDDER_DATA_INDEX
+#define V8VM_CONTEXT_EMBEDDER_DATA_INDEX 32
+#endif
+#ifndef V8VM_CONTEXT_SANDBOX_OBJECT_INDEX
+#define V8VM_CONTEXT_SANDBOX_OBJECT_INDEX 33
+#endif
+#ifndef V8VM_CONTEXT_ALLOW_WASM_CODE_GENERATION_INDEX
+#define V8VM_CONTEXT_ALLOW_WASM_CODE_GENERATION_INDEX 34
+#endif
+enum ContextEmbedderIndex
+{
+    kEnvironment = V8VM_CONTEXT_EMBEDDER_DATA_INDEX,
+    kSandboxObject = V8VM_CONTEXT_SANDBOX_OBJECT_INDEX,
+    kAllowWasmCodeGeneration = V8VM_CONTEXT_ALLOW_WASM_CODE_GENERATION_INDEX,
+};

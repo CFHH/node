@@ -53,4 +53,8 @@ void RegisterBuiltinModules();
     NODE_MODULE_CONTEXT_AWARE_CPP(modname, regfunc, nullptr, VM_F_INTERNAL)
 
 #define FOREACH_VM_BUILTIN_MODULES(V)   \
-    V(testmod)
+    V(testmod)                          \
+    /*builtin*/                         \
+    V(util)                             \
+    /*internals*/                       \
+    V(symbols)
