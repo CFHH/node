@@ -6,6 +6,14 @@ void OnDisposeIsolate(v8::Isolate* isolate);
 v8::Local<v8::Context> NewContext(v8::Isolate* isolate, v8::Local<v8::ObjectTemplate> object_template = v8::Local<v8::ObjectTemplate>());
 void OnDisposeContext(v8::Isolate* isolate, v8::Local<v8::Context> context);
 
+
+#define FIXED_ONE_BYTE_STRING(isolate, str) OneByteString(isolate, str, sizeof(str) - 1)
+inline v8::Local<v8::String> OneByteString(v8::Isolate* isolate, const char* data, int length = -1)
+{
+    return v8::String::NewFromOneByte(isolate, reinterpret_cast<const uint8_t*>(data), v8::NewStringType::kNormal, length).ToLocalChecked();
+}
+
+
 template <typename T>
 struct ResetInDestructorPersistentTraits
 {

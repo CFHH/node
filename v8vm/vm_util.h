@@ -9,13 +9,6 @@ extern bool v8_initialized;
     TypeName(const TypeName&) = delete;         \
     TypeName(TypeName&&) = delete
 
-#define FIXED_ONE_BYTE_STRING(isolate, string)  \
-  (OneByteString((isolate), (string), sizeof(string) - 1))
-
-inline v8::Local<v8::String> OneByteString(v8::Isolate* isolate, const char* data, int length)
-{
-    return v8::String::NewFromOneByte(isolate, reinterpret_cast<const uint8_t*>(data), v8::NewStringType::kNormal, length).ToLocalChecked();
-}
 
 #define STRINGIFY(x) STRINGIFY_(x)
 #define STRINGIFY_(x) #x

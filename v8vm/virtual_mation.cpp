@@ -47,6 +47,12 @@ V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
     set_as_external(v8::External::New(m_isolate, this));
     context->SetAlignedPointerInEmbedderData(ContextEmbedderIndex::kEnvironment, this);
 
+    v8::Local<v8::FunctionTemplate> process_template = v8::FunctionTemplate::New(m_isolate);
+    process_template->SetClassName(FIXED_ONE_BYTE_STRING(m_isolate, "process"));
+    v8::Local<v8::Object> process_object = process_template->GetFunction()->NewInstance(context).ToLocalChecked();
+    set_process_object(process_object);
+    SetupProcessObject();
+
     InstallMap(context, &m_output, "output");
 }
 
@@ -82,6 +88,14 @@ V8VirtualMation::~V8VirtualMation()
     m_isolate = NULL;
     delete m_create_params.array_buffer_allocator; //ZZWTODO 替换为 ArrayBufferAllocator
     m_environment = NULL;
+}
+
+void V8VirtualMation::SetupProcessObject()
+{
+    v8::HandleScope scope(m_isolate);
+    v8::Local<v8::Object> process = process_object();
+    SetReadOnlyProperty(process, "version", "123456789");
+    SetMethod(process, "_log", Log_JS2C);
 }
 
 bool V8VirtualMation::IsInUse()
@@ -211,4 +225,71 @@ V8VirtualMation* V8VirtualMation::GetCurrent(const v8::PropertyCallbackInfo<T>& 
 {
     CHECK(info.Data()->IsExternal());
     return static_cast<V8VirtualMation*>(info.Data().template As<v8::External>()->Value());
+}
+
+void V8VirtualMation::SetReadOnlyProperty(v8::Local<v8::Object> obj, const char* key, const char* val)
+{
+    obj->DefineOwnProperty(context(), OneByteString(m_isolate, key), FIXED_ONE_BYTE_STRING(m_isolate, val), v8::ReadOnly).FromJust();
+}
+
+v8::Local<v8::FunctionTemplate> V8VirtualMation::NewFunctionTemplate(v8::FunctionCallback callback, v8::Local<v8::Signature> signature, v8::ConstructorBehavior behavior, v8::SideEffectType side_effect_type)
+{
+    v8::Local<v8::External> external = as_external();
+    return v8::FunctionTemplate::New(m_isolate, callback, external, signature, 0, behavior, side_effect_type);
+}
+
+void V8VirtualMation::SetMethod(v8::Local<v8::Object> that, const char* name, v8::FunctionCallback callback)
+{
+    v8::Local<v8::Function> function = NewFunctionTemplate(callback, v8::Local<v8::Signature>(), v8::ConstructorBehavior::kAllow, v8::SideEffectType::kHasSideEffect)->GetFunction();
+    const v8::NewStringType type = v8::NewStringType::kInternalized;
+    v8::Local<v8::String> name_string = v8::String::NewFromUtf8(m_isolate, name, type).ToLocalChecked();
+    that->Set(name_string, function);
+    function->SetName(name_string);
+}
+
+void V8VirtualMation::SetMethodNoSideEffect(v8::Local<v8::Object> that, const char* name, v8::FunctionCallback callback)
+{
+    v8::Local<v8::Function> function = NewFunctionTemplate(callback, v8::Local<v8::Signature>(), v8::ConstructorBehavior::kAllow, v8::SideEffectType::kHasNoSideEffect)->GetFunction();
+    const v8::NewStringType type = v8::NewStringType::kInternalized;
+    v8::Local<v8::String> name_string = v8::String::NewFromUtf8(m_isolate, name, type).ToLocalChecked();
+    that->Set(name_string, function);
+    function->SetName(name_string);
+}
+
+void V8VirtualMation::SetProtoMethod(v8::Local<v8::FunctionTemplate> that, const char* name, v8::FunctionCallback callback)
+{
+    v8::Local<v8::Signature> signature = v8::Signature::New(m_isolate, that);
+    v8::Local<v8::FunctionTemplate> t = NewFunctionTemplate(callback, signature, v8::ConstructorBehavior::kThrow, v8::SideEffectType::kHasSideEffect);
+    const v8::NewStringType type = v8::NewStringType::kInternalized;
+    v8::Local<v8::String> name_string = v8::String::NewFromUtf8(m_isolate, name, type).ToLocalChecked();
+    that->PrototypeTemplate()->Set(name_string, t);
+    t->SetClassName(name_string);
+}
+
+void V8VirtualMation::SetProtoMethodNoSideEffect(v8::Local<v8::FunctionTemplate> that, const char* name, v8::FunctionCallback callback)
+{
+    v8::Local<v8::Signature> signature = v8::Signature::New(m_isolate, that);
+    v8::Local<v8::FunctionTemplate> t = NewFunctionTemplate(callback, signature, v8::ConstructorBehavior::kThrow, v8::SideEffectType::kHasNoSideEffect);
+    const v8::NewStringType type = v8::NewStringType::kInternalized;
+    v8::Local<v8::String> name_string = v8::String::NewFromUtf8(m_isolate, name, type).ToLocalChecked();
+    that->PrototypeTemplate()->Set(name_string, t);
+    t->SetClassName(name_string);
+}
+
+void V8VirtualMation::SetTemplateMethod(v8::Local<v8::FunctionTemplate> that, const char* name, v8::FunctionCallback callback)
+{
+    v8::Local<v8::FunctionTemplate> t = NewFunctionTemplate(callback, v8::Local<v8::Signature>(), v8::ConstructorBehavior::kAllow, v8::SideEffectType::kHasSideEffect);
+    const v8::NewStringType type = v8::NewStringType::kInternalized;
+    v8::Local<v8::String> name_string = v8::String::NewFromUtf8(m_isolate, name, type).ToLocalChecked();
+    that->Set(name_string, t);
+    t->SetClassName(name_string);
+}
+
+void V8VirtualMation::SetTemplateMethodNoSideEffect(v8::Local<v8::FunctionTemplate> that, const char* name, v8::FunctionCallback callback)
+{
+    v8::Local<v8::FunctionTemplate> t = NewFunctionTemplate(callback, v8::Local<v8::Signature>(), v8::ConstructorBehavior::kAllow, v8::SideEffectType::kHasNoSideEffect);
+    const v8::NewStringType type = v8::NewStringType::kInternalized;
+    v8::Local<v8::String> name_string = v8::String::NewFromUtf8(m_isolate, name, type).ToLocalChecked();
+    that->Set(name_string, t);
+    t->SetClassName(name_string);
 }

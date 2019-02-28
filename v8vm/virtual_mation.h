@@ -22,7 +22,8 @@ struct InvokeParam;
 
 #define ENVIRONMENT_STRONG_PERSISTENT_PROPERTIES(V)     \
     V(as_external, v8::External)                        \
-    V(context, v8::Context)
+    V(context, v8::Context)                             \
+    V(process_object, v8::Object)
 
 class V8VirtualMation
 {
@@ -49,7 +50,21 @@ public:
     template <typename T>
     static V8VirtualMation* GetCurrent(const v8::PropertyCallbackInfo<T>& info);
 
+    void SetReadOnlyProperty(v8::Local<v8::Object> obj, const char* key, const char* val);
+
+    v8::Local<v8::FunctionTemplate> NewFunctionTemplate(v8::FunctionCallback callback,
+        v8::Local<v8::Signature> signature = v8::Local<v8::Signature>(),
+        v8::ConstructorBehavior behavior = v8::ConstructorBehavior::kAllow,
+        v8::SideEffectType side_effect = v8::SideEffectType::kHasSideEffect);
+    void SetMethod(v8::Local<v8::Object> that, const char* name, v8::FunctionCallback callback);
+    void SetProtoMethod(v8::Local<v8::FunctionTemplate> that, const char* name, v8::FunctionCallback callback);
+    void SetTemplateMethod(v8::Local<v8::FunctionTemplate> that, const char* name, v8::FunctionCallback callback);
+    void SetMethodNoSideEffect(v8::Local<v8::Object> that, const char* name, v8::FunctionCallback callback);
+    void SetProtoMethodNoSideEffect(v8::Local<v8::FunctionTemplate> that, const char* name, v8::FunctionCallback callback);
+    void SetTemplateMethodNoSideEffect( v8::Local<v8::FunctionTemplate> that, const char* name, v8::FunctionCallback callback);
+
 private:
+    void SetupProcessObject();
     v8::Local<v8::Object> WrapMap(v8::Local<v8::Context> context, std::map<std::string, std::string>* obj);
     v8::Local<v8::ObjectTemplate> MakeMapTemplate();
     v8::Local<v8::ObjectTemplate> MakeInvokeParamTemplate();
