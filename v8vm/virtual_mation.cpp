@@ -1,25 +1,16 @@
-#include "v8environment.h"
 #include "virtual_mation.h"
+#include "v8environment.h"
 #include "smart_contract.h"
+#include "v8vm_internal.h"
 #include "v8vm_util.h"
 #include "v8vm_ex.h"
-#include <string>
-
-extern const char* g_js_lib_path;
 
 V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
     : m_environment(environment)
     , m_vmid(vmid)
 {
     m_create_params.array_buffer_allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator(); //ZZWTODO 替换为 ArrayBufferAllocator
-    m_isolate = v8::Isolate::New(m_create_params);
-
-    //ZZWTODO 
-    //m_isolate->AddMessageListener(OnMessage);
-    //m_isolate->SetAbortOnUncaughtExceptionCallback(ShouldAbortOnUncaughtException);
-    //m_isolate->SetMicrotasksPolicy(v8::MicrotasksPolicy::kExplicit);
-    //m_isolate->SetFatalErrorHandler(OnFatalError);
-    //m_isolate->SetAllowWasmCodeGenerationCallback(AllowWasmCodeGenerationCallback);
+    m_isolate = NewIsolate(&m_create_params);
 
     v8::Locker locker(m_isolate);
     v8::Isolate::Scope isolate_scope(m_isolate);
@@ -27,14 +18,14 @@ V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
 
 #define V(PropertyName, StringValue)    \
     m_ ## PropertyName.Set(m_isolate,   \
-        v8::Private::New(m_isolate,         \
+        v8::Private::New(m_isolate,     \
             v8::String::NewFromOneByte(m_isolate, reinterpret_cast<const uint8_t*>(StringValue), v8::NewStringType::kInternalized, sizeof(StringValue) - 1).ToLocalChecked()));
     PER_ISOLATE_PRIVATE_SYMBOL_PROPERTIES(V)
 #undef V
 
 #define V(PropertyName, StringValue)    \
     m_ ## PropertyName.Set(m_isolate,   \
-        v8::Symbol::New(m_isolate,          \
+        v8::Symbol::New(m_isolate,      \
             v8::String::NewFromOneByte(m_isolate, reinterpret_cast<const uint8_t*>(StringValue), v8::NewStringType::kInternalized, sizeof(StringValue) - 1).ToLocalChecked()));
     PER_ISOLATE_SYMBOL_PROPERTIES(V)
 #undef V
@@ -50,54 +41,43 @@ V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
     global->Set(v8::String::NewFromUtf8(m_isolate, "log", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, Log_JS2C));
     global->Set(v8::String::NewFromUtf8(m_isolate, "BalanceTransfer", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, BalanceTransfer_JS2C));
 
-    v8::Local<v8::Context> context = v8::Context::New(m_isolate, NULL, global);
-    set_context(context);
-
+    v8::Local<v8::Context> context = NewContext(m_isolate, global);
     v8::Context::Scope context_scope(context);
-    InstallMap(context, &m_output, "output");
-
-    //internal/per_context.js
-    std::string filename(g_js_lib_path);
-    filename += "/internal/per_context.js";
-    //Log("per_context: %s\r\n", filename.c_str());
-    char* sourcecode = NULL;
-    bool result = ReadScriptFile(filename.c_str(), sourcecode);
-    int size = strlen(sourcecode);
-    v8::Local<v8::String> per_context = v8::String::NewFromUtf8(m_isolate, sourcecode, v8::NewStringType::kNormal, static_cast<int>(size)).ToLocalChecked();
-    v8::ScriptCompiler::Source per_context_src(per_context, nullptr);
-    v8::Local<v8::Script> script = v8::ScriptCompiler::Compile(context, &per_context_src).ToLocalChecked();
-    script->Run(context).ToLocalChecked();
-
+    set_context(context);
     set_as_external(v8::External::New(m_isolate, this));
     context->SetAlignedPointerInEmbedderData(ContextEmbedderIndex::kEnvironment, this);
+
+    InstallMap(context, &m_output, "output");
 }
 
 V8VirtualMation::~V8VirtualMation()
 {
-    //Destroy isolate
+    //Dispose isolate
     {
         v8::Locker locker(m_isolate);
         v8::Isolate::Scope isolate_scope(m_isolate);
         v8::HandleScope handle_scope(m_isolate);
-        //Destroy context
+        //Dispose context
         {
-            v8::Local<v8::Context> ctx = context();
-            v8::Context::Scope context_scope(ctx);
-
-            for (std::map<std::string, SmartContract*>::iterator itr = m_contracts.begin(); itr != m_contracts.end(); ++itr)
-            {
-                SmartContract* contract = itr->second;
-                delete contract;
-            }
-            m_contracts.clear();
-            ctx->SetAlignedPointerInEmbedderData(ContextEmbedderIndex::kEnvironment, nullptr);
+            v8::Local<v8::Context> context = this->context();
+            OnDisposeContext(m_isolate, context);
         }
+        for (std::map<std::string, SmartContract*>::iterator itr = m_contracts.begin(); itr != m_contracts.end(); ++itr)
+        {
+            SmartContract* contract = itr->second;
+            delete contract;
+        }
+        m_contracts.clear();
         m_invoke_param_template.Reset();
         m_map_template.Reset();
+
 #define V(PropertyName, _) m_ ## PropertyName.Reset();
         ENVIRONMENT_STRONG_PERSISTENT_PROPERTIES(V)
 #undef V
+
+        OnDisposeIsolate(m_isolate);
     }
+
     m_isolate->Dispose();
     m_isolate = NULL;
     delete m_create_params.array_buffer_allocator; //ZZWTODO 替换为 ArrayBufferAllocator

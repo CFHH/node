@@ -1,6 +1,11 @@
 #pragma once
 #include "v8.h"
 
+v8::Isolate* NewIsolate(v8::Isolate::CreateParams* params);
+void OnDisposeIsolate(v8::Isolate* isolate);
+v8::Local<v8::Context> NewContext(v8::Isolate* isolate, v8::Local<v8::ObjectTemplate> object_template = v8::Local<v8::ObjectTemplate>());
+void OnDisposeContext(v8::Isolate* isolate, v8::Local<v8::Context> context);
+
 template <typename T>
 struct ResetInDestructorPersistentTraits
 {
