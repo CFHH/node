@@ -17,6 +17,15 @@
     <ClInclude Include="v8vm_ex.h" />
     <ClInclude Include="vm_module.h" />
     <ClInclude Include="vm_util.h" />
+    <ClInclude Include="module\v8vm_constants.h">
+      <Filter>module</Filter>
+    </ClInclude>
+    <ClInclude Include="module\v8vm_javascript.h">
+      <Filter>module</Filter>
+    </ClInclude>
+    <ClInclude Include="module\v8vm_code_cache.h">
+      <Filter>module</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vm\array_buffer_allocator.cpp">
@@ -43,6 +52,15 @@
     <ClCompile Include="module\symbols.cpp">
       <Filter>module</Filter>
     </ClCompile>
+    <ClCompile Include="module\v8vm_constants.cpp">
+      <Filter>module</Filter>
+    </ClCompile>
+    <ClCompile Include="module\v8vm_javascript.cpp">
+      <Filter>module</Filter>
+    </ClCompile>
+    <ClCompile Include="module\v8vm_code_cache.cpp">
+      <Filter>module</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="vm">
@@ -57,10 +75,16 @@
     <Filter Include="module">
       <UniqueIdentifier>{f3517fa4-86c3-4029-ac41-cae5a2652ecf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="jslib\internal\bootstrap">
+      <UniqueIdentifier>{c93873d0-17cd-4c6b-a56c-3019b43d316e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="jslib\internal\per_context.js">
       <Filter>jslib\internal</Filter>
+    </None>
+    <None Include="jslib\internal\bootstrap\loaders.js">
+      <Filter>jslib\internal\bootstrap</Filter>
     </None>
   </ItemGroup>
 </Project>

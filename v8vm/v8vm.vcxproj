@@ -181,6 +181,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="module\v8vm_code_cache.h" />
+    <ClInclude Include="module\v8vm_constants.h" />
+    <ClInclude Include="module\v8vm_javascript.h" />
     <ClInclude Include="platform.h" />
     <ClInclude Include="smart_contract.h" />
     <ClInclude Include="v8environment.h" />
@@ -197,6 +200,9 @@
   <ItemGroup>
     <ClCompile Include="module\symbols.cpp" />
     <ClCompile Include="module\util_module.cpp" />
+    <ClCompile Include="module\v8vm_code_cache.cpp" />
+    <ClCompile Include="module\v8vm_constants.cpp" />
+    <ClCompile Include="module\v8vm_javascript.cpp" />
     <ClCompile Include="smart_contract.cpp" />
     <ClCompile Include="v8environment.cpp" />
     <ClCompile Include="v8vm.cpp" />
@@ -211,6 +217,7 @@
     <ClCompile Include="vm_util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="jslib\internal\bootstrap\loaders.js" />
     <None Include="jslib\internal\per_context.js" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

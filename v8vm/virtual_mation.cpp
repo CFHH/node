@@ -4,6 +4,7 @@
 #include "v8vm_internal.h"
 #include "v8vm_util.h"
 #include "v8vm_ex.h"
+#include "vm_module.h"
 
 V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
     : m_environment(environment)
@@ -103,10 +104,21 @@ void V8VirtualMation::LoadEnvironment()
 {
     v8::HandleScope handle_scope(m_isolate);
 
+    v8::Local<v8::Context> context = this->context();
+
     v8::TryCatch try_catch(m_isolate);
     //try_catch.SetVerbose(false);
 
-    v8::Local<v8::String> loaders_name = FIXED_ONE_BYTE_STRING(m_isolate, "internal/bootstrap/loaders.js");
+    v8::Local<v8::Object> global = context->Global();
+    global->Set(FIXED_ONE_BYTE_STRING(m_isolate, "global"), global);
+
+    v8::MaybeLocal<v8::Value> bootstrapper = LoadScript(m_isolate, context, "internal/bootstrap/loaders.js");
+    CHECK(bootstrapper.ToLocalChecked()->IsFunction());
+    v8::MaybeLocal<v8::Function> loaders_bootstrapper = bootstrapper.ToLocalChecked().As<v8::Function>();
+
+    v8::Local<v8::Function> get_binding_fn = NewFunctionTemplate(GetBinding)->GetFunction(context).ToLocalChecked();
+    v8::Local<v8::Function> get_linked_binding_fn = NewFunctionTemplate(GetLinkedBinding)->GetFunction(context).ToLocalChecked();
+    v8::Local<v8::Function> get_internal_binding_fn = NewFunctionTemplate(GetInternalBinding)->GetFunction(context).ToLocalChecked();
 }
 
 bool V8VirtualMation::IsInUse()
@@ -303,4 +315,25 @@ void V8VirtualMation::SetTemplateMethodNoSideEffect(v8::Local<v8::FunctionTempla
     v8::Local<v8::String> name_string = v8::String::NewFromUtf8(m_isolate, name, type).ToLocalChecked();
     that->Set(name_string, t);
     t->SetClassName(name_string);
+}
+
+void V8VirtualMation::ThrowError(const char* errmsg)
+{
+    ThrowError(v8::Exception::Error, errmsg);
+}
+
+void V8VirtualMation::ThrowTypeError(const char* errmsg)
+{
+    ThrowError(v8::Exception::TypeError, errmsg);
+}
+
+void V8VirtualMation::ThrowRangeError(const char* errmsg)
+{
+    ThrowError(v8::Exception::RangeError, errmsg);
+}
+
+void V8VirtualMation::ThrowError(v8::Local<v8::Value>(*fun)(v8::Local<v8::String>), const char* errmsg)
+{
+    v8::HandleScope handle_scope(m_isolate);
+    m_isolate->ThrowException(fun(OneByteString(m_isolate, errmsg)));
 }

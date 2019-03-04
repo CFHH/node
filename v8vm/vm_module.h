@@ -30,6 +30,11 @@ void RegisterVMModule(VMModule* module);
 
 void RegisterBuiltinModules();
 
+void GetBinding(const v8::FunctionCallbackInfo<v8::Value>& args);
+void GetLinkedBinding(const v8::FunctionCallbackInfo<v8::Value>& args);
+void GetInternalBinding(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+
 
 #define NODE_MODULE_CONTEXT_AWARE_CPP(modname, regfunc, private_data, flags)    \
     static VMModule _module = {                                                 \

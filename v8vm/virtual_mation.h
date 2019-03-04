@@ -63,6 +63,11 @@ public:
     void SetProtoMethodNoSideEffect(v8::Local<v8::FunctionTemplate> that, const char* name, v8::FunctionCallback callback);
     void SetTemplateMethodNoSideEffect( v8::Local<v8::FunctionTemplate> that, const char* name, v8::FunctionCallback callback);
 
+    void ThrowError(const char* errmsg);
+    void ThrowTypeError(const char* errmsg);
+    void ThrowRangeError(const char* errmsg);
+    void ThrowError(v8::Local<v8::Value>(*fun)(v8::Local<v8::String>), const char* errmsg);
+
 private:
     void SetupProcessObject();
     void LoadEnvironment();

@@ -95,5 +95,12 @@ v8::MaybeLocal<v8::Value> LoadScript(v8::Isolate* isolate, v8::Local<v8::Context
         return v8::MaybeLocal<v8::Value>();
     }
 
+    if (try_catch.HasCaught())
+    {
+        ReportV8Exception(isolate, &try_catch);
+        return v8::MaybeLocal<v8::Value>();
+    }
+
     return handle_scope.Escape(result.ToLocalChecked());
 }
+
