@@ -149,8 +149,12 @@ V8Environment* g_environment = NULL;
 
 V8VM_EXTERN void V8VM_STDCALL SetJSLibPath(const char* path)
 {
-    if (g_js_lib_path_internal.length() == 0) {
+    if (g_js_lib_path_internal.length() == 0)
+    {
         g_js_lib_path_internal = path;
+        char last_char = path[strlen(path) - 1];
+        if (last_char !='/' || last_char != '\\')
+            g_js_lib_path_internal += '/';
         g_js_lib_path = g_js_lib_path_internal.c_str();
     }
 }

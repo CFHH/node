@@ -5,6 +5,7 @@ v8::Isolate* NewIsolate(v8::Isolate::CreateParams* params);
 void OnDisposeIsolate(v8::Isolate* isolate);
 v8::Local<v8::Context> NewContext(v8::Isolate* isolate, v8::Local<v8::ObjectTemplate> object_template = v8::Local<v8::ObjectTemplate>());
 void OnDisposeContext(v8::Isolate* isolate, v8::Local<v8::Context> context);
+v8::MaybeLocal<v8::Value> LoadScript(v8::Isolate* isolate, v8::Local<v8::Context> context, const char* script_name);
 
 
 #define FIXED_ONE_BYTE_STRING(isolate, str) OneByteString(isolate, str, sizeof(str) - 1)

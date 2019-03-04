@@ -4,9 +4,6 @@
     <ClInclude Include="vm\array_buffer_allocator.h">
       <Filter>vm</Filter>
     </ClInclude>
-    <ClInclude Include="vm\vm_internal.h">
-      <Filter>vm</Filter>
-    </ClInclude>
     <ClInclude Include="vm\vm_platform.h">
       <Filter>vm</Filter>
     </ClInclude>
@@ -26,9 +23,6 @@
       <Filter>vm</Filter>
     </ClCompile>
     <ClCompile Include="vm\test_module.cpp">
-      <Filter>vm</Filter>
-    </ClCompile>
-    <ClCompile Include="vm\vm_internal.cpp">
       <Filter>vm</Filter>
     </ClCompile>
     <ClCompile Include="vm\vm_platform.cpp">
@@ -63,5 +57,10 @@
     <Filter Include="module">
       <UniqueIdentifier>{f3517fa4-86c3-4029-ac41-cae5a2652ecf}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="jslib\internal\per_context.js">
+      <Filter>jslib\internal</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -65,6 +65,7 @@ public:
 
 private:
     void SetupProcessObject();
+    void LoadEnvironment();
     v8::Local<v8::Object> WrapMap(v8::Local<v8::Context> context, std::map<std::string, std::string>* obj);
     v8::Local<v8::ObjectTemplate> MakeMapTemplate();
     v8::Local<v8::ObjectTemplate> MakeInvokeParamTemplate();

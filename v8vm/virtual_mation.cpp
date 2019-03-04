@@ -52,6 +52,7 @@ V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
     v8::Local<v8::Object> process_object = process_template->GetFunction()->NewInstance(context).ToLocalChecked();
     set_process_object(process_object);
     SetupProcessObject();
+    LoadEnvironment();
 
     InstallMap(context, &m_output, "output");
 }
@@ -96,6 +97,16 @@ void V8VirtualMation::SetupProcessObject()
     v8::Local<v8::Object> process = process_object();
     SetReadOnlyProperty(process, "version", "123456789");
     SetMethod(process, "_log", Log_JS2C);
+}
+
+void V8VirtualMation::LoadEnvironment()
+{
+    v8::HandleScope handle_scope(m_isolate);
+
+    v8::TryCatch try_catch(m_isolate);
+    //try_catch.SetVerbose(false);
+
+    v8::Local<v8::String> loaders_name = FIXED_ONE_BYTE_STRING(m_isolate, "internal/bootstrap/loaders.js");
 }
 
 bool V8VirtualMation::IsInUse()

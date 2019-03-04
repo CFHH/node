@@ -190,7 +190,6 @@
     <ClInclude Include="v8vm_util.h" />
     <ClInclude Include="virtual_mation.h" />
     <ClInclude Include="vm\array_buffer_allocator.h" />
-    <ClInclude Include="vm\vm_internal.h" />
     <ClInclude Include="vm\vm_platform.h" />
     <ClInclude Include="vm_module.h" />
     <ClInclude Include="vm_util.h" />
@@ -207,10 +206,12 @@
     <ClCompile Include="virtual_mation.cpp" />
     <ClCompile Include="vm\array_buffer_allocator.cpp" />
     <ClCompile Include="vm\test_module.cpp" />
-    <ClCompile Include="vm\vm_internal.cpp" />
     <ClCompile Include="vm\vm_platform.cpp" />
     <ClCompile Include="vm_module.cpp" />
     <ClCompile Include="vm_util.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="jslib\internal\per_context.js" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
