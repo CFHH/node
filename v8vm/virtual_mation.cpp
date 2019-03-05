@@ -107,7 +107,6 @@ void V8VirtualMation::LoadEnvironment()
     v8::Local<v8::Context> context = this->context();
 
     v8::TryCatch try_catch(m_isolate);
-    //try_catch.SetVerbose(false);
 
     v8::Local<v8::Object> global = context->Global();
     global->Set(FIXED_ONE_BYTE_STRING(m_isolate, "global"), global);
@@ -119,6 +118,16 @@ void V8VirtualMation::LoadEnvironment()
     v8::Local<v8::Function> get_binding_fn = NewFunctionTemplate(GetBinding)->GetFunction(context).ToLocalChecked();
     v8::Local<v8::Function> get_linked_binding_fn = NewFunctionTemplate(GetLinkedBinding)->GetFunction(context).ToLocalChecked();
     v8::Local<v8::Function> get_internal_binding_fn = NewFunctionTemplate(GetInternalBinding)->GetFunction(context).ToLocalChecked();
+
+    v8::Local<v8::Value> loaders_bootstrapper_args[] = {
+        process_object(),
+        get_binding_fn,
+        get_linked_binding_fn,
+        get_internal_binding_fn
+    };
+
+    v8::Local<v8::Value> bootstrapped_loaders;
+    //loaders_bootstrapper.ToLocalChecked()->Call(context, v8::Null(m_isolate), arraysize(loaders_bootstrapper_args), loaders_bootstrapper_args).ToLocal(&bootstrapped_loaders);
 }
 
 bool V8VirtualMation::IsInUse()
