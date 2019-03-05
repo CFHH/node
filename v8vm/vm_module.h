@@ -60,6 +60,8 @@ void GetInternalBinding(const v8::FunctionCallbackInfo<v8::Value>& args);
 #define FOREACH_VM_BUILTIN_MODULES(V)   \
     V(testmod)                          \
     /*builtin*/                         \
+    V(config)                           \
+    V(contextify)                       \
     V(util)                             \
     /*internals*/                       \
     V(symbols)

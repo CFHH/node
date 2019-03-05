@@ -198,6 +198,8 @@
     <ClInclude Include="vm_util.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="module\config.cpp" />
+    <ClCompile Include="module\contextify.cpp" />
     <ClCompile Include="module\symbols.cpp" />
     <ClCompile Include="module\util_module.cpp" />
     <ClCompile Include="module\v8vm_code_cache.cpp" />

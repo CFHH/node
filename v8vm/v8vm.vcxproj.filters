@@ -61,6 +61,12 @@
     <ClCompile Include="module\v8vm_code_cache.cpp">
       <Filter>module</Filter>
     </ClCompile>
+    <ClCompile Include="module\config.cpp">
+      <Filter>module</Filter>
+    </ClCompile>
+    <ClCompile Include="module\contextify.cpp">
+      <Filter>module</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="vm">
