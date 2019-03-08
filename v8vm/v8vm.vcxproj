@@ -181,6 +181,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="base_object.h" />
+    <ClInclude Include="module\buffer.h" />
+    <ClInclude Include="module\contextify.h" />
     <ClInclude Include="module\v8vm_code_cache.h" />
     <ClInclude Include="module\v8vm_constants.h" />
     <ClInclude Include="module\v8vm_javascript.h" />
@@ -198,6 +201,8 @@
     <ClInclude Include="vm_util.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="base_object.cpp" />
+    <ClCompile Include="module\buffer.cpp" />
     <ClCompile Include="module\config.cpp" />
     <ClCompile Include="module\contextify.cpp" />
     <ClCompile Include="module\symbols.cpp" />

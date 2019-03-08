@@ -1,7 +1,15 @@
 #include "v8vm_internal.h"
 #include "v8vm_util.h"
+#include "virtual_mation.h"
 
 extern const char* g_js_lib_path;
+
+bool ShouldAbortOnUncaughtException(v8::Isolate* isolate)
+{
+    v8::HandleScope scope(isolate);
+    V8VirtualMation* vm = V8VirtualMation::GetCurrent(isolate);
+    return vm->inside_should_not_abort_on_uncaught_scope();
+}
 
 v8::Isolate* NewIsolate(v8::Isolate::CreateParams* params)
 {
@@ -10,7 +18,7 @@ v8::Isolate* NewIsolate(v8::Isolate::CreateParams* params)
         return nullptr;
     //ZZWTODO 
     //isolate->AddMessageListener(OnMessage);
-    //isolate->SetAbortOnUncaughtExceptionCallback(ShouldAbortOnUncaughtException);
+    isolate->SetAbortOnUncaughtExceptionCallback(ShouldAbortOnUncaughtException);
     //isolate->SetMicrotasksPolicy(v8::MicrotasksPolicy::kExplicit);
     //isolate->SetFatalErrorHandler(OnFatalError);
     //isolate->SetAllowWasmCodeGenerationCallback(AllowWasmCodeGenerationCallback);

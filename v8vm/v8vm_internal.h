@@ -7,6 +7,8 @@ v8::Local<v8::Context> NewContext(v8::Isolate* isolate, v8::Local<v8::ObjectTemp
 void OnDisposeContext(v8::Isolate* isolate, v8::Local<v8::Context> context);
 v8::MaybeLocal<v8::Value> LoadScript(v8::Isolate* isolate, v8::Local<v8::Context> context, const char* script_name);
 
+enum ErrorHandlingMode { CONTEXTIFY_ERROR, FATAL_ERROR, MODULE_ERROR };
+
 
 
 #define FIXED_ONE_BYTE_STRING(isolate, str) OneByteString(isolate, str, sizeof(str) - 1)

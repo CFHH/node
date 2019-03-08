@@ -5,6 +5,7 @@
 #include "v8vm_util.h"
 #include "v8vm_ex.h"
 #include "vm_module.h"
+#include <algorithm>
 
 V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
     : m_environment(environment)
@@ -46,7 +47,7 @@ V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
     v8::Context::Scope context_scope(context);
     set_context(context);
     set_as_external(v8::External::New(m_isolate, this));
-    context->SetAlignedPointerInEmbedderData(ContextEmbedderIndex::kEnvironment, this);
+    this->AssignToContext(context);
 
     v8::Local<v8::FunctionTemplate> process_template = v8::FunctionTemplate::New(m_isolate);
     process_template->SetClassName(FIXED_ONE_BYTE_STRING(m_isolate, "process"));
@@ -60,6 +61,7 @@ V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
 
 V8VirtualMation::~V8VirtualMation()
 {
+    RunCleanup();
     //Dispose isolate
     {
         v8::Locker locker(m_isolate);
@@ -236,6 +238,11 @@ v8::Local<v8::ObjectTemplate> V8VirtualMation::MakeInvokeParamTemplate()
 
 
 
+void V8VirtualMation::AssignToContext(v8::Local<v8::Context> context)
+{
+    context->SetAlignedPointerInEmbedderData(ContextEmbedderIndex::kEnvironment, this);
+}
+
 V8VirtualMation* V8VirtualMation::GetCurrent(v8::Isolate* isolate)
 {
     return V8VirtualMation::GetCurrent(isolate->GetCurrentContext());
@@ -345,4 +352,143 @@ void V8VirtualMation::ThrowError(v8::Local<v8::Value>(*fun)(v8::Local<v8::String
 {
     v8::HandleScope handle_scope(m_isolate);
     m_isolate->ThrowException(fun(OneByteString(m_isolate, errmsg)));
+}
+
+bool V8VirtualMation::IsExceptionDecorated(v8::Local<v8::Value> er)
+{
+    if (!er.IsEmpty() && er->IsObject())
+    {
+        v8::Local<v8::Object> err_obj = er.As<v8::Object>();
+        auto maybe_value = err_obj->GetPrivate(context(), decorated_private_symbol());
+        v8::Local<v8::Value> decorated;
+        return maybe_value.ToLocal(&decorated) && decorated->IsTrue();
+    }
+    return false;
+}
+
+void V8VirtualMation::AppendExceptionLine(v8::Local<v8::Value> er, v8::Local<v8::Message> message, enum ErrorHandlingMode mode)
+{
+    if (message.IsEmpty())
+        return;
+    v8::Local<v8::Context> context = this->context();
+
+    v8::HandleScope scope(m_isolate);
+    v8::Local<v8::Object> err_obj;
+    if (!er.IsEmpty() && er->IsObject())
+        err_obj = er.As<v8::Object>();
+
+    // Print (filename):(line number): (message).
+    v8::ScriptOrigin origin = message->GetScriptOrigin();
+    v8::Local<v8::Value> resource_name = message->GetScriptResourceName();
+    v8::String::Utf8Value filename(m_isolate, resource_name);
+    const char* filename_string = *filename;
+    int linenum = message->GetLineNumber(context).FromJust();
+
+    // Print line of source code.
+    v8::MaybeLocal<v8::String> source_line_maybe = message->GetSourceLine(context);
+    v8::String::Utf8Value sourceline(m_isolate, source_line_maybe.ToLocalChecked());
+    const char* sourceline_string = *sourceline;
+    if (strstr(sourceline_string, "node-do-not-add-exception-line") != nullptr)
+        return;
+
+    // Because of how node modules work, all scripts are wrapped with a
+    // "function (module, exports, __filename, ...) {"
+    // to provide script local variables.
+    //
+    // When reporting errors on the first line of a script, this wrapper
+    // function is leaked to the user. There used to be a hack here to
+    // truncate off the first 62 characters, but it caused numerous other
+    // problems when vm.runIn*Context() methods were used for non-module
+    // code.
+    //
+    // If we ever decide to re-instate such a hack, the following steps
+    // must be taken:
+    //
+    // 1. Pass a flag around to say "this code was wrapped"
+    // 2. Update the stack frame output so that it is also correct.
+    //
+    // It would probably be simpler to add a line rather than add some
+    // number of characters to the first line, since V8 truncates the
+    // sourceline to 78 characters, and we end up not providing very much
+    // useful debugging info to the user if we remove 62 characters.
+
+    int script_start = (linenum - origin.ResourceLineOffset()->Value()) == 1 ? origin.ResourceColumnOffset()->Value() : 0;
+    int start = message->GetStartColumn(context).FromMaybe(0);
+    int end = message->GetEndColumn(context).FromMaybe(0);
+    if (start >= script_start)
+    {
+        CHECK_GE(end, start);
+        start -= script_start;
+        end -= script_start;
+    }
+
+    char arrow[1024];
+    int max_off = sizeof(arrow) - 2;
+    int off = snprintf(arrow, sizeof(arrow), "%s:%i\n%s\n", filename_string, linenum, sourceline_string);
+    CHECK_GE(off, 0);
+    if (off > max_off)
+        off = max_off;
+
+    // Print wavy underline (GetUnderline is deprecated).
+    for (int i = 0; i < start; i++)
+    {
+        if (sourceline_string[i] == '\0' || off >= max_off)
+            break;
+        CHECK_LT(off, max_off);
+        arrow[off++] = (sourceline_string[i] == '\t') ? '\t' : ' ';
+    }
+    for (int i = start; i < end; i++)
+    {
+        if (sourceline_string[i] == '\0' || off >= max_off)
+            break;
+        CHECK_LT(off, max_off);
+        arrow[off++] = '^';
+    }
+    CHECK_LE(off, max_off);
+    arrow[off] = '\n';
+    arrow[off + 1] = '\0';
+
+    v8::Local<v8::String> arrow_str = v8::String::NewFromUtf8(m_isolate, arrow);
+
+    const bool can_set_arrow = !arrow_str.IsEmpty() && !err_obj.IsEmpty();
+    if (!can_set_arrow || (mode == FATAL_ERROR && !err_obj->IsNativeError()))
+    {
+        Log("%s\n", arrow);
+        return;
+    }
+    CHECK(err_obj->SetPrivate(context, arrow_message_private_symbol(), arrow_str).FromMaybe(false));
+}
+
+
+void V8VirtualMation::AddCleanupHook(void(*fn)(void*), void* arg)
+{
+    auto insertion_info = m_cleanup_hooks.emplace(CleanupHookCallback{fn, arg, m_cleanup_hook_counter++});
+    CHECK_EQ(insertion_info.second, true);
+}
+
+void V8VirtualMation::RemoveCleanupHook(void(*fn)(void*), void* arg)
+{
+    CleanupHookCallback search{fn, arg, 0};
+    m_cleanup_hooks.erase(search);
+}
+
+void V8VirtualMation::RunCleanup()
+{
+    while (!m_cleanup_hooks.empty())
+    {
+        std::vector<CleanupHookCallback> callbacks(m_cleanup_hooks.begin(), m_cleanup_hooks.end());
+        auto sort_algorithm = [](const CleanupHookCallback& a, const CleanupHookCallback& b)
+        {
+            return a.m_insertion_order_counter > b.m_insertion_order_counter;
+        };
+        std::sort(callbacks.begin(), callbacks.end(), sort_algorithm);
+
+        for (const CleanupHookCallback& cb : callbacks)
+        {
+            if (m_cleanup_hooks.count(cb) == 0)
+                continue;
+            cb.m_fn(cb.m_arg);
+            m_cleanup_hooks.erase(cb);
+        }
+    }
 }

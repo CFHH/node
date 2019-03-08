@@ -26,6 +26,13 @@
     <ClInclude Include="module\v8vm_code_cache.h">
       <Filter>module</Filter>
     </ClInclude>
+    <ClInclude Include="base_object.h" />
+    <ClInclude Include="module\contextify.h">
+      <Filter>module</Filter>
+    </ClInclude>
+    <ClInclude Include="module\buffer.h">
+      <Filter>module</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vm\array_buffer_allocator.cpp">
@@ -65,6 +72,10 @@
       <Filter>module</Filter>
     </ClCompile>
     <ClCompile Include="module\contextify.cpp">
+      <Filter>module</Filter>
+    </ClCompile>
+    <ClCompile Include="base_object.cpp" />
+    <ClCompile Include="module\buffer.cpp">
       <Filter>module</Filter>
     </ClCompile>
   </ItemGroup>

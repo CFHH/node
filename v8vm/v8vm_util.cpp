@@ -104,6 +104,7 @@ void GetInvokeParam2_JS2C(v8::Local<v8::String> name, const v8::PropertyCallback
 
 void ReportV8Exception(v8::Isolate* isolate, v8::TryCatch* try_catch)
 {
+    //ZZWTODO vm->stack_string() vm->arrow_message_private_symbol()
     v8::HandleScope handle_scope(isolate);
     v8::String::Utf8Value exception(isolate, try_catch->Exception());
     const char* exception_string = *exception;
