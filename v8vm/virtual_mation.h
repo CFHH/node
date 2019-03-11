@@ -24,6 +24,8 @@ struct InvokeParam;
     V(cached_data_produced_string, "cachedDataProduced")            \
     V(cached_data_rejected_string, "cachedDataRejected")            \
     V(cached_data_string, "cachedData")                             \
+    V(fatal_exception_string, "_fatalException")                    \
+    V(message_string, "message")                                    \
     V(stack_string, "stack")
 
 #define ENVIRONMENT_STRONG_PERSISTENT_PROPERTIES(V)                 \
@@ -79,10 +81,14 @@ public:
     void ThrowRangeError(const char* errmsg);
     void ThrowError(v8::Local<v8::Value>(*fun)(v8::Local<v8::String>), const char* errmsg);
 
+    void ReportException(v8::Local<v8::Value> er, v8::Local<v8::Message> message);
+    void ReportException(const v8::TryCatch& try_catch);
+
     bool IsExceptionDecorated(v8::Local<v8::Value> er);
     void AppendExceptionLine(v8::Local<v8::Value> er, v8::Local<v8::Message> message, enum ErrorHandlingMode mode);
     bool CanCallIntoJS() { return m_can_call_into_js; }
     bool SetCanCallIntoJS(bool value) { m_can_call_into_js = value; }
+
 
 private:
     void SetupProcessObject();

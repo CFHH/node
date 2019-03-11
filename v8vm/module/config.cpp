@@ -23,4 +23,4 @@ void InitializeConfigModule(v8::Local<v8::Object> exports, v8::Local<v8::Value> 
         READONLY_BOOLEAN_PROPERTY("experimentalWorker");
 }
 
-NODE_MODULE_CONTEXT_AWARE_INTERNAL(config, InitializeConfigModule)
+NODE_BUILTIN_MODULE_CONTEXT_AWARE(config, InitializeConfigModule)

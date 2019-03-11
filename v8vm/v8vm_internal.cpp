@@ -4,6 +4,44 @@
 
 extern const char* g_js_lib_path;
 
+void FatalException(v8::Isolate* isolate, v8::Local<v8::Value> error, v8::Local<v8::Message> message)
+{
+    v8::HandleScope scope(isolate);
+
+    V8VirtualMation* vm = V8VirtualMation::GetCurrent(isolate);
+    v8::Local<v8::Object> process_object = vm->process_object();
+    v8::Local<v8::String> fatal_exception_string = vm->fatal_exception_string();
+    v8::Local<v8::Function> fatal_exception_function = process_object->Get(fatal_exception_string).As<v8::Function>();
+
+    if (!fatal_exception_function->IsFunction())
+    {
+        vm->ReportException(error, message);
+        exit(6);
+    }
+    else
+    {
+        v8::TryCatch fatal_try_catch(isolate);
+        v8::Local<v8::Value> caught = fatal_exception_function->Call(process_object, 1, &error);
+        if (fatal_try_catch.HasTerminated())
+            return;
+        if (fatal_try_catch.HasCaught())
+        {
+            vm->ReportException(fatal_try_catch);
+            exit(7);
+        }
+        else if (caught->IsFalse())
+        {
+            vm->ReportException(error, message);
+            exit(1);
+        }
+    }
+}
+
+void OnMessage(v8::Local<v8::Message> message, v8::Local<v8::Value> error)
+{
+    FatalException(v8::Isolate::GetCurrent(), error, message);
+}
+
 bool ShouldAbortOnUncaughtException(v8::Isolate* isolate)
 {
     v8::HandleScope scope(isolate);
@@ -11,16 +49,30 @@ bool ShouldAbortOnUncaughtException(v8::Isolate* isolate)
     return vm->inside_should_not_abort_on_uncaught_scope();
 }
 
+void OnFatalError(const char* location, const char* message)
+{
+    if (location)
+    {
+        Log("FATAL ERROR: %s %s\n", location, message);
+    }
+    else
+    {
+        Log("FATAL ERROR: %s\n", message);
+    }
+    ABORT();
+}
+
+
 v8::Isolate* NewIsolate(v8::Isolate::CreateParams* params)
 {
     v8::Isolate* isolate = v8::Isolate::New(*params);
     if (isolate == nullptr)
         return nullptr;
     //ZZWTODO 
-    //isolate->AddMessageListener(OnMessage);
+    isolate->AddMessageListener(OnMessage);
     isolate->SetAbortOnUncaughtExceptionCallback(ShouldAbortOnUncaughtException);
     //isolate->SetMicrotasksPolicy(v8::MicrotasksPolicy::kExplicit);
-    //isolate->SetFatalErrorHandler(OnFatalError);
+    isolate->SetFatalErrorHandler(OnFatalError);
     //isolate->SetAllowWasmCodeGenerationCallback(AllowWasmCodeGenerationCallback);
     return isolate;
 }

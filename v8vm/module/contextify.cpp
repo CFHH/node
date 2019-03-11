@@ -679,4 +679,4 @@ void InitializeContextifyModule(v8::Local<v8::Object> exports, v8::Local<v8::Val
     ContextifyScript::InitializeContextifyModule(vm, exports);
 }
 
-NODE_MODULE_CONTEXT_AWARE_INTERNAL(contextify, InitializeContextifyModule)
+NODE_BUILTIN_MODULE_CONTEXT_AWARE(contextify, InitializeContextifyModule)

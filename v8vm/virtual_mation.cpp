@@ -129,7 +129,7 @@ void V8VirtualMation::LoadEnvironment()
     };
 
     v8::Local<v8::Value> bootstrapped_loaders;
-    //loaders_bootstrapper.ToLocalChecked()->Call(context, v8::Null(m_isolate), arraysize(loaders_bootstrapper_args), loaders_bootstrapper_args).ToLocal(&bootstrapped_loaders);
+    loaders_bootstrapper.ToLocalChecked()->Call(context, v8::Null(m_isolate), arraysize(loaders_bootstrapper_args), loaders_bootstrapper_args).ToLocal(&bootstrapped_loaders);
 }
 
 bool V8VirtualMation::IsInUse()
@@ -352,6 +352,87 @@ void V8VirtualMation::ThrowError(v8::Local<v8::Value>(*fun)(v8::Local<v8::String
 {
     v8::HandleScope handle_scope(m_isolate);
     m_isolate->ThrowException(fun(OneByteString(m_isolate, errmsg)));
+}
+
+void V8VirtualMation::ReportException(v8::Local<v8::Value> er, v8::Local<v8::Message> message)
+{
+    CHECK(!er.IsEmpty());
+    v8::HandleScope scope(m_isolate);
+    v8::Local<v8::Context> context = this->context();
+    if (message.IsEmpty())
+        message = v8::Exception::CreateMessage(m_isolate, er);
+    AppendExceptionLine(er, message, FATAL_ERROR);
+    v8::Local<v8::Value> trace_value;
+    v8::Local<v8::Value> arrow;
+    const bool decorated = IsExceptionDecorated(er);
+    if (er->IsUndefined() || er->IsNull())
+    {
+        trace_value = v8::Undefined(m_isolate);
+    }
+    else
+    {
+        v8::Local<v8::Object> err_obj = er->ToObject(context).ToLocalChecked();
+        trace_value = err_obj->Get(stack_string());
+        arrow = err_obj->GetPrivate(context, arrow_message_private_symbol()).ToLocalChecked();
+    }
+
+    v8::String::Utf8Value utf8_trace(m_isolate, trace_value);
+    char* trace = *utf8_trace;
+    if (trace == nullptr && !trace_value->IsUndefined())
+    {
+        if (arrow.IsEmpty() || !arrow->IsString() || decorated)
+        {
+            Log("%s\n", trace);
+        }
+        else
+        {
+            v8::String::Utf8Value utf8_arrow(m_isolate, arrow);
+            char* arrow_string = *utf8_arrow;
+            Log("%s\n%s\n", arrow_string, trace);
+        }
+    }
+    else
+    {
+        // this really only happens for RangeErrors, since they're the only
+        // kind that won't have all this info in the trace, or when non-Error
+        // objects are thrown manually.
+        v8::Local<v8::Value> message;
+        v8::Local<v8::Value> name;
+        if (er->IsObject())
+        {
+            v8::Local<v8::Object> err_obj = er.As<v8::Object>();
+            message = err_obj->Get(message_string());
+            name = err_obj->Get(FIXED_ONE_BYTE_STRING(m_isolate, "name"));
+        }
+        if (message.IsEmpty() || message->IsUndefined() || name.IsEmpty() || name->IsUndefined())
+        {
+            v8::String::Utf8Value utf8_message(m_isolate, er);
+            char* message = *utf8_message;
+            Log("%s\n", message ? message : "<toString() threw exception>");
+        }
+        else
+        {
+            v8::String::Utf8Value utf8_name(m_isolate, name);
+            char* name_string = *utf8_name;
+            v8::String::Utf8Value utf8_message(m_isolate, message);
+            char* message_string = *utf8_message;
+            if (arrow.IsEmpty() || !arrow->IsString() || decorated)
+            {
+                Log("%s: %s\n", name_string, message_string);
+            }
+            else
+            {
+                v8::String::Utf8Value utf8_arrowe(m_isolate, arrow);
+                char* arrow_string = *utf8_arrowe;
+                Log("%s\n%s: %s\n", *arrow_string, name_string, message_string);
+            }
+        }
+    }
+}
+
+void V8VirtualMation::ReportException(const v8::TryCatch& try_catch)
+{
+    ReportException(try_catch.Exception(), try_catch.Message());
 }
 
 bool V8VirtualMation::IsExceptionDecorated(v8::Local<v8::Value> er)
