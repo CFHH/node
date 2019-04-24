@@ -102,6 +102,31 @@ void V8VirtualMation::SetupProcessObject()
     SetMethod(process, "_log", Log_JS2C);
 }
 
+void V8VirtualMation::SetupBootstrapObject(v8::Local<v8::Object> bootstrapper)
+{
+    //BOOTSTRAP_METHOD(_setupProcessObject, SetupProcessObject);
+    //BOOTSTRAP_METHOD(_setupNextTick, SetupNextTick);
+    //BOOTSTRAP_METHOD(_setupPromises, SetupPromises);
+    //BOOTSTRAP_METHOD(_chdir, Chdir);
+    //BOOTSTRAP_METHOD(_cpuUsage, CPUUsage);
+    //BOOTSTRAP_METHOD(_hrtime, Hrtime);
+    //BOOTSTRAP_METHOD(_hrtimeBigInt, HrtimeBigInt);
+    //BOOTSTRAP_METHOD(_memoryUsage, MemoryUsage);
+    //BOOTSTRAP_METHOD(_rawDebug, RawDebug);
+    //BOOTSTRAP_METHOD(_umask, Umask);
+
+#if defined(__POSIX__) && !defined(__ANDROID__) && !defined(__CloudABI__)
+    if (env->is_main_thread()) {
+        BOOTSTRAP_METHOD(_initgroups, InitGroups);
+        BOOTSTRAP_METHOD(_setegid, SetEGid);
+        BOOTSTRAP_METHOD(_seteuid, SetEUid);
+        BOOTSTRAP_METHOD(_setgid, SetGid);
+        BOOTSTRAP_METHOD(_setuid, SetUid);
+        BOOTSTRAP_METHOD(_setgroups, SetGroups);
+    }
+#endif  // __POSIX__ && !defined(__ANDROID__) && !defined(__CloudABI__)
+}
+
 void V8VirtualMation::LoadEnvironment()
 {
     v8::HandleScope handle_scope(m_isolate);
@@ -113,23 +138,35 @@ void V8VirtualMation::LoadEnvironment()
     v8::Local<v8::Object> global = context->Global();
     global->Set(FIXED_ONE_BYTE_STRING(m_isolate, "global"), global);
 
-    v8::MaybeLocal<v8::Value> bootstrapper = LoadScript(m_isolate, context, "internal/bootstrap/loaders.js");
-    CHECK(bootstrapper.ToLocalChecked()->IsFunction());
-    v8::MaybeLocal<v8::Function> loaders_bootstrapper = bootstrapper.ToLocalChecked().As<v8::Function>();
+    v8::MaybeLocal<v8::Value> v8value = LoadScript(m_isolate, context, "internal/bootstrap/loaders.js");
+    CHECK(v8value.ToLocalChecked()->IsFunction());
+    v8::MaybeLocal<v8::Function> loaders_bootstrapper = v8value.ToLocalChecked().As<v8::Function>();
 
     v8::Local<v8::Function> get_binding_fn = NewFunctionTemplate(GetBinding)->GetFunction(context).ToLocalChecked();
     v8::Local<v8::Function> get_linked_binding_fn = NewFunctionTemplate(GetLinkedBinding)->GetFunction(context).ToLocalChecked();
     v8::Local<v8::Function> get_internal_binding_fn = NewFunctionTemplate(GetInternalBinding)->GetFunction(context).ToLocalChecked();
-
     v8::Local<v8::Value> loaders_bootstrapper_args[] = {
         process_object(),
         get_binding_fn,
         get_linked_binding_fn,
         get_internal_binding_fn
     };
-
     v8::Local<v8::Value> bootstrapped_loaders;
     loaders_bootstrapper.ToLocalChecked()->Call(context, v8::Null(m_isolate), arraysize(loaders_bootstrapper_args), loaders_bootstrapper_args).ToLocal(&bootstrapped_loaders);
+
+    v8value = LoadScript(m_isolate, context, "internal/bootstrap/v8vm.js");
+    CHECK(v8value.ToLocalChecked()->IsFunction());
+    v8::MaybeLocal<v8::Function> v8vm_bootstrapper = v8value.ToLocalChecked().As<v8::Function>();
+
+    v8::Local<v8::Object> bootstrapper = v8::Object::New(m_isolate);
+    SetupBootstrapObject(bootstrapper);
+    v8::Local<v8::Value> v8vm_bootstrapper_args[] = {
+        process_object(),
+        bootstrapper,
+        bootstrapped_loaders
+    };
+    v8::Local<v8::Object> bootstrapped_v8vm;
+    v8vm_bootstrapper.ToLocalChecked()->Call(context, v8::Null(m_isolate), arraysize(v8vm_bootstrapper_args), v8vm_bootstrapper_args).ToLocal(&bootstrapped_v8vm);
 }
 
 bool V8VirtualMation::IsInUse()
