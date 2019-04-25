@@ -154,19 +154,19 @@ void V8VirtualMation::LoadEnvironment()
     v8::Local<v8::Value> bootstrapped_loaders;
     loaders_bootstrapper.ToLocalChecked()->Call(context, v8::Null(m_isolate), arraysize(loaders_bootstrapper_args), loaders_bootstrapper_args).ToLocal(&bootstrapped_loaders);
 
-    v8value = LoadScript(m_isolate, context, "internal/bootstrap/v8vm.js");
-    CHECK(v8value.ToLocalChecked()->IsFunction());
-    v8::MaybeLocal<v8::Function> v8vm_bootstrapper = v8value.ToLocalChecked().As<v8::Function>();
+    //v8value = LoadScript(m_isolate, context, "internal/bootstrap/v8vm.js");
+    //CHECK(v8value.ToLocalChecked()->IsFunction());
+    //v8::MaybeLocal<v8::Function> v8vm_bootstrapper = v8value.ToLocalChecked().As<v8::Function>();
 
-    v8::Local<v8::Object> bootstrapper = v8::Object::New(m_isolate);
-    SetupBootstrapObject(bootstrapper);
-    v8::Local<v8::Value> v8vm_bootstrapper_args[] = {
-        process_object(),
-        bootstrapper,
-        bootstrapped_loaders
-    };
-    v8::Local<v8::Object> bootstrapped_v8vm;
-    v8vm_bootstrapper.ToLocalChecked()->Call(context, v8::Null(m_isolate), arraysize(v8vm_bootstrapper_args), v8vm_bootstrapper_args).ToLocal(&bootstrapped_v8vm);
+    //v8::Local<v8::Object> bootstrapper = v8::Object::New(m_isolate);
+    //SetupBootstrapObject(bootstrapper);
+    //v8::Local<v8::Value> v8vm_bootstrapper_args[] = {
+    //    process_object(),
+    //    bootstrapper,
+    //    bootstrapped_loaders
+    //};
+    //v8::Local<v8::Object> bootstrapped_v8vm;
+    //v8vm_bootstrapper.ToLocalChecked()->Call(context, v8::Null(m_isolate), arraysize(v8vm_bootstrapper_args), v8vm_bootstrapper_args).ToLocal(&bootstrapped_v8vm);
 }
 
 bool V8VirtualMation::IsInUse()
