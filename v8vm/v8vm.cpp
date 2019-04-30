@@ -256,7 +256,7 @@ V8VM_EXTERN int V8VM_STDCALL InvokeSmartContract(Int64 vmid, const char* contrac
         return -1;
 
     InvokeParam param;
-    param.param0 = int(vmid); //ZZWTODO
+    param.param0 = int(vmid); //ZZWTODO 修改V8来支持64位，或修改区块链只支持32位
     param.param1 = param1;
     param.param2 = param2;
     bool result = contract->Invoke(&param);

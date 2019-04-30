@@ -68,7 +68,7 @@ v8::Local<v8::Context> ContextifyContext::CreateV8Context(V8VirtualMation* vm, v
     object_template->SetHandler(config);
     object_template->SetHandler(indexed_config);
 
-    v8::Local<v8::Context> new_context = NewContext(isolate, object_template);
+    v8::Local<v8::Context> new_context = NewContext(isolate, vm, object_template);
 
     if (new_context.IsEmpty())
     {
@@ -89,7 +89,6 @@ v8::Local<v8::Context> ContextifyContext::CreateV8Context(V8VirtualMation* vm, v
 
     new_context->AllowCodeGenerationFromStrings(options.allow_code_gen_strings->IsTrue());
     new_context->SetEmbedderData(ContextEmbedderIndex::kAllowWasmCodeGeneration, options.allow_code_gen_wasm);
-    vm->AssignToContext(new_context);
 
     return scope.Escape(new_context);
 }

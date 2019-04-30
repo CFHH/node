@@ -27,12 +27,12 @@ bool SmartContract::Initialize(const char* sourcecode)
 
 #if SMART_CONTRACT_OWN_SEPERATE_CONTEXT
     v8::Local<v8::ObjectTemplate> global = v8::ObjectTemplate::New(isolate);
-    //ZZWTODO 实现CommonJS，用require
+    //ZZWTODO COMMONJS
     global->Set(v8::String::NewFromUtf8(isolate, "log", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(isolate, Log_JS2C));
     global->Set(v8::String::NewFromUtf8(isolate, "BalanceTransfer", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(isolate, BalanceTransfer_JS2C));
     v8::Local<v8::Context> context = v8::Context::New(isolate, NULL, global);
     v8::Context::Scope context_scope(context);
-    m_vm->InstallMap(context, &m_output, "output");
+    m_vm->SetupOutputMap(context, &m_output, "output");
 #else
     v8::Local<v8::Context> context = m_vm->context();
     v8::Context::Scope context_scope(context);

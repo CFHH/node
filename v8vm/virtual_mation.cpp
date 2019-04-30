@@ -11,13 +11,17 @@ V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
     : m_environment(environment)
     , m_vmid(vmid)
 {
-    m_create_params.array_buffer_allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator(); //ZZWTODO 替换为 ArrayBufferAllocator
+    //创建Isolate做为虚拟机
+    m_create_params.array_buffer_allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator(); //ZZWTODO 替换为自定义的ArrayBufferAllocator
     m_isolate = NewIsolate(&m_create_params);
 
     v8::Locker locker(m_isolate);
     v8::Isolate::Scope isolate_scope(m_isolate);
     v8::HandleScope handle_scope(m_isolate);
 
+    //m_isolate->SetData(0, this);
+
+    //定义Isolate的属性
 #define V(PropertyName, StringValue)    \
     m_ ## PropertyName.Set(m_isolate,   \
         v8::Private::New(m_isolate,     \
@@ -38,25 +42,28 @@ V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
     PER_ISOLATE_STRING_PROPERTIES(V)
 #undef V
 
-    //ZZWTODO 实现CommonJS，用require
+    //ZZWTODO COMMONJS 创建V8::Context
     v8::Local<v8::ObjectTemplate> global = v8::ObjectTemplate::New(m_isolate);
     global->Set(v8::String::NewFromUtf8(m_isolate, "log", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, Log_JS2C));
     global->Set(v8::String::NewFromUtf8(m_isolate, "BalanceTransfer", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, BalanceTransfer_JS2C));
 
-    v8::Local<v8::Context> context = NewContext(m_isolate, global);
+    v8::Local<v8::Context> context = NewContext(m_isolate, this, global);
     v8::Context::Scope context_scope(context);
     set_context(context);
     set_as_external(v8::External::New(m_isolate, this));
-    this->AssignToContext(context);
+    //SetupCommonjs();
 
+    //创建一个process对象
     v8::Local<v8::FunctionTemplate> process_template = v8::FunctionTemplate::New(m_isolate);
     process_template->SetClassName(FIXED_ONE_BYTE_STRING(m_isolate, "process"));
     v8::Local<v8::Object> process_object = process_template->GetFunction()->NewInstance(context).ToLocalChecked();
     set_process_object(process_object);
     SetupProcessObject();
-    LoadEnvironment();
 
-    InstallMap(context, &m_output, "output");
+    //LoadEnvironment(); //ZZWTODO COMMONJS NODE 最主要的
+
+    //向JS引入一个std::map，用于测试
+    SetupOutputMap(context, &m_output, "output");
 }
 
 V8VirtualMation::~V8VirtualMation()
@@ -90,8 +97,26 @@ V8VirtualMation::~V8VirtualMation()
 
     m_isolate->Dispose();
     m_isolate = NULL;
-    delete m_create_params.array_buffer_allocator; //ZZWTODO 替换为 ArrayBufferAllocator
+    delete m_create_params.array_buffer_allocator; //ZZWTODO 替换为自定义的ArrayBufferAllocator
     m_environment = NULL;
+}
+
+bool V8VirtualMation::IsInUse()
+{
+    return m_isolate->IsInUse();
+}
+
+void V8VirtualMation::PumpMessage()
+{
+    m_environment->PumpMessage(m_isolate);
+}
+
+void V8VirtualMation::SetupCommonjs()
+{
+    v8::HandleScope handle_scope(m_isolate);
+    v8::Local<v8::Context> context = this->context();
+    v8::TryCatch try_catch(m_isolate);
+    LoadScript(m_isolate, context, "internal/commonjs.js");
 }
 
 void V8VirtualMation::SetupProcessObject()
@@ -135,6 +160,7 @@ void V8VirtualMation::LoadEnvironment()
 
     v8::TryCatch try_catch(m_isolate);
 
+    //把global暴露给脚本
     v8::Local<v8::Object> global = context->Global();
     global->Set(FIXED_ONE_BYTE_STRING(m_isolate, "global"), global);
 
@@ -169,15 +195,10 @@ void V8VirtualMation::LoadEnvironment()
     //v8vm_bootstrapper.ToLocalChecked()->Call(context, v8::Null(m_isolate), arraysize(v8vm_bootstrapper_args), v8vm_bootstrapper_args).ToLocal(&bootstrapped_v8vm);
 }
 
-bool V8VirtualMation::IsInUse()
-{
-    return m_isolate->IsInUse();
-}
 
-void V8VirtualMation::PumpMessage()
-{
-    m_environment->PumpMessage(m_isolate);
-}
+/****************************************************************************************************
+* 智能合约
+****************************************************************************************************/
 
 SmartContract* V8VirtualMation::CreateSmartContract(const char* contract_name, const char* sourcecode)
 {
@@ -211,7 +232,7 @@ SmartContract* V8VirtualMation::GetSmartContract(const char* contract_name)
     return contract;
 }
 
-void V8VirtualMation::InstallMap(v8::Local<v8::Context> context, std::map<std::string, std::string>* stdmap, const char* map_name)
+void V8VirtualMation::SetupOutputMap(v8::Local<v8::Context> context, std::map<std::string, std::string>* stdmap, const char* map_name)
 {
     v8::HandleScope handle_scope(m_isolate);
     v8::Local<v8::Object> map_obj = WrapMap(context, stdmap);
@@ -241,8 +262,6 @@ v8::Local<v8::ObjectTemplate> V8VirtualMation::MakeMapTemplate()
     obj_templ->SetHandler(v8::NamedPropertyHandlerConfiguration(MapGet_JS2C, MapSet_JS2C));
     return handle_scope.Escape(obj_templ);
 }
-
-
 
 v8::Local<v8::Object> V8VirtualMation::WrapInvokeParam(v8::Local<v8::Context> context, InvokeParam* param)
 {
@@ -274,10 +293,14 @@ v8::Local<v8::ObjectTemplate> V8VirtualMation::MakeInvokeParamTemplate()
 }
 
 
+/****************************************************************************************************
+* 各种方法取得 V8VirtualMation*
+****************************************************************************************************/
 
-void V8VirtualMation::AssignToContext(v8::Local<v8::Context> context)
+V8VirtualMation* V8VirtualMation::GetCurrent(v8::Local<v8::Context> context)
 {
-    context->SetAlignedPointerInEmbedderData(ContextEmbedderIndex::kEnvironment, this);
+    //kEnvironment
+    return static_cast<V8VirtualMation*>(context->GetAlignedPointerFromEmbedderData(ContextEmbedderIndex::kEnvironment));
 }
 
 V8VirtualMation* V8VirtualMation::GetCurrent(v8::Isolate* isolate)
@@ -285,15 +308,11 @@ V8VirtualMation* V8VirtualMation::GetCurrent(v8::Isolate* isolate)
     return V8VirtualMation::GetCurrent(isolate->GetCurrentContext());
 }
 
-V8VirtualMation* V8VirtualMation::GetCurrent(v8::Local<v8::Context> context)
-{
-    return static_cast<V8VirtualMation*>(context->GetAlignedPointerFromEmbedderData(ContextEmbedderIndex::kEnvironment));
-}
-
 V8VirtualMation* V8VirtualMation::GetCurrent(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
+    //as_external()
     CHECK(info.Data()->IsExternal());
-    return static_cast<V8VirtualMation*>(info.Data().As<v8::External>()->Value());
+    return static_cast<V8VirtualMation*>(info.Data().template As<v8::External>()->Value());
 }
 
 template <typename T>
@@ -302,6 +321,11 @@ V8VirtualMation* V8VirtualMation::GetCurrent(const v8::PropertyCallbackInfo<T>& 
     CHECK(info.Data()->IsExternal());
     return static_cast<V8VirtualMation*>(info.Data().template As<v8::External>()->Value());
 }
+
+
+/****************************************************************************************************
+* 设置属性和方法
+****************************************************************************************************/
 
 void V8VirtualMation::SetReadOnlyProperty(v8::Local<v8::Object> obj, const char* key, const char* val)
 {
@@ -369,6 +393,11 @@ void V8VirtualMation::SetTemplateMethodNoSideEffect(v8::Local<v8::FunctionTempla
     that->Set(name_string, t);
     t->SetClassName(name_string);
 }
+
+
+/****************************************************************************************************
+* 异常处理
+****************************************************************************************************/
 
 void V8VirtualMation::ThrowError(const char* errmsg)
 {
@@ -577,6 +606,10 @@ void V8VirtualMation::AppendExceptionLine(v8::Local<v8::Value> er, v8::Local<v8:
     CHECK(err_obj->SetPrivate(context, arrow_message_private_symbol(), arrow_str).FromMaybe(false));
 }
 
+
+/****************************************************************************************************
+* 其他
+****************************************************************************************************/
 
 void V8VirtualMation::AddCleanupHook(void(*fn)(void*), void* arg)
 {

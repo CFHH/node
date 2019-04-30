@@ -12,7 +12,7 @@ class V8Environment
 public:
     explicit V8Environment();
     ~V8Environment();
-    v8::Platform* GetPlatform() {  return m_platform.get(); }
+    v8::Platform* GetPlatform() { return m_platform.get(); }
     void PumpMessage(v8::Isolate* isolate);
     V8VirtualMation* CreateVirtualMation(Int64 expected_vmid);
     void DisposeVirtualMation(Int64 vmid);

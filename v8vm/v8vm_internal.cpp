@@ -4,8 +4,16 @@
 
 extern const char* g_js_lib_path;
 
-void FatalException(v8::Isolate* isolate, v8::Local<v8::Value> error, v8::Local<v8::Message> message)
+bool ShouldAbortOnUncaughtException(v8::Isolate* isolate)
 {
+    v8::HandleScope scope(isolate);
+    V8VirtualMation* vm = V8VirtualMation::GetCurrent(isolate);
+    return vm->inside_should_not_abort_on_uncaught_scope();
+}
+
+void OnMessage(v8::Local<v8::Message> message, v8::Local<v8::Value> error)
+{
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
     v8::HandleScope scope(isolate);
 
     V8VirtualMation* vm = V8VirtualMation::GetCurrent(isolate);
@@ -37,18 +45,6 @@ void FatalException(v8::Isolate* isolate, v8::Local<v8::Value> error, v8::Local<
     }
 }
 
-void OnMessage(v8::Local<v8::Message> message, v8::Local<v8::Value> error)
-{
-    FatalException(v8::Isolate::GetCurrent(), error, message);
-}
-
-bool ShouldAbortOnUncaughtException(v8::Isolate* isolate)
-{
-    v8::HandleScope scope(isolate);
-    V8VirtualMation* vm = V8VirtualMation::GetCurrent(isolate);
-    return vm->inside_should_not_abort_on_uncaught_scope();
-}
-
 void OnFatalError(const char* location, const char* message)
 {
     if (location)
@@ -62,18 +58,50 @@ void OnFatalError(const char* location, const char* message)
     ABORT();
 }
 
+void ExitOnPromiseRejectCallback(v8::PromiseRejectMessage promise_reject_message)
+{
+    //auto isolate = Isolate::GetCurrent();
+    //worker* w = (worker*)isolate->GetData(0);
+    //assert(w->isolate == isolate);
+    //HandleScope handle_scope(w->isolate);
+    //auto context = w->context.Get(w->isolate);
+    //auto exception = promise_reject_message.GetValue();
+    //auto message = Exception::CreateMessage(isolate, exception);
+    //auto onerrorStr = String::NewFromUtf8(w->isolate, "onerror");
+    //auto onerror = context->Global()->Get(onerrorStr);
+    //if (onerror->IsFunction()) {
+    //    Local<Function> func = Local<Function>::Cast(onerror);
+    //    Local<Value> args[5];
+    //    auto origin = message->GetScriptOrigin();
+    //    args[0] = exception->ToString();
+    //    args[1] = message->GetScriptResourceName();
+    //    args[2] = origin.ResourceLineOffset();
+    //    args[3] = origin.ResourceColumnOffset();
+    //    args[4] = exception;
+    //    func->Call(context->Global(), 5, args);
+    //    /* message, source, lineno, colno, error */
+    //}
+    //else {
+    //    printf("Unhandled Promise\n");
+    //    message->PrintCurrentStackTrace(isolate, stdout);
+    //}
+    //exit(1);
+}
+
 
 v8::Isolate* NewIsolate(v8::Isolate::CreateParams* params)
 {
     v8::Isolate* isolate = v8::Isolate::New(*params);
     if (isolate == nullptr)
         return nullptr;
-    //ZZWTODO 
-    isolate->AddMessageListener(OnMessage);
-    isolate->SetAbortOnUncaughtExceptionCallback(ShouldAbortOnUncaughtException);
-    //isolate->SetMicrotasksPolicy(v8::MicrotasksPolicy::kExplicit);
-    isolate->SetFatalErrorHandler(OnFatalError);
-    //isolate->SetAllowWasmCodeGenerationCallback(AllowWasmCodeGenerationCallback);
+    ////ZZWTODO COMMONJS NODE
+    //isolate->SetCaptureStackTraceForUncaughtExceptions(true);
+    //isolate->SetAbortOnUncaughtExceptionCallback(ShouldAbortOnUncaughtException);
+    //isolate->AddMessageListener(OnMessage);
+    //isolate->SetFatalErrorHandler(OnFatalError);
+    ////isolate->SetPromiseRejectCallback(ExitOnPromiseRejectCallback);
+    ////isolate->SetMicrotasksPolicy(v8::MicrotasksPolicy::kExplicit);
+    ////isolate->SetAllowWasmCodeGenerationCallback(AllowWasmCodeGenerationCallback);
     return isolate;
 }
 
@@ -81,29 +109,18 @@ void OnDisposeIsolate(v8::Isolate* isolate)
 {
 }
 
-v8::Local<v8::Context> NewContext(v8::Isolate* isolate, v8::Local<v8::ObjectTemplate> object_template)
+v8::Local<v8::Context> NewContext(v8::Isolate* isolate, V8VirtualMation* vm, v8::Local<v8::ObjectTemplate> object_template)
 {
     v8::Local<v8::Context> context = v8::Context::New(isolate, nullptr, object_template);
     if (context.IsEmpty())
         return context;
-
     v8::HandleScope handle_scope(isolate);
+    v8::Context::Scope context_scope(context);
+    context->SetAlignedPointerInEmbedderData(ContextEmbedderIndex::kEnvironment, vm);
     context->SetEmbedderData(ContextEmbedderIndex::kAllowWasmCodeGeneration, True(isolate));
 
-    v8::Context::Scope context_scope(context);
-
     //internal/per_context.js
-    LoadScript(isolate, context, "internal/per_context.js");
-    //std::string filename(g_js_lib_path);
-    //filename += "internal/per_context.js";
-    ////Log("per_context: %s\r\n", filename.c_str());
-    //char* sourcecode = NULL;
-    //bool result = ReadScriptFile(filename.c_str(), sourcecode);
-    //int size = strlen(sourcecode);
-    //v8::Local<v8::String> per_context = v8::String::NewFromUtf8(isolate, sourcecode, v8::NewStringType::kNormal, static_cast<int>(size)).ToLocalChecked();
-    //v8::ScriptCompiler::Source per_context_src(per_context, nullptr);
-    //v8::Local<v8::Script> script = v8::ScriptCompiler::Compile(context, &per_context_src).ToLocalChecked();
-    //script->Run(context).ToLocalChecked();
+    //LoadScript(isolate, context, "internal/per_context.js"); //ZZWTODO COMMONJS NODE
 
     return context;
 }

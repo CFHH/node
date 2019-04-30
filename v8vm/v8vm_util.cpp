@@ -47,7 +47,6 @@ void MapGet_JS2C(v8::Local<v8::Name> key_obj, const v8::PropertyCallbackInfo<v8:
     info.GetReturnValue().Set(v8::String::NewFromUtf8(isolate, value.c_str(), v8::NewStringType::kNormal, static_cast<int>(value.length())).ToLocalChecked());
 }
 
-
 void MapSet_JS2C(v8::Local<v8::Name> key_obj, v8::Local<v8::Value> value_obj, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
     if (key_obj->IsSymbol())
@@ -85,7 +84,6 @@ void GetInvokeParam0_JS2C(v8::Local<v8::String> name, const v8::PropertyCallback
     info.GetReturnValue().Set(param->param0);
 }
 
-
 void GetInvokeParam1_JS2C(v8::Local<v8::String> name, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
     InvokeParam* param = V8Object2InvokeParam(info.Holder());
@@ -105,6 +103,7 @@ void GetInvokeParam2_JS2C(v8::Local<v8::String> name, const v8::PropertyCallback
 void ReportV8Exception(v8::Isolate* isolate, v8::TryCatch* try_catch)
 {
     //ZZWTODO vm->stack_string() vm->arrow_message_private_symbol()
+    //ZZWTODO 拼一个完整的字符串，一次性打出
     v8::HandleScope handle_scope(isolate);
     v8::String::Utf8Value exception(isolate, try_catch->Exception());
     const char* exception_string = *exception;
