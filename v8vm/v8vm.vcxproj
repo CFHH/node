@@ -225,6 +225,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="jslib\internal\bootstrap\loaders.js" />
+    <None Include="jslib\internal\commonjs.js" />
     <None Include="jslib\internal\per_context.js" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -4,3 +4,10 @@
 
 void BalanceTransfer_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args);
 
+void LoadScript_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+void GetSourcePath_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+void IsFileExists_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+

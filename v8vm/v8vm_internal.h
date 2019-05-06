@@ -54,7 +54,9 @@ void OnDisposeContext(v8::Isolate* isolate, v8::Local<v8::Context> context);
 /****************************************************************************************************
 * 加载脚本
 ****************************************************************************************************/
-v8::MaybeLocal<v8::Value> LoadScript(v8::Isolate* isolate, v8::Local<v8::Context> context, const char* script_name);
+v8::MaybeLocal<v8::Value> LoadInternalScript(v8::Isolate* isolate, v8::Local<v8::Context> context, const char* relative_file_name, bool wrap);
+v8::MaybeLocal<v8::Value> LoadSourceScript(v8::Isolate* isolate, v8::Local<v8::Context> context, const char* relative_file_name, bool wrap);
+v8::MaybeLocal<v8::Value> LoadScript(v8::Isolate* isolate, v8::Local<v8::Context> context, std::string& absolute_file_name, bool wrap);
 
 
 /****************************************************************************************************

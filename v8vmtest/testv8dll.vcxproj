@@ -184,6 +184,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="sample_contract.js" />
+    <None Include="util.js" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -103,5 +103,8 @@
     <None Include="jslib\internal\bootstrap\loaders.js">
       <Filter>jslib\internal\bootstrap</Filter>
     </None>
+    <None Include="jslib\internal\commonjs.js">
+      <Filter>jslib\internal</Filter>
+    </None>
   </ItemGroup>
 </Project>

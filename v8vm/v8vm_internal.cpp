@@ -2,7 +2,13 @@
 #include "v8vm_util.h"
 #include "virtual_mation.h"
 
-extern const char* g_js_lib_path;
+extern const char* g_internal_js_lib_path;
+extern const char* g_js_source_path;
+
+const char* g_wrapper[2] = {
+    "(function (exports, require, module, __filename, __dirname) {\r\n",
+    "\r\n})"
+};
 
 bool ShouldAbortOnUncaughtException(v8::Isolate* isolate)
 {
@@ -120,7 +126,7 @@ v8::Local<v8::Context> NewContext(v8::Isolate* isolate, V8VirtualMation* vm, v8:
     context->SetEmbedderData(ContextEmbedderIndex::kAllowWasmCodeGeneration, True(isolate));
 
     //internal/per_context.js
-    //LoadScript(isolate, context, "internal/per_context.js"); //ZZWTODO COMMONJS NODE
+    //LoadInternalScript(isolate, context, "internal/per_context.js", false); //ZZWTODO COMMONJS NODE
 
     return context;
 }
@@ -132,22 +138,46 @@ void OnDisposeContext(v8::Isolate* isolate, v8::Local<v8::Context> context)
     context->SetAlignedPointerInEmbedderData(ContextEmbedderIndex::kEnvironment, nullptr);
 }
 
-v8::MaybeLocal<v8::Value> LoadScript(v8::Isolate* isolate, v8::Local<v8::Context> context, const char* script_name)
+v8::MaybeLocal<v8::Value> LoadInternalScript(v8::Isolate* isolate, v8::Local<v8::Context> context, const char* relative_file_name, bool wrap)
+{
+    std::string filename(g_internal_js_lib_path);
+    filename += relative_file_name;
+    return LoadScript(isolate, context, filename, wrap);
+}
+
+v8::MaybeLocal<v8::Value> LoadSourceScript(v8::Isolate* isolate, v8::Local<v8::Context> context, const char* relative_file_name, bool wrap)
+{
+    std::string filename(g_js_source_path);
+    filename += relative_file_name;
+    return LoadScript(isolate, context, filename, wrap);
+}
+
+v8::MaybeLocal<v8::Value> LoadScript(v8::Isolate* isolate, v8::Local<v8::Context> context, std::string& absolute_file_name, bool wrap)
 {
     v8::EscapableHandleScope handle_scope(isolate);
 
-    std::string filename(g_js_lib_path);
-    filename += script_name;
-    v8::Local<v8::String> filename_v8 = v8::String::NewFromUtf8(isolate, filename.c_str(), v8::NewStringType::kNormal, static_cast<int>(filename.length())).ToLocalChecked();
+    v8::Local<v8::String> filename_v8 = v8::String::NewFromUtf8(isolate, absolute_file_name.c_str(), v8::NewStringType::kNormal, static_cast<int>(absolute_file_name.length())).ToLocalChecked();
 
     char* sourcecode = NULL;
-    bool ok = ReadScriptFile(filename.c_str(), sourcecode);
+    bool ok = ReadScriptFile(absolute_file_name.c_str(), sourcecode);
     if (!ok)
     {
+        delete sourcecode;
         return v8::MaybeLocal<v8::Value>();
     }
-    int size = strlen(sourcecode);
-    v8::Local<v8::String> sourcecode_v8 = v8::String::NewFromUtf8(isolate, sourcecode, v8::NewStringType::kNormal, static_cast<int>(size)).ToLocalChecked();
+    std::string temp;
+    if (wrap)
+    {
+        temp = g_wrapper[0];
+        temp.append(sourcecode);
+        temp.append(g_wrapper[1]);
+    }
+    else
+    {
+        temp = sourcecode;
+    }
+    delete sourcecode;
+    v8::Local<v8::String> sourcecode_v8 = v8::String::NewFromUtf8(isolate, temp.c_str(), v8::NewStringType::kNormal, static_cast<int>(temp.length())).ToLocalChecked();
 
     v8::TryCatch try_catch(isolate);
 

@@ -33,6 +33,7 @@ struct InvokeParam;
     V(buffer_prototype_object, v8::Object)                          /**/\
     V(context, v8::Context)                                         /* v8::Context，目前所有合约运行在同一个Context中 */\
     V(process_object, v8::Object)                                   /* process对象 */\
+    V(runmain, v8::Function)                                        /* Module.runMain */\
     V(script_context_constructor_template, v8::FunctionTemplate)    /**/\
     V(script_data_constructor_function, v8::Function)               /**/\
     V(vm_parsing_context_symbol, v8::Symbol)                        /**/

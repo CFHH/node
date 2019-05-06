@@ -139,6 +139,7 @@ void ReportV8Exception(v8::Isolate* isolate, v8::TryCatch* try_catch)
         wave[i] = '^';
     wave[end] = 0;
     Log(wave);
+    delete wave;
     // Log stack trace
     v8::Local<v8::Value> stack_trace_string;
     if (try_catch->StackTrace(context).ToLocal(&stack_trace_string)

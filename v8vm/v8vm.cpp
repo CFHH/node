@@ -143,19 +143,41 @@ HTTP_PARSER_STRICT=0
 NGHTTP2_STATICLIB
 */
 
-std::string g_js_lib_path_internal;
-const char* g_js_lib_path = NULL;
+std::string g_internal_js_lib_path_internal;
+const char* g_internal_js_lib_path = NULL;
+std::string g_js_source_path_internal;
+const char* g_js_source_path = NULL;
 V8Environment* g_environment = NULL;
 
-V8VM_EXTERN void V8VM_STDCALL SetJSLibPath(const char* path)
+V8VM_EXTERN void V8VM_STDCALL SetInternalJSLibPath(const char* path)
 {
-    if (g_js_lib_path_internal.length() == 0)
+    if (g_internal_js_lib_path_internal.length() == 0)
     {
-        g_js_lib_path_internal = path;
-        char last_char = path[strlen(path) - 1];
-        if (last_char !='/' || last_char != '\\')
-            g_js_lib_path_internal += '/';
-        g_js_lib_path = g_js_lib_path_internal.c_str();
+        g_internal_js_lib_path_internal = path;
+        for (int i = 0; i < g_internal_js_lib_path_internal.length(); ++i)
+        {
+            if (g_internal_js_lib_path_internal[i] == '\\')
+                g_internal_js_lib_path_internal[i] = '/';
+        }
+        if (g_internal_js_lib_path_internal[g_internal_js_lib_path_internal.length()-1] != '/')
+            g_internal_js_lib_path_internal += '/';
+        g_internal_js_lib_path = g_internal_js_lib_path_internal.c_str();
+    }
+}
+
+V8VM_EXTERN void V8VM_STDCALL SetJSSourcePath(const char* path)
+{
+    if (g_js_source_path_internal.length() == 0)
+    {
+        g_js_source_path_internal = path;
+        for (int i = 0; i < g_js_source_path_internal.length(); ++i)
+        {
+            if (g_js_source_path_internal[i] == '\\')
+                g_js_source_path_internal[i] = '/';
+        }
+        if (g_js_source_path_internal[g_js_source_path_internal.length() - 1] == '/')
+            g_js_source_path_internal = g_js_source_path_internal.substr(0, g_js_source_path_internal.length() - 1);
+        g_js_source_path = g_js_source_path_internal.c_str();
     }
 }
 

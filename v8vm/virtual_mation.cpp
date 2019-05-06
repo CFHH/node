@@ -43,15 +43,22 @@ V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
 #undef V
 
     //ZZWTODO COMMONJS 创建V8::Context
+    //全局函数
     v8::Local<v8::ObjectTemplate> global = v8::ObjectTemplate::New(m_isolate);
     global->Set(v8::String::NewFromUtf8(m_isolate, "log", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, Log_JS2C));
     global->Set(v8::String::NewFromUtf8(m_isolate, "BalanceTransfer", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, BalanceTransfer_JS2C));
+    global->Set(v8::String::NewFromUtf8(m_isolate, "sysLoadScript", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, LoadScript_JS2C));
+
+    //fs文件处理函数
+    v8::Local<v8::ObjectTemplate> fs = v8::ObjectTemplate::New(m_isolate);
+    global->Set(v8::String::NewFromUtf8(m_isolate, "fs", v8::NewStringType::kNormal).ToLocalChecked(), fs);
+    fs->Set(v8::String::NewFromUtf8(m_isolate, "IsFileExists", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, IsFileExists_JS2C));
 
     v8::Local<v8::Context> context = NewContext(m_isolate, this, global);
     v8::Context::Scope context_scope(context);
     set_context(context);
     set_as_external(v8::External::New(m_isolate, this));
-    //SetupCommonjs();
+    SetupCommonjs();
 
     //创建一个process对象
     v8::Local<v8::FunctionTemplate> process_template = v8::FunctionTemplate::New(m_isolate);
@@ -116,7 +123,13 @@ void V8VirtualMation::SetupCommonjs()
     v8::HandleScope handle_scope(m_isolate);
     v8::Local<v8::Context> context = this->context();
     v8::TryCatch try_catch(m_isolate);
-    LoadScript(m_isolate, context, "internal/commonjs.js");
+    LoadInternalScript(m_isolate, context, "internal/commonjs.js", false);
+    v8::Local<v8::String> runmain_name = v8::String::NewFromUtf8(m_isolate, "runMain", v8::NewStringType::kNormal).ToLocalChecked();
+    v8::Local<v8::Value> runmain_val;
+    context->Global()->Get(context, runmain_name).ToLocal(&runmain_val);
+    CHECK(runmain_val->IsFunction());
+    v8::Local<v8::Function> runmain_fun = v8::Local<v8::Function>::Cast(runmain_val);
+    set_runmain(runmain_fun);
 }
 
 void V8VirtualMation::SetupProcessObject()
@@ -164,7 +177,7 @@ void V8VirtualMation::LoadEnvironment()
     v8::Local<v8::Object> global = context->Global();
     global->Set(FIXED_ONE_BYTE_STRING(m_isolate, "global"), global);
 
-    v8::MaybeLocal<v8::Value> v8value = LoadScript(m_isolate, context, "internal/bootstrap/loaders.js");
+    v8::MaybeLocal<v8::Value> v8value = LoadInternalScript(m_isolate, context, "internal/bootstrap/loaders.js", false);
     CHECK(v8value.ToLocalChecked()->IsFunction());
     v8::MaybeLocal<v8::Function> loaders_bootstrapper = v8value.ToLocalChecked().As<v8::Function>();
 
@@ -180,7 +193,7 @@ void V8VirtualMation::LoadEnvironment()
     v8::Local<v8::Value> bootstrapped_loaders;
     loaders_bootstrapper.ToLocalChecked()->Call(context, v8::Null(m_isolate), arraysize(loaders_bootstrapper_args), loaders_bootstrapper_args).ToLocal(&bootstrapped_loaders);
 
-    //v8value = LoadScript(m_isolate, context, "internal/bootstrap/v8vm.js");
+    //v8value = LoadInternalScript(m_isolate, context, "internal/bootstrap/v8vm.js", false);
     //CHECK(v8value.ToLocalChecked()->IsFunction());
     //v8::MaybeLocal<v8::Function> v8vm_bootstrapper = v8value.ToLocalChecked().As<v8::Function>();
 

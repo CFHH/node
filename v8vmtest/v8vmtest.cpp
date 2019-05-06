@@ -3,7 +3,8 @@
 #include <string.h>
 #include "v8vm.h"
 
-#define SET_JS_LIB_PATH SetJSLibPath("E:/Github/node/v8vm/jslib")
+#define SET_INTERNAL_JS_LIB_PATH SetInternalJSLibPath("E:/Github/node/v8vm/jslib")
+#define SET_JS_SOURCE_PATH SetJSSourcePath("E:/Github/node/v8vmtest")
 
 const char* SampleContractName = "SampleContract";
 const char* SampleContract = "function Initialize()\
@@ -27,7 +28,8 @@ Initialize(); ";
 
 int TestCase1()
 {
-    SET_JS_LIB_PATH;
+    SET_INTERNAL_JS_LIB_PATH;
+    SET_JS_SOURCE_PATH;
     InitializeV8Environment();
     Int64 vmid = CreateV8VirtualMation(0);
     if (vmid == 0)
@@ -50,7 +52,8 @@ int TestCase1()
 
 int TestCase2()
 {
-    SET_JS_LIB_PATH;
+    SET_INTERNAL_JS_LIB_PATH;
+    SET_JS_SOURCE_PATH;
     InitializeV8Environment();
     Int64 vmid1 = CreateV8VirtualMation(0);
     if (vmid1 == 0)
@@ -82,7 +85,8 @@ int TestCase2()
 #endif
 int TestCase3()
 {
-    SET_JS_LIB_PATH;
+    SET_INTERNAL_JS_LIB_PATH;
+    SET_JS_SOURCE_PATH;
     InitializeV8Environment();
     Int64 vmid = CreateV8VirtualMation(0);
     if (vmid == 0)
