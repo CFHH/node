@@ -34,7 +34,6 @@ int TestCase1()
     Int64 vmid = CreateV8VirtualMation(0);
     if (vmid == 0)
         return 1;
-    //bool ok1 = LoadSmartContractByFileName(vmid, SampleContractName, "E:/Github/node/v8vmtest/sample_contract.js");
     bool ok1 = LoadSmartContractBySourcecode(vmid, SampleContractName, SampleContract);
     if (!ok1)
         return 1;
@@ -49,8 +48,30 @@ int TestCase1()
     return 0;
 }
 
-
 int TestCase2()
+{
+    SET_INTERNAL_JS_LIB_PATH;
+    SET_JS_SOURCE_PATH;
+    InitializeV8Environment();
+    Int64 vmid = CreateV8VirtualMation(0);
+    if (vmid == 0)
+        return 1;
+    bool ok1 = LoadSmartContractByFileName(vmid, SampleContractName, "/sample_contract.js");
+    if (!ok1)
+        return 1;
+    for (int i = 0; i < 4; ++i)
+    {
+        int result1 = InvokeSmartContract(vmid, SampleContractName, i + 1, "sum");
+        if (result1 != 0)
+            return 1;
+    }
+    DisposeV8VirtualMation(vmid);
+    ShutdownV8Environment();
+    return 0;
+}
+
+
+int TestCase3()
 {
     SET_INTERNAL_JS_LIB_PATH;
     SET_JS_SOURCE_PATH;
@@ -83,7 +104,7 @@ int TestCase2()
 #include <Windows.h>
 #else
 #endif
-int TestCase3()
+int TestCase4()
 {
     SET_INTERNAL_JS_LIB_PATH;
     SET_JS_SOURCE_PATH;
@@ -120,7 +141,7 @@ int TestCase3()
 
 int main()
 {
-    TestCase1();
+    TestCase2();
     return 0;
 }
 

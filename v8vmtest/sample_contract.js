@@ -1,9 +1,5 @@
 //var util = require('util.js');
 
-function Initialize()
-{
-}
-
 function Process(param)
 {
     if (!output[param.param2])
@@ -17,4 +13,5 @@ function Process(param)
     log("Process(), " + param.param2 + " = " + output[param.param2]);
 }
 
-Initialize();
+exports.Process = Process;
+

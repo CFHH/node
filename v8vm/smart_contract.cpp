@@ -72,6 +72,38 @@ bool SmartContract::Initialize(const char* sourcecode)
     return true;
 }
 
+bool SmartContract::InitializeByFileName(const char* filename)
+{
+    v8::Isolate* isolate = m_vm->GetIsolate();
+    v8::Locker locker(isolate);
+    v8::Isolate::Scope isolate_scope(isolate);
+    v8::HandleScope handle_scope(isolate);
+    v8::Local<v8::Context> context = m_vm->context();
+    v8::Context::Scope context_scope(context);
+    //调用runMain
+    v8::Local<v8::String> v8filename = v8::String::NewFromUtf8(isolate, filename, v8::NewStringType::kNormal).ToLocalChecked();
+    v8::Local<v8::Value> args[] = {
+        v8filename,
+    };
+    v8::Local<v8::Function> runmain = m_vm->runmain();
+    v8::MaybeLocal<v8::Value> maybe_exports = runmain->Call(context, v8::Null(isolate), arraysize(args), args);
+    //获得exports
+    v8::Local<v8::Value> local_exports;
+    maybe_exports.ToLocal(&local_exports);
+    if (!local_exports->IsObject())
+        return false;
+    v8::Local<v8::Object> exports = v8::Local<v8::Object>::Cast(local_exports);
+    //获得exports.process函数
+    v8::Local<v8::String> process_name = v8::String::NewFromUtf8(isolate, SMART_CONTRACT_PROCESS, v8::NewStringType::kNormal).ToLocalChecked();
+    v8::Local<v8::Value> process_val;
+    if (!exports->Get(context, process_name).ToLocal(&process_val) || !process_val->IsFunction()) {
+        return false;
+    }
+    v8::Local<v8::Function> process_fun = v8::Local<v8::Function>::Cast(process_val);
+    m_process_fun.Reset(isolate, process_fun);
+    return true;
+}
+
 bool SmartContract::Invoke(InvokeParam* param)
 {
     v8::Isolate* isolate = m_vm->GetIsolate();

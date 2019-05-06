@@ -226,6 +226,19 @@ SmartContract* V8VirtualMation::CreateSmartContract(const char* contract_name, c
     return contract;
 }
 
+SmartContract* V8VirtualMation::CreateSmartContractByFileName(const char* contract_name, const char* filename)
+{
+    SmartContract* contract = new SmartContract(this);
+    if (!contract->InitializeByFileName(filename))
+    {
+        delete contract;
+        contract = NULL;
+        return NULL;
+    }
+    m_contracts[contract_name] = contract;
+    return contract;
+}
+
 void V8VirtualMation::DestroySmartContract(const char* contract_name)
 {
     std::map<std::string, SmartContract*>::iterator itr = m_contracts.find(contract_name);

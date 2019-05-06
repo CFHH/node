@@ -254,16 +254,18 @@ V8VM_EXTERN bool V8VM_STDCALL LoadSmartContractBySourcecode(Int64 vmid, const ch
 
 V8VM_EXTERN bool V8VM_STDCALL LoadSmartContractByFileName(Int64 vmid, const char* contract_name, const char* filename)
 {
-    char* buf = NULL;
-    bool result = ReadScriptFile(filename, buf);
-    if (!result)
-    {
-        delete buf;
+    if (g_environment == NULL)
         return false;
-    }
-    result = LoadSmartContractBySourcecode(vmid, contract_name, buf);
-    delete buf;
-    return result;
+    V8VirtualMation* vm = g_environment->GetVirtualMation(vmid);
+    if (vm == NULL)
+        return false;
+    SmartContract* contract = vm->GetSmartContract(contract_name);
+    if (contract != NULL)
+        return false;
+    contract = vm->CreateSmartContractByFileName(contract_name, filename);
+    if (contract == NULL)
+        return false;
+    return true;
 }
 
 V8VM_EXTERN int V8VM_STDCALL InvokeSmartContract(Int64 vmid, const char* contract_name, int param1, const char* param2)

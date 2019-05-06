@@ -172,7 +172,8 @@ Module.prototype.getpath = function () {
 };
 
 Module.prototype.load = function (filename) {
-    assert(!this.loaded);
+    if (this.loaded)
+        return;
     var module_fn = sysLoadScript(filename);
     var require_fn = makeRequireFunction(this);
     module_fn(this.exports, require_fn, this, this.filename, null);
@@ -186,9 +187,9 @@ Module.prototype.require = function (file) {
 
 //暴露给C++，载入一个智能合约的入口
 Module.runMain = function (file) {
-    Module._load(file, null, true);
+    return Module._load(file, null, true);
 };
 
 function runMain(file) {
-    Module._load(file, null, true);
+    return Module._load(file, null, true);
 }

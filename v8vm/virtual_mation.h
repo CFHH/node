@@ -65,6 +65,7 @@ private:
 
 public:
     SmartContract* CreateSmartContract(const char* contract_name, const char* sourcecode);
+    SmartContract* CreateSmartContractByFileName(const char* contract_name, const char* filename);
     void DestroySmartContract(const char* contract_name);
     SmartContract* GetSmartContract(const char* contract_name);
     void SetupOutputMap(v8::Local<v8::Context> context, std::map<std::string, std::string>* stdmap, const char* map_name);

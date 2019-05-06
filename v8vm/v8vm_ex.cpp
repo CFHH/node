@@ -5,7 +5,9 @@
 #include "v8vm_util.h"
 #include "virtual_mation.h"
 
+extern const char* g_internal_js_lib_path;
 extern const char* g_js_source_path;
+
 //这里的变量名不能和go中的c函数部分同名，否则在linux下会发生segmentation violation
 BalanceTransfer_callback BalanceTransferFn = NULL;
 
@@ -59,9 +61,16 @@ void IsFileExists_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args)
         return;
     v8::Isolate* isolate = args.GetIsolate();
     v8::HandleScope scope(isolate);
-    v8::String::Utf8Value file_name(args.GetIsolate(), args[0]);
-    FILE* filehandle = fopen(*file_name, "r");
-    bool isok = filehandle != NULL;
-    fclose(filehandle);
+    v8::String::Utf8Value relative_file_name(args.GetIsolate(), args[0]);
+
+    std::string filename(g_js_source_path);
+    filename += *relative_file_name;
+    bool isok = false;
+    FILE* filehandle = fopen(filename.c_str(), "r");
+    if (filehandle != NULL)
+    {
+        isok = true;
+        fclose(filehandle);
+    }
     args.GetReturnValue().Set(isok);
 }
