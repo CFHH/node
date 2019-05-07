@@ -16,9 +16,9 @@ class V8VirtualMation;
 
 struct InvokeParam
 {
-    int param0;  //ZZWTODO 需要改V8支持64，用来表示vmid
-    int param1;
-    std::string param2;
+    int param0;         //Reserved
+    int param1;         //整数参数
+    std::string param2; //字符串参数，json
 };
 
 class SmartContract
@@ -26,7 +26,7 @@ class SmartContract
 public:
     explicit SmartContract(V8VirtualMation* vm);
     ~SmartContract();
-    bool Initialize(const char* sourcecode);
+    bool InitializeBySourceCode(const char* sourcecode);
     bool InitializeByFileName(const char* filename);
     bool Invoke(InvokeParam* param);
 

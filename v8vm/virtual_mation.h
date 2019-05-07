@@ -64,7 +64,7 @@ private:
     bool m_can_call_into_js = true;
 
 public:
-    SmartContract* CreateSmartContract(const char* contract_name, const char* sourcecode);
+    SmartContract* CreateSmartContractBySourceCode(const char* contract_name, const char* sourcecode);
     SmartContract* CreateSmartContractByFileName(const char* contract_name, const char* filename);
     void DestroySmartContract(const char* contract_name);
     SmartContract* GetSmartContract(const char* contract_name);
@@ -148,6 +148,12 @@ private:
 ENVIRONMENT_STRONG_PERSISTENT_PROPERTIES(V)
 #undef V
 
+public:
+    bool RegisterSourceCode(std::string& key, const char* sourcecode);
+    std::string GetRegisteredSourceCode(std::string& key);
+    void UnregisterSourceCode(std::string& key);
+private:
+    std::map<std::string, std::string> m_registered_source_code;
 
 public:
     //支持BaseObject

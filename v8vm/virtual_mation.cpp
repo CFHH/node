@@ -218,10 +218,10 @@ void V8VirtualMation::LoadEnvironment()
 * 智能合约
 ****************************************************************************************************/
 
-SmartContract* V8VirtualMation::CreateSmartContract(const char* contract_name, const char* sourcecode)
+SmartContract* V8VirtualMation::CreateSmartContractBySourceCode(const char* contract_name, const char* sourcecode)
 {
     SmartContract* contract = new SmartContract(this);
-    if (!contract->Initialize(sourcecode))
+    if (!contract->InitializeBySourceCode(sourcecode))
     {
         delete contract;
         contract = NULL;
@@ -637,6 +637,31 @@ void V8VirtualMation::AppendExceptionLine(v8::Local<v8::Value> er, v8::Local<v8:
     CHECK(err_obj->SetPrivate(context, arrow_message_private_symbol(), arrow_str).FromMaybe(false));
 }
 
+
+/****************************************************************************************************
+* 通过直接传源码的方式创建智能合约时，临时存储
+****************************************************************************************************/
+
+bool V8VirtualMation::RegisterSourceCode(std::string& key, const char* sourcecode)
+{
+    if (m_registered_source_code.find(key) != m_registered_source_code.end())
+        return false;
+    m_registered_source_code[key] = std::string(sourcecode);
+    return true;
+}
+
+std::string V8VirtualMation::GetRegisteredSourceCode(std::string& key)
+{
+    std::map<std::string, std::string>::iterator itr = m_registered_source_code.find(key);
+    if (itr == m_registered_source_code.end())
+        return std::string("");
+    return itr->second;
+}
+
+void V8VirtualMation::UnregisterSourceCode(std::string& key)
+{
+    m_registered_source_code.erase(key);
+}
 
 /****************************************************************************************************
 * 其他

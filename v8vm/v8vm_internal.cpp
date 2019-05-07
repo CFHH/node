@@ -147,9 +147,17 @@ v8::MaybeLocal<v8::Value> LoadInternalScript(v8::Isolate* isolate, v8::Local<v8:
 
 v8::MaybeLocal<v8::Value> LoadSourceScript(v8::Isolate* isolate, v8::Local<v8::Context> context, const char* relative_file_name, bool wrap)
 {
-    std::string filename(g_js_source_path);
-    filename += relative_file_name;
-    return LoadScript(isolate, context, filename, wrap);
+    if (strstr(relative_file_name, RAW_CODE_TAG) != NULL)
+    {
+        std::string filename(relative_file_name);
+        return LoadScript(isolate, context, filename, wrap);
+    }
+    else
+    {
+        std::string filename(g_js_source_path);
+        filename += relative_file_name;
+        return LoadScript(isolate, context, filename, wrap);
+    }
 }
 
 v8::MaybeLocal<v8::Value> LoadScript(v8::Isolate* isolate, v8::Local<v8::Context> context, std::string& absolute_file_name, bool wrap)
@@ -159,9 +167,19 @@ v8::MaybeLocal<v8::Value> LoadScript(v8::Isolate* isolate, v8::Local<v8::Context
     v8::Local<v8::String> filename_v8 = v8::String::NewFromUtf8(isolate, absolute_file_name.c_str(), v8::NewStringType::kNormal, static_cast<int>(absolute_file_name.length())).ToLocalChecked();
 
     std::string sourcecode;
-    bool ok = ReadScriptFile(absolute_file_name.c_str(), sourcecode);
-    if (!ok)
-        return v8::MaybeLocal<v8::Value>();
+    if (absolute_file_name.find(RAW_CODE_TAG) != std::string::npos)
+    {
+        V8VirtualMation* vm = V8VirtualMation::GetCurrent(isolate);
+        sourcecode = vm->GetRegisteredSourceCode(absolute_file_name);
+        if (sourcecode.length() == 0)
+            return v8::MaybeLocal<v8::Value>();
+    }
+    else
+    {
+        bool ok = ReadScriptFile(absolute_file_name.c_str(), sourcecode);
+        if (!ok)
+            return v8::MaybeLocal<v8::Value>();
+    }
     if (wrap)
     {
         sourcecode = g_wrapper[0] + sourcecode;

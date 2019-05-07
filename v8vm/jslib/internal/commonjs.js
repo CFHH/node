@@ -46,6 +46,9 @@ Module.wrap = function (script) {
 
 //确定文件file的完整路径文件名
 Module._resolveFilename = function (file, parent, isMain) {
+    if (file.length > 7 && file.slice(0, 7) == "CODE://") {
+        return file;
+    }
     var paths = Module._resolveLookupPaths(file, parent, true);
     var filename = Module._findPath(file, paths);
     if (!filename) {
@@ -197,10 +200,6 @@ Module.prototype.require = function (file) {
 };
 
 //暴露给C++，载入一个智能合约的入口
-Module.runMain = function (file) {
-    return Module._load(file, null, true);
-};
-
 function runMain(file) {
     return Module._load(file, null, true);
 }

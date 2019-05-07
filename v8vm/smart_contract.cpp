@@ -18,7 +18,7 @@ SmartContract::~SmartContract()
     m_vm = NULL;
 }
 
-bool SmartContract::Initialize(const char* sourcecode)
+bool SmartContract::InitializeBySourceCode(const char* sourcecode)
 {
     v8::Isolate* isolate = m_vm->GetIsolate();
     v8::Locker locker(isolate);
@@ -78,8 +78,13 @@ bool SmartContract::InitializeByFileName(const char* filename)
     v8::Locker locker(isolate);
     v8::Isolate::Scope isolate_scope(isolate);
     v8::HandleScope handle_scope(isolate);
+
+#if SMART_CONTRACT_OWN_SEPERATE_CONTEXT
+#else
     v8::Local<v8::Context> context = m_vm->context();
     v8::Context::Scope context_scope(context);
+#endif
+
     //调用runMain
     v8::Local<v8::String> v8filename = v8::String::NewFromUtf8(isolate, filename, v8::NewStringType::kNormal).ToLocalChecked();
     v8::Local<v8::Value> args[] = {

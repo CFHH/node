@@ -143,9 +143,9 @@ HTTP_PARSER_STRICT=0
 NGHTTP2_STATICLIB
 */
 
-std::string g_internal_js_lib_path_internal;
+std::string g_internal_js_lib_path_internal;    //内部辅助的js代码放在此目录下，为了方便，以'/'结尾
 const char* g_internal_js_lib_path = NULL;
-std::string g_js_source_path_internal;
+std::string g_js_source_path_internal;          //虚拟机内脚本的路径（如/lib/math/add.js）以此为根路径，为了方便，不以'/'结尾
 const char* g_js_source_path = NULL;
 V8Environment* g_environment = NULL;
 
@@ -246,7 +246,13 @@ V8VM_EXTERN bool V8VM_STDCALL LoadSmartContractBySourcecode(Int64 vmid, const ch
     SmartContract* contract = vm->GetSmartContract(contract_name);
     if (contract != NULL)
         return false;
-    contract = vm->CreateSmartContract(contract_name, sourcecode);
+    std::string key(RAW_CODE_TAG);
+    key.append(contract_name);
+    if (!vm->RegisterSourceCode(key, sourcecode))
+        return false;
+    //contract = vm->CreateSmartContractBySourceCode(contract_name, sourcecode);
+    contract = vm->CreateSmartContractByFileName(contract_name, key.c_str());
+    vm->UnregisterSourceCode(key);
     if (contract == NULL)
         return false;
     return true;
@@ -280,7 +286,7 @@ V8VM_EXTERN int V8VM_STDCALL InvokeSmartContract(Int64 vmid, const char* contrac
         return -1;
 
     InvokeParam param;
-    param.param0 = int(vmid); //ZZWTODO 修改V8来支持64位，或修改区块链只支持32位
+    param.param0 = 0;
     param.param1 = param1;
     param.param2 = param2;
     bool result = contract->Invoke(&param);

@@ -18,14 +18,16 @@ V8VM_EXTERN void V8VM_STDCALL SetBalanceTransfer(BalanceTransfer_callback fn)
 
 void BalanceTransfer_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
-    if (args.Length() != 4)
+    if (args.Length() != 3)
         return;
     v8::Isolate* isolate = args.GetIsolate();
     v8::HandleScope scope(isolate);
-    Int64 vmid = args[0]->IntegerValue(args.GetIsolate()->GetCurrentContext()).FromMaybe(0);
-    v8::String::Utf8Value from(args.GetIsolate(), args[1]);
-    v8::String::Utf8Value to(args.GetIsolate(), args[2]);
-    Int64 amount = args[3]->IntegerValue(args.GetIsolate()->GetCurrentContext()).FromMaybe(0);
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
+    V8VirtualMation* vm = V8VirtualMation::GetCurrent(isolate);
+    Int64 vmid = vm->VMID();
+    v8::String::Utf8Value from(isolate, args[0]);
+    v8::String::Utf8Value to(isolate, args[1]);
+    Int64 amount = args[2]->IntegerValue(context).FromMaybe(0);
     int result = BalanceTransferFn(vmid, *from, *to, amount);
     args.GetReturnValue().Set(result);
 }
@@ -36,10 +38,9 @@ void LoadScript_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args)
         return;
     v8::Isolate* isolate = args.GetIsolate();
     v8::HandleScope scope(isolate);
-    V8VirtualMation* vm = V8VirtualMation::GetCurrent(isolate);
-    v8::Local<v8::Context> context = vm->context();
-    v8::String::Utf8Value script_name(args.GetIsolate(), args[0]);
-    v8::MaybeLocal<v8::Value> result = LoadSourceScript(isolate, context, *script_name, true);
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
+    v8::String::Utf8Value file_name(isolate, args[0]);
+    v8::MaybeLocal<v8::Value> result = LoadSourceScript(isolate, context, *file_name, true);
     v8::Local<v8::Value> module;
     if (result.ToLocal(&module))
     {
@@ -61,7 +62,7 @@ void IsFileExists_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args)
         return;
     v8::Isolate* isolate = args.GetIsolate();
     v8::HandleScope scope(isolate);
-    v8::String::Utf8Value relative_file_name(args.GetIsolate(), args[0]);
+    v8::String::Utf8Value relative_file_name(isolate, args[0]);
 
     std::string filename(g_js_source_path);
     filename += *relative_file_name;

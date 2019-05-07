@@ -8,11 +8,7 @@
 #define SET_JS_SOURCE_PATH SetJSSourcePath("E:/Github/node/v8vmtest")
 
 const char* SampleContractName = "SampleContract";
-const char* SampleContract = "function Initialize()\
-{\
-}\
-\
-function Process(param)\
+const char* SampleContract = "function Process(param)\
 {\
     if (!output[param.param2])\
     {\
@@ -25,7 +21,7 @@ function Process(param)\
     log(\"Process(), \" + param.param2 + \" = \" + output[param.param2]);\
 }\
 \
-Initialize(); ";
+exports.Process = Process;";
 
 int TestCase1()
 {
@@ -142,7 +138,7 @@ int TestCase4()
 
 int main()
 {
-    TestCase2();
+    TestCase1();
     //char ch;
     //ch = getch();
     return 0;
