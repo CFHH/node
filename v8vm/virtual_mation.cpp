@@ -46,13 +46,18 @@ V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
     //全局函数
     v8::Local<v8::ObjectTemplate> global = v8::ObjectTemplate::New(m_isolate);
     global->Set(v8::String::NewFromUtf8(m_isolate, "log", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, Log_JS2C));
-    global->Set(v8::String::NewFromUtf8(m_isolate, "BalanceTransfer", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, BalanceTransfer_JS2C));
-    global->Set(v8::String::NewFromUtf8(m_isolate, "sysLoadScript", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, LoadScript_JS2C));
-
-    //fs文件处理函数
-    v8::Local<v8::ObjectTemplate> fs = v8::ObjectTemplate::New(m_isolate);
-    global->Set(v8::String::NewFromUtf8(m_isolate, "fs", v8::NewStringType::kNormal).ToLocalChecked(), fs);
-    fs->Set(v8::String::NewFromUtf8(m_isolate, "IsFileExists", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, IsFileExists_JS2C));
+    //内建模块：sys
+    v8::Local<v8::ObjectTemplate> sys_module = v8::ObjectTemplate::New(m_isolate);
+    global->Set(v8::String::NewFromUtf8(m_isolate, "sys", v8::NewStringType::kNormal).ToLocalChecked(), sys_module);
+    sys_module->Set(v8::String::NewFromUtf8(m_isolate, "LoadScript", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, LoadScript_JS2C));
+    //内建模块：fs
+    v8::Local<v8::ObjectTemplate> fs_module = v8::ObjectTemplate::New(m_isolate);
+    global->Set(v8::String::NewFromUtf8(m_isolate, "fs", v8::NewStringType::kNormal).ToLocalChecked(), fs_module);
+    fs_module->Set(v8::String::NewFromUtf8(m_isolate, "IsFileExists", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, IsFileExists_JS2C));
+    //内建模块：bc
+    v8::Local<v8::ObjectTemplate> bc_module = v8::ObjectTemplate::New(m_isolate);
+    global->Set(v8::String::NewFromUtf8(m_isolate, "bc", v8::NewStringType::kNormal).ToLocalChecked(), bc_module);
+    bc_module->Set(v8::String::NewFromUtf8(m_isolate, "BalanceTransfer", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, BalanceTransfer_JS2C));
 
     v8::Local<v8::Context> context = NewContext(m_isolate, this, global);
     v8::Context::Scope context_scope(context);

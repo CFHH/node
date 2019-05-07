@@ -185,7 +185,7 @@ Module.prototype.getpath = function () {
 Module.prototype.load = function (filename) {
     if (this.loaded)
         return;
-    var module_fn = sysLoadScript(filename);
+    var module_fn = sys.LoadScript(filename);
     var require_fn = makeRequireFunction(this);
     module_fn(this.exports, require_fn, this, this.filename, null);
     this.loaded = true;
