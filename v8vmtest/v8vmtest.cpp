@@ -138,7 +138,7 @@ int TestCase4()
 
 int main()
 {
-    TestCase1();
+    TestCase2();
     //char ch;
     //ch = getch();
     return 0;

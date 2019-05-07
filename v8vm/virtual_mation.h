@@ -64,7 +64,6 @@ private:
     bool m_can_call_into_js = true;
 
 public:
-    SmartContract* CreateSmartContractBySourceCode(const char* contract_name, const char* sourcecode);
     SmartContract* CreateSmartContractByFileName(const char* contract_name, const char* filename);
     void DestroySmartContract(const char* contract_name);
     SmartContract* GetSmartContract(const char* contract_name);

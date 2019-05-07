@@ -250,7 +250,6 @@ V8VM_EXTERN bool V8VM_STDCALL LoadSmartContractBySourcecode(Int64 vmid, const ch
     key.append(contract_name);
     if (!vm->RegisterSourceCode(key, sourcecode))
         return false;
-    //contract = vm->CreateSmartContractBySourceCode(contract_name, sourcecode);
     contract = vm->CreateSmartContractByFileName(contract_name, key.c_str());
     vm->UnregisterSourceCode(key);
     if (contract == NULL)

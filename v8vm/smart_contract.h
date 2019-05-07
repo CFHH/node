@@ -26,7 +26,6 @@ class SmartContract
 public:
     explicit SmartContract(V8VirtualMation* vm);
     ~SmartContract();
-    bool InitializeBySourceCode(const char* sourcecode);
     bool InitializeByFileName(const char* filename);
     bool Invoke(InvokeParam* param);
 
@@ -36,6 +35,5 @@ private:
     v8::Global<v8::Context> m_context;
     std::map<std::string, std::string> m_output;
 #endif
-    v8::Global<v8::Script> m_script;
     v8::Global<v8::Function> m_process_fun;
 };

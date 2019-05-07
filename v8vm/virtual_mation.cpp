@@ -218,19 +218,6 @@ void V8VirtualMation::LoadEnvironment()
 * 智能合约
 ****************************************************************************************************/
 
-SmartContract* V8VirtualMation::CreateSmartContractBySourceCode(const char* contract_name, const char* sourcecode)
-{
-    SmartContract* contract = new SmartContract(this);
-    if (!contract->InitializeBySourceCode(sourcecode))
-    {
-        delete contract;
-        contract = NULL;
-        return NULL;
-    }
-    m_contracts[contract_name] = contract;
-    return contract;
-}
-
 SmartContract* V8VirtualMation::CreateSmartContractByFileName(const char* contract_name, const char* filename)
 {
     SmartContract* contract = new SmartContract(this);
