@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <conio.h>
 #include <string.h>
 #include "v8vm.h"
 
@@ -142,6 +143,8 @@ int TestCase4()
 int main()
 {
     TestCase2();
+    //char ch;
+    //ch = getch();
     return 0;
 }
 

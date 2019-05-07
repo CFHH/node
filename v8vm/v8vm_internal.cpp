@@ -158,26 +158,16 @@ v8::MaybeLocal<v8::Value> LoadScript(v8::Isolate* isolate, v8::Local<v8::Context
 
     v8::Local<v8::String> filename_v8 = v8::String::NewFromUtf8(isolate, absolute_file_name.c_str(), v8::NewStringType::kNormal, static_cast<int>(absolute_file_name.length())).ToLocalChecked();
 
-    char* sourcecode = NULL;
+    std::string sourcecode;
     bool ok = ReadScriptFile(absolute_file_name.c_str(), sourcecode);
     if (!ok)
-    {
-        delete sourcecode;
         return v8::MaybeLocal<v8::Value>();
-    }
-    std::string temp;
     if (wrap)
     {
-        temp = g_wrapper[0];
-        temp.append(sourcecode);
-        temp.append(g_wrapper[1]);
+        sourcecode = g_wrapper[0] + sourcecode;
+        sourcecode.append(g_wrapper[1]);
     }
-    else
-    {
-        temp = sourcecode;
-    }
-    delete sourcecode;
-    v8::Local<v8::String> sourcecode_v8 = v8::String::NewFromUtf8(isolate, temp.c_str(), v8::NewStringType::kNormal, static_cast<int>(temp.length())).ToLocalChecked();
+    v8::Local<v8::String> sourcecode_v8 = v8::String::NewFromUtf8(isolate, sourcecode.c_str(), v8::NewStringType::kNormal, static_cast<int>(sourcecode.length())).ToLocalChecked();
 
     v8::TryCatch try_catch(isolate);
 
@@ -210,4 +200,3 @@ v8::MaybeLocal<v8::Value> LoadScript(v8::Isolate* isolate, v8::Local<v8::Context
 
     return handle_scope.Escape(result.ToLocalChecked());
 }
-

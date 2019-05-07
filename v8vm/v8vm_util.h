@@ -31,6 +31,7 @@ void GetInvokeParam2_JS2C(v8::Local<v8::String> name, const v8::PropertyCallback
 /****************************************************************************************************
 * 异常
 ****************************************************************************************************/
+std::string ExceptionString(v8::Isolate* isolate, v8::TryCatch* try_catch);
 void ReportV8Exception(v8::Isolate* isolate, v8::TryCatch* try_catch);
 
 
@@ -44,4 +45,4 @@ void Log(const char *format, ...);
 /****************************************************************************************************
 * JS文件
 ****************************************************************************************************/
-bool ReadScriptFile(const char* filename, char*& buf);
+bool ReadScriptFile(const char* filename, std::string& out);

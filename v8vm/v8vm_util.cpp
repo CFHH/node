@@ -100,11 +100,13 @@ void GetInvokeParam2_JS2C(v8::Local<v8::String> name, const v8::PropertyCallback
     info.GetReturnValue().Set(v8::String::NewFromUtf8(info.GetIsolate(), param->param2.c_str(), v8::NewStringType::kNormal, static_cast<int>(param->param2.length())).ToLocalChecked());
 }
 
-void ReportV8Exception(v8::Isolate* isolate, v8::TryCatch* try_catch)
+std::string ExceptionString(v8::Isolate* isolate, v8::TryCatch* try_catch)
 {
     //ZZWTODO vm->stack_string() vm->arrow_message_private_symbol()
-    //ZZWTODO 拼一个完整的字符串，一次性打出
+    std::string out = "V8VM_EXCEPTION:\r\n";
     v8::HandleScope handle_scope(isolate);
+    v8::Local<v8::Context> context(isolate->GetCurrentContext());
+
     v8::String::Utf8Value exception(isolate, try_catch->Exception());
     const char* exception_string = *exception;
     if (exception_string == NULL)
@@ -112,24 +114,34 @@ void ReportV8Exception(v8::Isolate* isolate, v8::TryCatch* try_catch)
     v8::Local<v8::Message> message = try_catch->Message();
     if (message.IsEmpty())
     {
-        Log(exception_string);
-        return;
+        out.append(exception_string);
+        return out;
     }
-    // Log (filename):(line number): (exception)
-    v8::Local<v8::Context> context(isolate->GetCurrentContext());
+
+    const size_t tempbuf_size = 20;
+    char tempbuf[tempbuf_size];
+
+    //Print (filename):(line number): (exception)
     v8::String::Utf8Value filename(isolate, message->GetScriptOrigin().ResourceName());
     const char* filename_string = *filename;
     if (filename_string == NULL)
         filename_string = "<unknown script file name>";
     int linenum = message->GetLineNumber(context).FromJust();
-    Log("%s:%i: %s", filename_string, linenum, exception_string);
-    // Log line of source code
+    snprintf(tempbuf, tempbuf_size, "%i", linenum);
+    out.append(filename_string);
+    out.append(" : ");
+    out.append(tempbuf);
+    out.append(".\r\n");
+
+    //Print line of source code
     v8::String::Utf8Value sourceline(isolate, message->GetSourceLine(context).ToLocalChecked());
     const char* sourceline_string = *sourceline;
     if (sourceline_string == NULL)
         sourceline_string = "<unknown source line>";
-    Log(sourceline_string);
-    // Log wavy underline
+    out.append(sourceline_string);
+    out.append("\r\n");
+
+    //Print wavy underline
     int start = message->GetStartColumn(context).FromJust();
     int end = message->GetEndColumn(context).FromJust();
     char* wave = new char[end + 1];
@@ -138,9 +150,11 @@ void ReportV8Exception(v8::Isolate* isolate, v8::TryCatch* try_catch)
     for (int i = start; i < end; i++)
         wave[i] = '^';
     wave[end] = 0;
-    Log(wave);
+    out.append(wave);
+    out.append("\r\n");
     delete wave;
-    // Log stack trace
+
+    //Print stack trace
     v8::Local<v8::Value> stack_trace_string;
     if (try_catch->StackTrace(context).ToLocal(&stack_trace_string)
         && stack_trace_string->IsString()
@@ -151,8 +165,16 @@ void ReportV8Exception(v8::Isolate* isolate, v8::TryCatch* try_catch)
         const char* stack_trace_string = *stack_trace;
         if (stack_trace_string == NULL)
             stack_trace_string = "<unknown stack trace>";
-        Log(stack_trace_string);
+        out.append(stack_trace_string);
+        out.append("\r\n");
     }
+    return out;
+}
+
+void ReportV8Exception(v8::Isolate* isolate, v8::TryCatch* try_catch)
+{
+    std::string exception_string = ExceptionString(isolate, try_catch);
+    Log(exception_string.c_str());
 }
 
 void Log_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args)
@@ -180,7 +202,7 @@ void Log(const char *format, ...)
     printf("%s\n", buf);
 }
 
-bool ReadScriptFile(const char* filename, char*& buf)
+bool ReadScriptFile(const char* filename, std::string& out)
 {
     FILE* file = fopen(filename, "rb");
     if (file == NULL)
@@ -188,17 +210,16 @@ bool ReadScriptFile(const char* filename, char*& buf)
     fseek(file, 0, SEEK_END);
     size_t size = ftell(file);
     rewind(file);
-    buf = new char[size + 1];
+    out.resize(size);
     for (size_t i = 0; i < size;)
     {
-        i += fread(&buf[i], 1, size - i, file);
+        i += fread(&out[i], 1, size - i, file);
         if (ferror(file))
         {
             fclose(file);
             return false;
         }
     }
-    buf[size] = '\0';
     fclose(file);
     return true;
 }
