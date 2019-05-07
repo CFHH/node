@@ -102,6 +102,7 @@ Module._findPath = function (file, paths) {
                         } else {
                             return;
                         }
+                        break;
                     }
                 }
                 if (!find_slash || start >= file.length)
@@ -112,34 +113,44 @@ Module._findPath = function (file, paths) {
             if (n > 0) {
                 var end = 0;
                 for (var i = curPath.length - 1 - 1; i >= 0; --i) {  //curPath以'/'结尾
-                    if (curPath[i] == CHAR_FORWARD_SLASH) {
+                    if (curPath.charCodeAt(i) == CHAR_FORWARD_SLASH) {
                         --n;
-                        if (n == 0)
+                        if (n == 0) {
+                            end = i;
                             break;
+                        }
                     }
                 }
                 if (n != 0)
                     return;
-                var filename = curPath.slice(0, end + 1).cancat(file.slice(start));
+                var p1 = curPath.slice(0, end + 1);
+                var p2 = file.slice(start);
+                var filename = curPath.slice(0, end + 1).concat(file.slice(start));
                 if (fs.IsFileExists(filename))
-                    return file;
+                    return filename;
             } else {
                 var filename = curPath.cancat(file.slice(start));
                 if (fs.IsFileExists(filename))
-                    return file;
+                    return filename;
             }
         } else {
             var filename = curPath.concat(file);
             if (fs.IsFileExists(filename))
-                return file;
+                return filename;
         }
     }
 };
 
 Module._load = function (file, parent, isMain) {
+    var parent_id = "(NO PARENT)";
+    if (parent)
+        parent_id = parent.id;
+    log("LOAD MODULE : " + file + ", parnet = " + parent_id);
     var filename = Module._resolveFilename(file, parent, isMain);
+    log("    FULL PATH : " + filename);
     var cachedModule = Module._cache[filename];
     if (cachedModule) {
+        log("    CACHED MODULE: " + filename);
         updateChildren(parent, cachedModule, true);
         return cachedModule.exports;
     }
@@ -162,10 +173,10 @@ Module._tryLoad = function (module, filename) {
 };
 
 Module.prototype.getpath = function () {
-    var file = this.id;
-    for (var i = file.length - 1; i >= 0; --i) {
-        if (file[i] == CHAR_FORWARD_SLASH) {
-            return file.slice(0, i + 1);
+    var filename = this.id;
+    for (var i = filename.length - 1; i >= 0; --i) {
+        if (filename.charCodeAt(i) == CHAR_FORWARD_SLASH) {
+            return filename.slice(0, i + 1);
         }
     }
     return ROOT_PATH;

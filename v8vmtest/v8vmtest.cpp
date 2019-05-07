@@ -56,7 +56,7 @@ int TestCase2()
     Int64 vmid = CreateV8VirtualMation(0);
     if (vmid == 0)
         return 1;
-    bool ok1 = LoadSmartContractByFileName(vmid, SampleContractName, "/sample_contract.js");
+    bool ok1 = LoadSmartContractByFileName(vmid, SampleContractName, "sample_contract.js");
     if (!ok1)
         return 1;
     for (int i = 0; i < 4; ++i)
