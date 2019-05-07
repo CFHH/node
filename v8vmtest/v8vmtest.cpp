@@ -67,7 +67,6 @@ int TestCase2()
     return 0;
 }
 
-
 int TestCase3()
 {
     SET_INTERNAL_JS_LIB_PATH;
@@ -136,9 +135,41 @@ int TestCase4()
     return 0;
 }
 
+const char* BalancetransferContractName = "BalancetransferContract";
+extern "C"
+{
+    int BalanceTransferCallback(Int64 vmid, char* from, char* to, Int64 amount)
+    {
+        printf("BalanceTransferCallback, FROM : {%s}, TO :{%s}, AMOUNT : {%i}\r\n", from, to, int(amount));
+        return 0;
+    }
+}
+int TestCase5()
+{
+    SET_INTERNAL_JS_LIB_PATH;
+    SET_JS_SOURCE_PATH;
+    SetBalanceTransfer(BalanceTransferCallback);
+    InitializeV8Environment();
+    Int64 vmid = CreateV8VirtualMation(0);
+    if (vmid == 0)
+        return 1;
+    bool ok1 = LoadSmartContractByFileName(vmid, BalancetransferContractName, "/block_balancetransfer_contract.js");
+    if (!ok1)
+        return 1;
+    for (int i = 0; i < 4; ++i)
+    {
+        int result1 = InvokeSmartContract(vmid, BalancetransferContractName, 0, "{ \"from\":\"Zhang3\", \"to\":\"Li4\", \"amount\":100123456789 }");
+        if (result1 != 0)
+            return 1;
+    }
+    DisposeV8VirtualMation(vmid);
+    ShutdownV8Environment();
+    return 0;
+}
+
 int main()
 {
-    TestCase2();
+    TestCase5();
     //char ch;
     //ch = getch();
     return 0;

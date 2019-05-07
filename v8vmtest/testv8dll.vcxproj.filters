@@ -5,6 +5,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="sample_contract.js" />
-    <None Include="util.js" />
+    <None Include="block_balancetransfer_contract.js" />
   </ItemGroup>
 </Project>

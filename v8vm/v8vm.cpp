@@ -279,10 +279,10 @@ V8VM_EXTERN int V8VM_STDCALL InvokeSmartContract(Int64 vmid, const char* contrac
         return -1;
     V8VirtualMation* vm = g_environment->GetVirtualMation(vmid);
     if (vm == NULL)
-        return -1;
+        return -2;
     SmartContract* contract = vm->GetSmartContract(contract_name);
     if (contract == NULL)
-        return -1;
+        return -3;
 
     InvokeParam param;
     param.param0 = 0;
@@ -290,6 +290,6 @@ V8VM_EXTERN int V8VM_STDCALL InvokeSmartContract(Int64 vmid, const char* contrac
     param.param2 = param2;
     bool result = contract->Invoke(&param);
     if (!result)
-        return -1;
+        return -4;
     return 0;
 }
