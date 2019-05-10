@@ -1,9 +1,13 @@
-#include "v8vm_util.h"
-#include <stdarg.h>
-#include "smart_contract.h"
 #include <string.h>
+#include <stdarg.h>
+#include "v8vm.h"
+#include "v8vm_util.h"
+#include "virtual_mation.h"
+#include "smart_contract.h"
 
 #define LOG_BUF_SIZE 1024
+
+extern Log_callback LogFn;
 
 char* V8ObjectToCString(v8::Isolate* isolate, v8::Local<v8::Value> value)
 {
@@ -173,8 +177,10 @@ std::string ExceptionString(v8::Isolate* isolate, v8::TryCatch* try_catch)
 
 void ReportV8Exception(v8::Isolate* isolate, v8::TryCatch* try_catch)
 {
+    V8VirtualMation* vm = V8VirtualMation::GetCurrent(isolate);
+    Int64 vmid = vm->VMID();
     std::string exception_string = ExceptionString(isolate, try_catch);
-    Log(exception_string.c_str());
+    Log(vmid, 0, exception_string.c_str());
 }
 
 void Log_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args)
@@ -183,12 +189,14 @@ void Log_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args)
         return;
     v8::Isolate* isolate = args.GetIsolate();
     v8::HandleScope scope(isolate);
+    V8VirtualMation* vm = V8VirtualMation::GetCurrent(isolate);
+    Int64 vmid = vm->VMID();
     v8::Local<v8::Value> arg = args[0];
     v8::String::Utf8Value value(isolate, arg);
-    Log(*value);
+    Log(vmid, 0, *value);
 }
 
-void Log(const char *format, ...)
+void Log(Int64 vmid, Int32 level, const char *format, ...)
 {
     char buf[LOG_BUF_SIZE] = { 0 };
     va_list argptr;
@@ -199,7 +207,10 @@ void Log(const char *format, ...)
     vsprintf(buf, format, argptr);
 #endif
     va_end(argptr);
-    printf("%s\n", buf);
+    if (LogFn != NULL)
+        LogFn(vmid, level, buf);
+    else
+        printf("VMID:%i, %s\n", int(vmid), buf);
 }
 
 bool ReadScriptFile(const char* filename, std::string& out)

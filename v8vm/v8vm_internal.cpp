@@ -55,11 +55,11 @@ void OnFatalError(const char* location, const char* message)
 {
     if (location)
     {
-        Log("FATAL ERROR: %s %s\n", location, message);
+        Log(0, 0, "FATAL ERROR: %s %s\n", location, message);
     }
     else
     {
-        Log("FATAL ERROR: %s\n", message);
+        Log(0, 0, "FATAL ERROR: %s\n", message);
     }
     ABORT();
 }

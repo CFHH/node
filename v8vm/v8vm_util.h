@@ -39,7 +39,7 @@ void ReportV8Exception(v8::Isolate* isolate, v8::TryCatch* try_catch);
 * 日志
 ****************************************************************************************************/
 void Log_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args);
-void Log(const char *format, ...);
+void Log(Int64 vmid, Int32 level, const char *format, ...);
 
 
 /****************************************************************************************************

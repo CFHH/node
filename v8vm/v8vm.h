@@ -35,10 +35,11 @@ extern "C" {
     V8VM_EXTERN bool V8VM_STDCALL LoadSmartContractByFileName(Int64 vmid, const char* contract_name, const char* filename);
     V8VM_EXTERN int V8VM_STDCALL InvokeSmartContract(Int64 vmid, const char* contract_name, int param1, const char* param2);
 
+    typedef int(*Log_callback)(Int64 vmid, Int32 level, char* text);
+    V8VM_EXTERN void V8VM_STDCALL SetLog(Log_callback fn);
+
     typedef int(*BalanceTransfer_callback)(Int64 vmid, char* from, char* to, Int64 amount);
     V8VM_EXTERN void V8VM_STDCALL SetBalanceTransfer(BalanceTransfer_callback fn);
-
-    //ZZWTODO 加一个Log回调
 
 #ifdef __cplusplus
 }

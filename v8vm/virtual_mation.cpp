@@ -466,13 +466,13 @@ void V8VirtualMation::ReportException(v8::Local<v8::Value> er, v8::Local<v8::Mes
     {
         if (arrow.IsEmpty() || !arrow->IsString() || decorated)
         {
-            Log("%s\n", trace);
+            Log(m_vmid, 0, "%s\n", trace);
         }
         else
         {
             v8::String::Utf8Value utf8_arrow(m_isolate, arrow);
             char* arrow_string = *utf8_arrow;
-            Log("%s\n%s\n", arrow_string, trace);
+            Log(m_vmid, 0, "%s\n%s\n", arrow_string, trace);
         }
     }
     else
@@ -492,7 +492,7 @@ void V8VirtualMation::ReportException(v8::Local<v8::Value> er, v8::Local<v8::Mes
         {
             v8::String::Utf8Value utf8_message(m_isolate, er);
             char* message = *utf8_message;
-            Log("%s\n", message ? message : "<toString() threw exception>");
+            Log(m_vmid, 0, "%s\n", message ? message : "<toString() threw exception>");
         }
         else
         {
@@ -502,13 +502,13 @@ void V8VirtualMation::ReportException(v8::Local<v8::Value> er, v8::Local<v8::Mes
             char* message_string = *utf8_message;
             if (arrow.IsEmpty() || !arrow->IsString() || decorated)
             {
-                Log("%s: %s\n", name_string, message_string);
+                Log(m_vmid, 0, "%s: %s\n", name_string, message_string);
             }
             else
             {
                 v8::String::Utf8Value utf8_arrowe(m_isolate, arrow);
                 char* arrow_string = *utf8_arrowe;
-                Log("%s\n%s: %s\n", *arrow_string, name_string, message_string);
+                Log(m_vmid, 0, "%s\n%s: %s\n", *arrow_string, name_string, message_string);
             }
         }
     }
@@ -618,7 +618,7 @@ void V8VirtualMation::AppendExceptionLine(v8::Local<v8::Value> er, v8::Local<v8:
     const bool can_set_arrow = !arrow_str.IsEmpty() && !err_obj.IsEmpty();
     if (!can_set_arrow || (mode == FATAL_ERROR && !err_obj->IsNativeError()))
     {
-        Log("%s\n", arrow);
+        Log(m_vmid, 0, "%s\n", arrow);
         return;
     }
     CHECK(err_obj->SetPrivate(context, arrow_message_private_symbol(), arrow_str).FromMaybe(false));

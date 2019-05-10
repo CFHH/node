@@ -169,7 +169,7 @@ int TestCase5()
 
 int main()
 {
-    TestCase5();
+    TestCase2();
     //char ch;
     //ch = getch();
     return 0;

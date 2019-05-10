@@ -9,7 +9,13 @@ extern const char* g_internal_js_lib_path;
 extern const char* g_js_source_path;
 
 //这里的变量名不能和go中的c函数部分同名，否则在linux下会发生segmentation violation
+Log_callback LogFn = NULL;
 BalanceTransfer_callback BalanceTransferFn = NULL;
+
+V8VM_EXTERN void V8VM_STDCALL SetLog(Log_callback fn)
+{
+    LogFn = fn;
+}
 
 V8VM_EXTERN void V8VM_STDCALL SetBalanceTransfer(BalanceTransfer_callback fn)
 {
