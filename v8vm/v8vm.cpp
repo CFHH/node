@@ -181,6 +181,24 @@ V8VM_EXTERN void V8VM_STDCALL SetJSSourcePath(const char* path)
     }
 }
 
+V8VM_EXTERN Int64 V8VM_STDCALL NewString(const char* str)
+{
+    if (str == NULL)
+        return 0;
+    int len = strlen(str) + 1;
+    char* buf = new char[len];
+    strcpy(buf, str);
+    return (Int64)buf;
+}
+
+V8VM_EXTERN void V8VM_STDCALL DeleteString(Int64 ptr)
+{
+    if (ptr == 0)
+        return;
+    char* buf = (char*)ptr;
+    delete[] buf;
+}
+
 V8VM_EXTERN void V8VM_STDCALL InitializeV8Environment()
 {
     if (g_environment != NULL)
