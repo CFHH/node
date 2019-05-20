@@ -51,6 +51,9 @@ extern "C" {
     typedef Int64(*QueryDB_callback)(Int64 vmid, char* key_json);
     V8VM_EXTERN void V8VM_STDCALL SetQueryDB(QueryDB_callback fn);
 
+    typedef int(*RequireAuth_callback)(Int64 vmid, char* account);
+    V8VM_EXTERN void V8VM_STDCALL SetRequireAuth(RequireAuth_callback fn);
+
 #ifdef __cplusplus
 }
 #endif

@@ -14,6 +14,7 @@ Log_callback LogFn = NULL;
 BalanceTransfer_callback BalanceTransferFn = NULL;
 UpdateDB_callback UpdateDBFn = NULL;
 QueryDB_callback QueryDBFn = NULL;
+RequireAuth_callback RequireAuthFn = NULL;
 
 V8VM_EXTERN void V8VM_STDCALL SetLog(Log_callback fn)
 {
@@ -33,6 +34,11 @@ V8VM_EXTERN void V8VM_STDCALL SetUpdateDB(UpdateDB_callback fn)
 V8VM_EXTERN void V8VM_STDCALL SetQueryDB(QueryDB_callback fn)
 {
     QueryDBFn = fn;
+}
+
+V8VM_EXTERN void V8VM_STDCALL SetRequireAuth(RequireAuth_callback fn)
+{
+    RequireAuthFn = fn;
 }
 
 void BalanceTransfer_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args)
@@ -84,6 +90,20 @@ void QueryDB_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args)
         args.GetReturnValue().Set(result);
         DeleteString(ptr);
     }
+}
+
+void RequireAuth_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
+    if (args.Length() != 1)
+        return;
+    v8::Isolate* isolate = args.GetIsolate();
+    v8::HandleScope scope(isolate);
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
+    V8VirtualMation* vm = V8VirtualMation::GetCurrent(context);
+    Int64 vmid = vm->VMID();
+    v8::String::Utf8Value account(isolate, args[0]);
+    int result = RequireAuthFn(vmid, *account);
+    args.GetReturnValue().Set(result);
 }
 
 void LoadScript_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args)
