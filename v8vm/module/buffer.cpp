@@ -1,3 +1,4 @@
+#include <cstring>
 #include "buffer.h"
 #include "virtual_mation.h"
 #include "vm_util.h"
