@@ -1,3 +1,4 @@
+#include <cstring>
 #include "v8vm_internal.h"
 #include "v8vm_util.h"
 #include "virtual_mation.h"

@@ -1,3 +1,4 @@
+#include <cstring>
 #include "vm_module.h"
 #include "virtual_mation.h"
 #include "module/v8vm_constants.h"

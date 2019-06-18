@@ -1,9 +1,16 @@
+#include <cstring>
+#include <string>
+//#include "v8ex.h"
 #include "v8vm.h"
 #include "v8environment.h"
 #include "virtual_mation.h"
 #include "smart_contract.h"
 #include "v8vm_util.h"
-#include <string>
+
+//void v8exlogFN(const char* text)
+//{
+//    printf(text);
+//}
 
 /*
 *****Gosig虚拟机的编译方法*****
@@ -204,6 +211,7 @@ V8VM_EXTERN void V8VM_STDCALL InitializeV8Environment()
     if (g_environment != NULL)
         return;
     g_environment = new V8Environment();
+    //v8::SetV8exLog(v8exlogFN);
 }
 
 V8VM_EXTERN void V8VM_STDCALL ShutdownV8Environment()

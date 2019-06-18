@@ -1,3 +1,4 @@
+#include <cstring>
 #include "virtual_mation.h"
 #include "v8environment.h"
 #include "smart_contract.h"

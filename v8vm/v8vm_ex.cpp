@@ -149,3 +149,48 @@ void IsFileExists_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args)
     }
     args.GetReturnValue().Set(isok);
 }
+
+
+
+/************************************************************************
+AsmJsParser
+AsmJsScanner
+
+V8 Bytecode：
+    所有指令的列表 E:\Github\node\deps\v8\src\interpreter\bytecodes.h
+    class Bytecode
+
+    搜索 BYTECODE_LIST，最主要的就是下面几个
+        DECLARE_VISIT_BYTECODE(name, ...)           Visit##name()
+                                                    VisitLdaSmi
+        DEFINE_BYTECODE_OUTPUT(name, ...)           Create##name##Node()    Output##name()
+                                                    OutputLdaSmi
+        DEFINE_BYTECODE_NODE_CREATOR(name, ...)     BytecodeNode Name()
+
+
+
+
+
+    以LdaSmi指令为例，枚举值 kLdaSmi
+
+
+AST
+
+
+INTERPRETER
+    IGNITION_HANDLER(LdaSmi, InterpreterAssembler)
+        声明一个类 class LdaSmiAssembler : public InterpreterAssembler
+        static void LdaSmiAssembler::Generate() 会调用 GenerateImpl()
+        每个具体的 IGNITION_HANDLER 后面的代码是 void LdaSmiAssembler::GenerateImpl()的实现
+        除了IGNITION_HANDLER，还有 TF_STUB TF_BUILTIN 不知道是做什么的
+
+    栈
+    Isolate::Init
+        SetupIsolateDelegate::SetupInterpreter
+            InstallBytecodeHandlers
+                SetupInterpreter::InstallBytecodeHandler
+                    GenerateBytecodeHandler
+                        Name##Assembler::Generate
+
+    builtins-utils-gen.h
+************************************************************************/
