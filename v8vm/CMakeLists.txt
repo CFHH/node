@@ -14,4 +14,4 @@ ADD_SUBDIRECTORY(vm)
 
 ADD_LIBRARY(v8vm SHARED ${DIR_SRCS})
 
-TARGET_LINK_LIBRARIES(v8vm libv8.so libpthread.so)
+TARGET_LINK_LIBRARIES(v8vm module vm libv8.so libpthread.so)
