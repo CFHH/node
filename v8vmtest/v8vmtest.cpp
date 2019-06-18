@@ -3,8 +3,13 @@
 #include <string.h>
 #include "v8vm.h"
 
+#if defined(_MSC_VER)
 #define SET_INTERNAL_JS_LIB_PATH SetInternalJSLibPath("E:/Github/node/v8vm/jslib")
 #define SET_JS_SOURCE_PATH SetJSSourcePath("E:/Github/node/v8vmtest")
+#else
+#define SET_INTERNAL_JS_LIB_PATH SetInternalJSLibPath("/home/zzw/github/node/v8vm/jslib")
+#define SET_JS_SOURCE_PATH SetJSSourcePath("/home/zzw/github/node/v8vmtest")
+#endif
 
 const char* SampleContractName = "SampleContract";
 const char* SampleContract = "function Process(param)\
