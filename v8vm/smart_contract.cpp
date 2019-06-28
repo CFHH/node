@@ -64,7 +64,7 @@ bool SmartContract::InitializeByFileName(const char* filename)
     return true;
 }
 
-bool SmartContract::Invoke(InvokeParam* param)
+int SmartContract::Invoke(InvokeParam* param)
 {
     v8::Isolate* isolate = m_vm->GetIsolate();
     v8::Locker locker(isolate);
@@ -87,8 +87,15 @@ bool SmartContract::Invoke(InvokeParam* param)
     {
         ReportV8Exception(isolate, &try_catch);
         m_vm->PumpMessage();
-        return false;
+        return -20000;
     }
     m_vm->PumpMessage();
-    return true;
+
+    if (result->IsInt32())
+        return result->Int32Value();
+    else if (result->IsNullOrUndefined())
+        return 0;
+    else
+        return -20001;
+    return 0;
 }

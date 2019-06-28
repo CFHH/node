@@ -186,6 +186,9 @@
     <None Include="block_balancetransfer_contract.js" />
     <None Include="sample_contract.js" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

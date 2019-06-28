@@ -107,4 +107,13 @@
       <Filter>jslib\internal</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
+    <Text Include="vm\CMakeLists.txt">
+      <Filter>vm</Filter>
+    </Text>
+    <Text Include="module\CMakeLists.txt">
+      <Filter>module</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

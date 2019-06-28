@@ -27,7 +27,7 @@ public:
     explicit SmartContract(V8VirtualMation* vm);
     ~SmartContract();
     bool InitializeByFileName(const char* filename);
-    bool Invoke(InvokeParam* param);
+    int Invoke(InvokeParam* param);
 
 private:
     V8VirtualMation* m_vm;

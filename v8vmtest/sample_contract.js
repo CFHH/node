@@ -12,6 +12,7 @@ function Process(param)
         output[param.param2] = util.add(Number(output[param.param2]), param.param1);
     }
     log("Process(), " + param.param2 + " = " + output[param.param2]);
+    return 0;
 }
 
 exports.Process = Process;

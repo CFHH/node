@@ -18,6 +18,7 @@
     1、node.sln（通过.\vcbuild得到）
     2、v8vm.sln
 二、Linux
+    下载代码 https://github.com/CFHH/node
     1、编译node
         ./configure --shared
         make -j4
@@ -39,6 +40,7 @@
         cmake ..
         make
         ./v8vmtest
+    5、修改链代码，跑链需要这俩动态库：/usr/lib/libv8.so和/usr/lib/libv8vm.so
 */
 
 /*
@@ -302,20 +304,18 @@ V8VM_EXTERN bool V8VM_STDCALL LoadSmartContractByFileName(Int64 vmid, const char
 V8VM_EXTERN int V8VM_STDCALL InvokeSmartContract(Int64 vmid, const char* contract_name, int param1, const char* param2)
 {
     if (g_environment == NULL)
-        return -1;
+        return -10000;
     V8VirtualMation* vm = g_environment->GetVirtualMation(vmid);
     if (vm == NULL)
-        return -2;
+        return -10001;
     SmartContract* contract = vm->GetSmartContract(contract_name);
     if (contract == NULL)
-        return -3;
+        return -10002;
 
     InvokeParam param;
     param.param0 = 0;
     param.param1 = param1;
     param.param2 = param2;
-    bool result = contract->Invoke(&param);
-    if (!result)
-        return -4;
-    return 0;
+    int result = contract->Invoke(&param);
+    return result;
 }
