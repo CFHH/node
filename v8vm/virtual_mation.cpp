@@ -62,6 +62,8 @@ V8VirtualMation::V8VirtualMation(V8Environment* environment, Int64 vmid)
     bc_module->Set(v8::String::NewFromUtf8(m_isolate, "UpdateDB", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, UpdateDB_JS2C));
     bc_module->Set(v8::String::NewFromUtf8(m_isolate, "QueryDB", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, QueryDB_JS2C));
     bc_module->Set(v8::String::NewFromUtf8(m_isolate, "RequireAuth", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, RequireAuth_JS2C));
+    bc_module->Set(v8::String::NewFromUtf8(m_isolate, "GetIntValue", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, GetIntValue_JS2C));
+    bc_module->Set(v8::String::NewFromUtf8(m_isolate, "GetStringValue", v8::NewStringType::kNormal).ToLocalChecked(), v8::FunctionTemplate::New(m_isolate, GetStringValue_JS2C));
 
     v8::Local<v8::Context> context = NewContext(m_isolate, this, global);
     v8::Context::Scope context_scope(context);

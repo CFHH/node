@@ -55,6 +55,10 @@ extern "C" {
     typedef int(*RequireAuth_callback)(Int64 vmid, char* account);
     V8VM_EXTERN void V8VM_STDCALL SetRequireAuth(RequireAuth_callback fn);
 
+    typedef int(*GetIntValue_callback)(Int64 vmid, Int32 keyid);
+    typedef Int64(*GetStringValue_callback)(Int64 vmid, Int32 keyid);
+    V8VM_EXTERN void V8VM_STDCALL SetValueGetter(GetIntValue_callback fn1, GetStringValue_callback fn2);
+
 #ifdef __cplusplus
 }
 #endif

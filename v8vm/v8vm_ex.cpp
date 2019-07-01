@@ -15,6 +15,8 @@ BalanceTransfer_callback BalanceTransferFn = NULL;
 UpdateDB_callback UpdateDBFn = NULL;
 QueryDB_callback QueryDBFn = NULL;
 RequireAuth_callback RequireAuthFn = NULL;
+GetIntValue_callback GetIntValueFn = NULL;
+GetStringValue_callback GetStringValueFn = NULL;
 
 V8VM_EXTERN void V8VM_STDCALL SetLog(Log_callback fn)
 {
@@ -41,6 +43,12 @@ V8VM_EXTERN void V8VM_STDCALL SetRequireAuth(RequireAuth_callback fn)
     RequireAuthFn = fn;
 }
 
+V8VM_EXTERN void V8VM_STDCALL SetValueGetter(GetIntValue_callback fn1, GetStringValue_callback fn2)
+{
+    GetIntValueFn = fn1;
+    GetStringValueFn = fn2;
+}
+
 void BalanceTransfer_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
     if (args.Length() != 3)
@@ -52,7 +60,7 @@ void BalanceTransfer_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args)
     Int64 vmid = vm->VMID();
     v8::String::Utf8Value from(isolate, args[0]);
     v8::String::Utf8Value to(isolate, args[1]);
-    Int64 amount = args[2]->IntegerValue(context).FromMaybe(0);
+    Int64 amount = args[2]->IntegerValue(context).FromMaybe(0);  //ZZWTODO js无法提供int64
     int result = BalanceTransferFn(vmid, *from, *to, amount);
     args.GetReturnValue().Set(result);
 }
@@ -104,6 +112,40 @@ void RequireAuth_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args)
     v8::String::Utf8Value account(isolate, args[0]);
     int result = RequireAuthFn(vmid, *account);
     args.GetReturnValue().Set(result);
+}
+
+void GetIntValue_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
+    if (args.Length() != 1)
+        return;
+    v8::Isolate* isolate = args.GetIsolate();
+    v8::HandleScope scope(isolate);
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
+    V8VirtualMation* vm = V8VirtualMation::GetCurrent(context);
+    Int64 vmid = vm->VMID();
+    Int32 keyid = args[0]->Int32Value(context).FromMaybe(0);
+    int result = GetIntValueFn(vmid, keyid);
+    args.GetReturnValue().Set(result);
+}
+
+void GetStringValue_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
+    if (args.Length() != 1)
+        return;
+    v8::Isolate* isolate = args.GetIsolate();
+    v8::HandleScope scope(isolate);
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
+    V8VirtualMation* vm = V8VirtualMation::GetCurrent(context);
+    Int64 vmid = vm->VMID();
+    Int32 keyid = args[0]->Int32Value(context).FromMaybe(0);
+    Int64 ptr = GetStringValueFn(vmid, keyid);
+    if (ptr != 0)
+    {
+        char* value_json = (char*)ptr;
+        v8::Local<v8::String> result = v8::String::NewFromUtf8(isolate, value_json, v8::NewStringType::kNormal).ToLocalChecked();
+        args.GetReturnValue().Set(result);
+        DeleteString(ptr);
+    }
 }
 
 void LoadScript_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args)
