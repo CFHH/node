@@ -142,9 +142,9 @@ int TestCase4()
 const char* BalancetransferContractName = "BalancetransferContract";
 extern "C"
 {
-    int BalanceTransferCallback(Int64 vmid, char* from, char* to, Int64 amount)
+    int BalanceTransferCallback(Int64 vmid, char* from, char* to, char* amount)
     {
-        printf("BalanceTransferCallback, FROM : {%s}, TO :{%s}, AMOUNT : {%i}\r\n", from, to, int(amount));
+        printf("BalanceTransferCallback, FROM : {%s}, TO :{%s}, AMOUNT : {%s}\r\n", from, to, amount);
         return 0;
     }
 }
@@ -162,7 +162,7 @@ int TestCase5()
         return 1;
     for (int i = 0; i < 4; ++i)
     {
-        int result1 = InvokeSmartContract(vmid, BalancetransferContractName, 0, "{ \"from\":\"Zhang3\", \"to\":\"Li4\", \"amount\":100123456789 }");
+        int result1 = InvokeSmartContract(vmid, BalancetransferContractName, 0, "{ \"from\":\"Zhang3\", \"to\":\"Li4\", \"amount\":\"100123456789\" }");
         if (result1 != 0)
             return 1;
     }

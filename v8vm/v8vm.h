@@ -43,7 +43,7 @@ extern "C" {
     typedef void(*Log_callback)(Int64 vmid, Int32 level, char* text);
     V8VM_EXTERN void V8VM_STDCALL SetLog(Log_callback fn);
 
-    typedef int(*BalanceTransfer_callback)(Int64 vmid, char* from, char* to, Int64 amount);
+    typedef int(*BalanceTransfer_callback)(Int64 vmid, char* from, char* to, char* amount);
     V8VM_EXTERN void V8VM_STDCALL SetBalanceTransfer(BalanceTransfer_callback fn);
 
     typedef int(*UpdateDB_callback)(Int64 vmid, char* key_json, char* value_json);

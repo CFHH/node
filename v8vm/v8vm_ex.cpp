@@ -60,8 +60,8 @@ void BalanceTransfer_JS2C(const v8::FunctionCallbackInfo<v8::Value>& args)
     Int64 vmid = vm->VMID();
     v8::String::Utf8Value from(isolate, args[0]);
     v8::String::Utf8Value to(isolate, args[1]);
-    Int64 amount = args[2]->IntegerValue(context).FromMaybe(0);  //ZZWTODO js无法提供int64
-    int result = BalanceTransferFn(vmid, *from, *to, amount);
+    v8::String::Utf8Value amount(isolate, args[2]); //Int64 amount = args[2]->IntegerValue(context).FromMaybe(0);  //ZZWTODO js无法提供int64
+    int result = BalanceTransferFn(vmid, *from, *to, *amount);
     args.GetReturnValue().Set(result);
 }
 
