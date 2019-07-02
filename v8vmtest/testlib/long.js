@@ -1,3 +1,6 @@
+//根据 http://adknstage.com/mediatool/scripts/closure/goog/docs/class_goog_math_Long.html 修改
+
+
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -12,8 +15,6 @@
 
 // Copyright 2009 Google Inc. All Rights Reserved
 
-
-//根据 http://adknstage.com/mediatool/scripts/closure/goog/docs/class_goog_math_Long.html 修改
 
 /**
  * Constructs a 64-bit two's-complement integer, given its low and high 32-bit

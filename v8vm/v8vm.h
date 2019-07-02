@@ -35,9 +35,9 @@ extern "C" {
     V8VM_EXTERN void V8VM_STDCALL DisposeV8VirtualMation(Int64 vmid);
     V8VM_EXTERN bool V8VM_STDCALL IsV8VirtualMationInUse(Int64 vmid);
     V8VM_EXTERN bool V8VM_STDCALL IsSmartContractLoaded(Int64 vmid, const char* contract_name);
-    V8VM_EXTERN bool V8VM_STDCALL LoadSmartContractBySourcecode(Int64 vmid, const char* contract_name, const char* sourcecode);
-    V8VM_EXTERN bool V8VM_STDCALL LoadSmartContractByFileName(Int64 vmid, const char* contract_name, const char* filename);
-    //返回js脚本的返回值：0表示正常；<= -10000是libv8vm内部错误
+    V8VM_EXTERN int V8VM_STDCALL LoadSmartContractBySourcecode(Int64 vmid, const char* contract_name, const char* sourcecode);
+    V8VM_EXTERN int V8VM_STDCALL LoadSmartContractByFileName(Int64 vmid, const char* contract_name, const char* filename);
+    //返回js脚本的返回值：0表示正常；<=-10000是V8VM_ERROR
     V8VM_EXTERN int V8VM_STDCALL InvokeSmartContract(Int64 vmid, const char* contract_name, int param1, const char* param2);
 
     typedef void(*Log_callback)(Int64 vmid, Int32 level, char* text);
@@ -62,3 +62,13 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+
+
+//此处都定义为<=-10000的值.
+#define V8VM_SUCCESS                    0
+#define V8VM_ERROR_ENVIRONMENT          (-10000)
+#define V8VM_ERROR_INVALID_VMID         (-10001)
+#define V8VM_ERROR_INVALID_CONTRACT     (-10002)
+#define V8VM_ERROR_CONTRACT_EXISTS      (-10003)
+#define V8VM_ERROR_SOURCECODE_EXISTS    (-10004)
+#define V8VM_ERROR_LOAD_CONTRACT        (-10004)

@@ -35,8 +35,8 @@ int TestCase1()
     Int64 vmid = CreateV8VirtualMation(0);
     if (vmid == 0)
         return 1;
-    bool ok1 = LoadSmartContractBySourcecode(vmid, SampleContractName, SampleContract);
-    if (!ok1)
+    int ok1 = LoadSmartContractBySourcecode(vmid, SampleContractName, SampleContract);
+    if (ok1 != V8VM_SUCCESS)
         return 1;
     for (int i = 0; i < 4; ++i)
     {
@@ -57,8 +57,8 @@ int TestCase2()
     Int64 vmid = CreateV8VirtualMation(0);
     if (vmid == 0)
         return 1;
-    bool ok1 = LoadSmartContractByFileName(vmid, SampleContractName, "sample_contract.js");
-    if (!ok1)
+    int ok1 = LoadSmartContractByFileName(vmid, SampleContractName, "sample_contract.js");
+    if (ok1 != V8VM_SUCCESS)
         return 1;
     for (int i = 0; i < 4; ++i)
     {
@@ -82,11 +82,11 @@ int TestCase3()
     Int64 vmid2 = CreateV8VirtualMation(0);
     if (vmid2 == 0)
         return 1;
-    bool ok1 = LoadSmartContractBySourcecode(vmid1, "sample_contract_1", SampleContract);
-    if (!ok1)
+    int ok1 = LoadSmartContractBySourcecode(vmid1, "sample_contract_1", SampleContract);
+    if (ok1 != V8VM_SUCCESS)
         return 1;
-    bool ok2 = LoadSmartContractBySourcecode(vmid2, "sample_contract_2", SampleContract);
-    if (!ok2)
+    int ok2 = LoadSmartContractBySourcecode(vmid2, "sample_contract_2", SampleContract);
+    if (ok2 != V8VM_SUCCESS)
         return 1;
     int result1 = InvokeSmartContract(vmid1, "sample_contract_1", 100, "vm1");
     if (result1 != 0)
@@ -112,8 +112,8 @@ int TestCase4()
     Int64 vmid = CreateV8VirtualMation(0);
     if (vmid == 0)
         return 1;
-    bool ok1 = LoadSmartContractBySourcecode(vmid, SampleContractName, SampleContract);
-    if (!ok1)
+    int ok1 = LoadSmartContractBySourcecode(vmid, SampleContractName, SampleContract);
+    if (ok1 != V8VM_SUCCESS)
         return 1;
 #ifdef _MSC_VER
     LARGE_INTEGER freq;
@@ -157,8 +157,8 @@ int TestCase5()
     Int64 vmid = CreateV8VirtualMation(0);
     if (vmid == 0)
         return 1;
-    bool ok1 = LoadSmartContractByFileName(vmid, BalancetransferContractName, "/block_balancetransfer_contract.js");
-    if (!ok1)
+    int ok1 = LoadSmartContractByFileName(vmid, BalancetransferContractName, "/block_balancetransfer_contract.js");
+    if (ok1 != V8VM_SUCCESS)
         return 1;
     for (int i = 0; i < 4; ++i)
     {

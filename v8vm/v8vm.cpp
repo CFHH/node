@@ -264,53 +264,53 @@ V8VM_EXTERN bool V8VM_STDCALL IsSmartContractLoaded(Int64 vmid, const char* cont
     return true;
 }
 
-V8VM_EXTERN bool V8VM_STDCALL LoadSmartContractBySourcecode(Int64 vmid, const char* contract_name, const char* sourcecode)
+V8VM_EXTERN int V8VM_STDCALL LoadSmartContractBySourcecode(Int64 vmid, const char* contract_name, const char* sourcecode)
 {
     if (g_environment == NULL)
-        return false;
+        return V8VM_ERROR_ENVIRONMENT;
     V8VirtualMation* vm = g_environment->GetVirtualMation(vmid);
     if (vm == NULL)
-        return false;
+        return V8VM_ERROR_INVALID_VMID;
     SmartContract* contract = vm->GetSmartContract(contract_name);
     if (contract != NULL)
-        return false;
+        return V8VM_ERROR_CONTRACT_EXISTS;
     std::string key(RAW_CODE_TAG);
     key.append(contract_name);
     if (!vm->RegisterSourceCode(key, sourcecode))
-        return false;
+        return V8VM_ERROR_SOURCECODE_EXISTS;
     contract = vm->CreateSmartContractByFileName(contract_name, key.c_str());
     vm->UnregisterSourceCode(key);
     if (contract == NULL)
-        return false;
-    return true;
+        return V8VM_ERROR_LOAD_CONTRACT;
+    return V8VM_SUCCESS;
 }
 
-V8VM_EXTERN bool V8VM_STDCALL LoadSmartContractByFileName(Int64 vmid, const char* contract_name, const char* filename)
+V8VM_EXTERN int V8VM_STDCALL LoadSmartContractByFileName(Int64 vmid, const char* contract_name, const char* filename)
 {
     if (g_environment == NULL)
-        return false;
+        return V8VM_ERROR_ENVIRONMENT;
     V8VirtualMation* vm = g_environment->GetVirtualMation(vmid);
     if (vm == NULL)
-        return false;
+        return V8VM_ERROR_INVALID_VMID;
     SmartContract* contract = vm->GetSmartContract(contract_name);
     if (contract != NULL)
-        return false;
+        return V8VM_ERROR_CONTRACT_EXISTS;
     contract = vm->CreateSmartContractByFileName(contract_name, filename);
     if (contract == NULL)
-        return false;
-    return true;
+        return V8VM_ERROR_LOAD_CONTRACT;
+    return V8VM_SUCCESS;
 }
 
 V8VM_EXTERN int V8VM_STDCALL InvokeSmartContract(Int64 vmid, const char* contract_name, int param1, const char* param2)
 {
     if (g_environment == NULL)
-        return -10000;
+        return V8VM_ERROR_ENVIRONMENT;
     V8VirtualMation* vm = g_environment->GetVirtualMation(vmid);
     if (vm == NULL)
-        return -10001;
+        return V8VM_ERROR_INVALID_VMID;
     SmartContract* contract = vm->GetSmartContract(contract_name);
     if (contract == NULL)
-        return -10002;
+        return V8VM_ERROR_INVALID_CONTRACT;
 
     InvokeParam param;
     param.param0 = 0;
